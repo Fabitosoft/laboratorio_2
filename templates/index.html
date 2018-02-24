@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block title %}
+    Odecopack Proyectos
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="app">
+        </div>
+        {% render_bundle 'app' %}
+    </div>
+{% endblock %}
