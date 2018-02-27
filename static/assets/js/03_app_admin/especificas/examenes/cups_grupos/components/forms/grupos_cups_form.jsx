@@ -32,20 +32,16 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={element_type}
             >
-                <div className="m-2">
-                    <div className="row">
-                        <MyTextFieldSimple
-                            className="col-12"
-                            nombre='Nombre de Grupo'
-                            name='nombre'
-                            case='U'/>
-                        <MyTextFieldSimple
-                            className="col-12"
-                            nombre='Orden'
-                            name='orden'
-                            case='U'/>
-                    </div>
-                </div>
+                <MyTextFieldSimple
+                    className="col-12"
+                    nombre='Nombre de Grupo'
+                    name='nombre'
+                    case='U'/>
+                <MyTextFieldSimple
+                    className="col-12"
+                    nombre='Orden'
+                    name='orden'
+                    case='U'/>
             </MyFormTagModal>
         )
     }

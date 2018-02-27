@@ -1,14 +1,30 @@
+from django.contrib.auth.models import Group
 from django.db import models
+from registration.forms import User
+
 from examenes.models import Examen
 
 
 class Entidad(models.Model):
     nombre = models.CharField(max_length=200, unique=True)
-    nit = models.CharField(max_length=100, null=True, blank=True)
+    nit = models.CharField(max_length=100, null=True, blank=True, unique=True)
     direccion = models.CharField(max_length=200, null=True, blank=True)
     telefono = models.CharField(max_length=200, null=True, blank=True)
     examenes = models.ManyToManyField(Examen, through='EntidadExamen')
     activo = models.BooleanField(default=True)
+    usuario = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='mi_entidad', null=True, blank=True)
+
+    def create_user(self):
+        username = 'en-%s' % (self.nit)
+        user = User.objects.create_user(
+            username=username.lower(),
+            password=self.nit,
+            first_name=self.nombre.upper()
+        )
+        self.usuario = user
+        new_group, created = Group.objects.get_or_create(name='Entidades')
+        user.groups.add(new_group)
+        self.save()
 
     class Meta:
         verbose_name_plural = 'Entidades'
@@ -46,6 +62,6 @@ class EntidadExamen(models.Model):
     class Meta:
         unique_together = [('examen', 'entidad')]
         permissions = (
-            ('list_examen', 'Can list examenes'),
-            ('detail_examen', 'Can detail examen'),
+            ('list_entidadexamen', 'Can list entidad examenes'),
+            ('detail_entidadexamen', 'Can detail entidad examen'),
         )

@@ -11,12 +11,14 @@ export const MyFormTagModal = (props) => {
         onSubmit,
         onCancel,
         modal_open,
-        element_type
+        element_type,
+        modelStyle
     } = props;
     return (
         <MyDialogCreate
             element_type={`${initialValues ? 'Editar ' : 'Crear '} ${element_type}`}
             is_open={modal_open}
+            modelStyle={modelStyle}
         >
             <form className="card" onSubmit={onSubmit}>
                 <div className="row pl-3 pr-5">

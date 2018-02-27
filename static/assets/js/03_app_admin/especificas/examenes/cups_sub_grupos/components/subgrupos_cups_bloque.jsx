@@ -1,4 +1,4 @@
-import React, {Fragment, Component} from 'react'
+import React, {Fragment, Component} from 'react';
 import Tabla from './sub_grupos_cups_tabla';
 import CreateForm from './forms/sub_grupos_cups_form';
 import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
@@ -88,10 +88,12 @@ class BloqueTab extends Component {
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchCupsSubGrupo(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

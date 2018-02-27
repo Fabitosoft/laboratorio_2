@@ -19,6 +19,7 @@ import medicosRemitentesReducer from './especificas/medicos/medicosRemitentesRed
 import entidadesReducer from './especificas/entidades/entidadesReducer';
 import contactosEntidadesReducer from './especificas/entidades/contactosEntidadesReducer';
 import entidadExamenesReducer from './especificas/entidades/entidadExamenesReducer';
+import pacientesReducer from './especificas/pacientes/pacientesReducer';
 
 const rootReducer = combineReducers({
     mis_permisos: misPermisosReducer,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
     entidades: entidadesReducer,
     contactos_entidades: contactosEntidadesReducer,
     entidad_examenes: entidadExamenesReducer,
+    pacientes: pacientesReducer,
 });
 
 export default rootReducer;

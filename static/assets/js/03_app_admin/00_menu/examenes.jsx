@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import {Link} from 'react-router-dom'
@@ -9,7 +9,7 @@ const MenuPermisos = (props) => (
     <li className="nav-item dropdown">
         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="false">
-            <FontIcon className="fas fa-lock-alt"/>
+            <FontIcon className="fas fa-stethoscope"/>
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
 

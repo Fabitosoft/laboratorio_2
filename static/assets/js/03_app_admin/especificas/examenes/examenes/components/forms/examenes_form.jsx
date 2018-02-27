@@ -1,15 +1,19 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {reduxForm, reset} from 'redux-form';
-import {MyTextFieldSimple, MyCheckboxSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyTextFieldSimple,
+    MyCheckboxSimple,
+    MySelectField
+} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-import {
-    SelectField
-} from 'redux-form-material-ui'
-import {Field} from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
 
+const modelStyle = {
+    width: '100%',
+    height: '100%',
+    maxWidth: 'none',
+};
 
 class Form extends Component {
     constructor(props) {
@@ -38,6 +42,7 @@ class Form extends Component {
         const grupo_cups = grupo_cups_seleccionado ? grupo_cups_seleccionado : initialValues ? initialValues.grupo_cups : null;
         return (
             <MyFormTagModal
+                modelStyle={modelStyle}
                 onCancel={() => {
                     onCancel();
                     this.setState({grupo_cups_seleccionado: null, es_especial: false});
@@ -52,9 +57,14 @@ class Form extends Component {
                 element_type={element_type}
             >
                 <MyTextFieldSimple
-                    className="col-12 col-md-8"
+                    className="col-12"
                     nombre='Nombre'
                     name='nombre'
+                    case='U'/>
+                <MyTextFieldSimple
+                    className="col-12 col-md-8"
+                    nombre='Nombre Corto'
+                    name='nombre_corto'
                     case='U'/>
                 <MyTextFieldSimple
                     className="col-12 col-md-4"
@@ -62,80 +72,80 @@ class Form extends Component {
                     name='codigo_cups'
                     case='U'/>
                 <MyTextFieldSimple
-                    className="col-12 col-md-6"
-                    nombre='Nombre Corto'
-                    name='nombre_corto'
-                    case='U'/>
-                <MyTextFieldSimple
-                    className="col-12 col-md-6"
-                    nombre='Técnica'
-                    name='tecnica'
-                    case='U'/>
-                <MyTextFieldSimple
-                    className="col-12 col-md-8"
+                    className="col-12 col-md-8 col-lg-7"
                     nombre='Valor de Referencia'
                     name='valor_referencia'
                     multiLine={true}
                     rows={6}
                     case='U'/>
-                <MyTextFieldSimple
-                    className="col-12 col-md-4"
-                    nombre='Uni. Medida'
-                    name='unidad_medida'
-                    case='U'/>
-                <MyTextFieldSimple
-                    className="col-12 col-md-6"
-                    nombre='Costo Referencia'
-                    name='costo_referencia'
-                    case='U'/>
-                <div className='col-12 col-md-6'>
-                    <Field
-                        fullWidth={true}
-                        name="grupo_cups"
-                        component={SelectField}
-                        hintText="Grupo Cups"
-                        floatingLabelText="Grupo Cups"
-                        onChange={(a, b, c) => this.setState({grupo_cups_seleccionado: b})}
-                    >
-                        {grupos_cups_disponibles.map(grupo => {
-                            return <MenuItem key={grupo.id} value={grupo.id} primaryText={grupo.nombre}/>
-                        })}
-                    </Field>
+                <div className="col-12 col-md-4 col-lg-5">
+                    <div className="row">
+                        <MyTextFieldSimple
+                            className="col-12"
+                            nombre='Uni. Medida'
+                            name='unidad_medida'
+                            case='U'/>
+                        <MyTextFieldSimple
+                            className="col-12"
+                            nombre='Costo Referencia'
+                            name='costo_referencia'
+                            case='U'/>
+                        <MyTextFieldSimple
+                            className="col-12"
+                            nombre='Técnica'
+                            name='tecnica'
+                            case='U'/>
+                    </div>
                 </div>
-                {
-                    grupo_cups &&
-                    <div className='col-12 col-md-6'>
-                        <Field
-                            fullWidth={true}
-                            name="subgrupo_cups"
-                            component={SelectField}
-                            hintText="Subgrupo Cups"
-                            floatingLabelText="Subgrupo Cups"
-                        >
-                            {
-                                grupos_cups[grupo_cups].mis_subgrupos.map(subgrupo => {
-                                    return <MenuItem key={subgrupo.id} value={subgrupo.id}
-                                                     primaryText={subgrupo.nombre}/>
+
+                <div className="col-12">
+                    <div className="row">
+                        <MySelectField
+                            className='col-12 col-md-4'
+                            nombre='Grupo Cups'
+                            name='grupo_cups'
+                            onChange={(a, b, c) => this.setState({grupo_cups_seleccionado: b})}
+                            options={
+                                _.map(grupos_cups_disponibles, e => {
+                                    return {
+                                        value: e.id,
+                                        primaryText: e.nombre
+                                    }
                                 })
                             }
-                        </Field>
+                        />
+
+                        {
+                            grupo_cups &&
+                            <MySelectField
+                                className='col-12 col-md-8'
+                                nombre='Subgrupo Cups'
+                                name='subgrupo_cups'
+                                options={
+                                    grupos_cups[grupo_cups].mis_subgrupos.map(e => {
+                                        return {
+                                            value: e.id,
+                                            primaryText: e.nombre
+                                        }
+                                    })
+                                }
+                            />
+                        }
                     </div>
-                }
+                </div>
                 <MyCheckboxSimple className="col-12" nombre="Multifirma" name='multifirma'/>
                 <MyCheckboxSimple className="col-12" nombre="Especial" name='especial'
                                   onClick={(e) => this.setState({es_especial: e.target.checked})}/>
                 {((initialValues && initialValues.especial) || es_especial) &&
-                <div className='col-md-12'>
-                    <Field
-                        component={SelectField}
-                        hintText="Tipo Plantilla"
-                        floatingLabelText="Tipo Plantilla"
-                        name='nro_plantilla'
-                        case='U'>
-                        <MenuItem value={1} primaryText='Biopsia'/>
-                        <MenuItem value={2} primaryText='Citología'/>
-                    </Field>
-                </div>
+                <MySelectField
+                    className='col-12 col-md-6'
+                    nombre='Tipo Plantilla'
+                    name='nro_plantilla'
+                    options={[
+                        {value: 1, primaryText: 'Biopsia'},
+                        {value: 2, primaryText: 'Citología'}
+                    ]}
+                />
                 }
             </MyFormTagModal>
         )

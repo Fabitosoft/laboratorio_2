@@ -13,7 +13,9 @@ const MenuTerceros = (props) => (
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
             <MenuItem primaryText="Usuarios" containerElement={<Link to='/app/admin/usuarios/list'/>}
             />
-            <MenuItem primaryText="Colaboradores" containerElement={<Link to='/app/admin/colaboradores/list'/>}/>
+
+            <MenuItem primaryText="Pacientes" containerElement={<Link to='/app/admin/pacientes/pacientes/list'/>}
+            />
         </div>
     </li>
 );

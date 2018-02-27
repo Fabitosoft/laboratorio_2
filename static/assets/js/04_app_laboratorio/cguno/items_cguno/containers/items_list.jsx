@@ -83,17 +83,18 @@ class ItemsList extends Component {
         return (
             <ValidarPermisos can_see={can_list} nombre='listas de items CGUno'>
                 <Titulo>Items CGUno</Titulo>
-                <div className="col-12">
-                    <SelectField
-                        floatingLabelText="Tipo Consulta"
-                        value={this.state.tipo_consulta}
-                        onChange={this.handleChangeTipoConsulta}
-                    >
-                        <MenuItem value={1} primaryText="Descripción"/>
-                        <MenuItem value={2} primaryText="ID Cguno"/>
-                        <MenuItem value={3} primaryText="Referencia"/>
-                    </SelectField>
-                </div>
+                <MySelectField
+                    className='col-12 col-md-6'
+                    nombre='Tipo Consulta'
+                    name='tipo_consulta'
+                    value={this.state.tipo_consulta}
+                    options={[
+                        {value: 1, primaryText: 'Descripción'},
+                        {value: 2, primaryText: 'ID CGuno'},
+                        {value: 3, primaryText: 'Referencia'}
+                    ]}
+                />
+
                 <div className="col-12">
                     <ListaBusqueda>
                         {

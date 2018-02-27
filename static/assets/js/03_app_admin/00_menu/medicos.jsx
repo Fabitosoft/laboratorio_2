@@ -20,6 +20,10 @@ const MenuPermisos = (props) => (
                 primaryText="Médicos Remitentes"
                 containerElement={<Link to='/app/admin/medicos/medicos_remitentes/list'/>}
             />
+            <MenuItem
+                primaryText="Especialistas"
+                containerElement={<Link to='/app/admin/medicos/especialistas/list'/>}
+            />
         </div>
     </li>
 

@@ -107,8 +107,15 @@ class UsuariosList extends Component {
                                         handleModalClose();
                                     }}
                                     onSelectItemEdit={(item) => {
-                                        onSelectItem(item);
-                                        handleModalOpen();
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
+                                        this.props.fetchUsuario(item.id, () => {
+                                                onSelectItem(item);
+                                                handleModalOpen();
+                                                noCargando();
+                                            },
+                                            notificarErrorAjaxAction
+                                        )
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                 />

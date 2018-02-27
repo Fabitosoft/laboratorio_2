@@ -63,6 +63,7 @@ export class MyDialogCreate extends Component {
         const {
             element_type,
             is_open,
+            modelStyle
         } = this.props;
         const actions = [];
         return (
@@ -73,6 +74,7 @@ export class MyDialogCreate extends Component {
                     modal={true}
                     open={is_open}
                     autoScrollBodyContent={true}
+                    contentStyle={modelStyle}
                 >
                     {this.props.children}
                 </Dialog>

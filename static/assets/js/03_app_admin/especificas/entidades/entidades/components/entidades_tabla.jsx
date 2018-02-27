@@ -14,6 +14,7 @@ class Tabla extends React.Component {
             onDelete,
             permisos,
             onSelectItemEdit,
+            onCreateEntidadUsuario,
             updateItem,
             element_type
         } = this.props;
@@ -70,6 +71,22 @@ class Tabla extends React.Component {
                         {
                             Header: "Opciones",
                             columns: [
+                                {
+                                    Header: "Username",
+                                    accessor: "usuario_username",
+                                    maxWidth: 150,
+                                    filterable: true,
+                                    filterMethod: (filter, row) => {
+                                        return row[filter.id] ? row[filter.id].includes(filter.value.toLowerCase()) : false
+                                    },
+                                    Cell: row => (
+                                        !row.value ? permisos.change &&
+                                            <span>Crear Usuario <i
+                                                onClick={() => onCreateEntidadUsuario(row.original)}
+                                                className='far fa-plus puntero'></i></span> :
+                                            row.value
+                                    )
+                                },
                                 {
                                     Header: "Elimi.",
                                     show: permisos.delete,

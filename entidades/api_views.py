@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from .models import Entidad, ContactoEntidad, EntidadExamen
@@ -9,7 +9,7 @@ from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, Entid
 
 
 class EntidadViewSet(viewsets.ModelViewSet):
-    queryset = Entidad.objects.all()
+    queryset = Entidad.objects.prefetch_related('usuario').all()
     serializer_class = EntidadSerializer
 
     @list_route(methods=['get'])
@@ -22,6 +22,14 @@ class EntidadViewSet(viewsets.ModelViewSet):
                 Q(nombre__icontains=parametro)
             ).distinct()
         serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def crear_usuario(self, request, pk=None):
+        entidad = self.get_object()
+        if (not entidad.usuario):
+            entidad.create_user()
+        serializer = self.get_serializer(entidad)
         return Response(serializer.data)
 
 

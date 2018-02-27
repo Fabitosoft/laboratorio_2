@@ -74,10 +74,12 @@ class BloqueTab extends Component {
                                         handleModalClose();
                                     }}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchEspecialidad(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

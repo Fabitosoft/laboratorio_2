@@ -7,3 +7,4 @@ export * from './medicos/medicosRemitentesAction';
 export * from './entidades/entidadesAction';
 export * from './entidades/contactosEntidadesAction';
 export * from './entidades/entidadesExamenesAction';
+export * from './pacientes/pacientesAction';

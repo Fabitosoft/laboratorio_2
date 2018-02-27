@@ -3,7 +3,7 @@ import Tabla from './entidad_examenes_tabla';
 import CreateForm from './forms/entidad_examenes_form';
 import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
 import {
-    GRUPOS_CUPS as permisos_view,
+    ENTIDADES_EXAMENES as permisos_view,
 } from "../../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 
@@ -82,10 +82,12 @@ class BloqueTab extends Component {
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchEntidadExamen(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

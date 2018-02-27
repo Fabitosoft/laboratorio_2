@@ -8,37 +8,14 @@ import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permis
 import {permisosAdapter} from "../../../../../00_utilities/common";
 import {ESPECIALIDADES as especialidades_permisos} from "../../../../../00_utilities/permisos/types";
 
-const styles = {
-    headline: {
-        fontSize: 24,
-        paddingTop: 16,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
-    slide: {
-        padding: 10,
-    },
-};
-
 
 class ListadoElementos extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            slideIndex: 0,
-        };
-        this.elemento_plural = 'Examenes';
-        this.elemento_singular = 'Examen';
         this.cargarDatos = this.cargarDatos.bind(this);
         this.error_callback = this.error_callback.bind(this);
 
     }
-
-    handleChange = (value) => {
-        this.setState({
-            slideIndex: value,
-        });
-    };
 
     componentDidMount() {
         this.cargarDatos();
@@ -47,7 +24,6 @@ class ListadoElementos extends Component {
     error_callback(error) {
         this.props.notificarErrorAjaxAction(error);
     }
-
 
     componentWillUnmount() {
         this.props.clearEspecialidades();
@@ -63,7 +39,7 @@ class ListadoElementos extends Component {
         const {especialidades_list, mis_permisos} = this.props;
         const permisos = permisosAdapter(mis_permisos, especialidades_permisos);
         return (
-            <ValidarPermisos can_see={permisos.list} nombre='Examenes'>
+            <ValidarPermisos can_see={permisos.list} nombre='Especialidades'>
                 <Titulo>{`Especialidades`}</Titulo>
                 <BloqueTabEspecialidades {...this.props} list={especialidades_list} mis_permisos={mis_permisos}/>
                 <CargarDatos
@@ -78,7 +54,6 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         especialidades_list: state.especialidades
-
     }
 }
 

@@ -57,12 +57,14 @@ class EntidadExamenSerializer(serializers.ModelSerializer):
 class EntidadSerializer(serializers.ModelSerializer):
     mis_examenes = EntidadExamenSerializer(read_only=True, many=True)
     mis_contactos = ContactoEntidadSerializer(read_only=True, many=True)
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
 
     class Meta:
         model = Entidad
         fields = [
             'id',
             'nombre',
+            'usuario_username',
             'nit',
             'mis_examenes',
             'direccion',

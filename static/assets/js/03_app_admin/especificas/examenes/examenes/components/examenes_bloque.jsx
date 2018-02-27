@@ -78,10 +78,12 @@ class BloqueTab extends Component {
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchExamen(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

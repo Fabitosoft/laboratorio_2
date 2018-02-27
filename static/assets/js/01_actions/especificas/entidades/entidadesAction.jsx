@@ -12,6 +12,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
+    callApiMethod,
     callApiMethodWithParameters
 } from '../../00_general_fuctions'
 
@@ -62,3 +63,12 @@ export const updateEntidad = (id, values, callback = null, callback_error = null
         updateObject(current_url_api, id, values, dispatches, callback, callback_error)
     }
 };
+
+export function createEntidadUsuario(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ENTIDAD, payload: response})
+        };
+        callApiMethod(current_url_api, id, 'crear_usuario', dispatches, callback, callback_error);
+    }
+}

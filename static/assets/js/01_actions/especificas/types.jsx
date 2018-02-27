@@ -53,16 +53,23 @@ export const FETCH_ENTIDAD = 'fetch_entidad';
 export const CLEAR_ENTIDADES = 'clear_entidades';
 export const UPDATE_ENTIDAD = 'update_entidad';
 
-export const CREATE_CONTACTO_ENTIDAD='create_contacto_entidad';
-export const DELETE_CONTACTO_ENTIDAD='delete_contacto_entidad';
-export const FETCH_CONTACTOS_ENTIDADES='fetch_contactos_entidades';
-export const FETCH_CONTACTO_ENTIDAD='fetch_contacto_entidad';
-export const CLEAR_CONTACTOS_ENTIDADES='clear_contactos_entidades';
-export const UPDATE_CONTACTO_ENTIDAD='update_contacto_entidad';
+export const CREATE_CONTACTO_ENTIDAD = 'create_contacto_entidad';
+export const DELETE_CONTACTO_ENTIDAD = 'delete_contacto_entidad';
+export const FETCH_CONTACTOS_ENTIDADES = 'fetch_contactos_entidades';
+export const FETCH_CONTACTO_ENTIDAD = 'fetch_contacto_entidad';
+export const CLEAR_CONTACTOS_ENTIDADES = 'clear_contactos_entidades';
+export const UPDATE_CONTACTO_ENTIDAD = 'update_contacto_entidad';
 
-export const CREATE_ENTIDAD_EXAMEN='create_entidad_examen';
-export const DELETE_ENTIDAD_EXAMEN='delete_entidad_examen';
-export const FETCH_ENTIDADES_EXAMENES='fetch_entidades_examenes';
-export const FETCH_ENTIDAD_EXAMEN='fetch_entidad_examen';
-export const CLEAR_ENTIDADES_EXAMENES='clear_entidades_examenes';
-export const UPDATE_ENTIDAD_EXAMEN='update_entidad_examen';
+export const CREATE_ENTIDAD_EXAMEN = 'create_entidad_examen';
+export const DELETE_ENTIDAD_EXAMEN = 'delete_entidad_examen';
+export const FETCH_ENTIDADES_EXAMENES = 'fetch_entidades_examenes';
+export const FETCH_ENTIDAD_EXAMEN = 'fetch_entidad_examen';
+export const CLEAR_ENTIDADES_EXAMENES = 'clear_entidades_examenes';
+export const UPDATE_ENTIDAD_EXAMEN = 'update_entidad_examen';
+
+export const CREATE_PACIENTE = 'create_paciente';
+export const DELETE_PACIENTE = 'delete_paciente';
+export const FETCH_PACIENTES = 'fetch_pacientes';
+export const FETCH_PACIENTE = 'fetch_paciente';
+export const CLEAR_PACIENTES = 'clear_pacientes';
+export const UPDATE_PACIENTE = 'update_paciente';

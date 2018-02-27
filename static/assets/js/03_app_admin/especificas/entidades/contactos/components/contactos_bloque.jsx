@@ -3,7 +3,7 @@ import Tabla from './contactos_tabla';
 import CreateForm from './forms/contactos_form';
 import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
 import {
-    GRUPOS_CUPS as permisos_view,
+    CONTACTOS_ENTIDADES as permisos_view,
 } from "../../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 
@@ -81,10 +81,12 @@ class BloqueTab extends Component {
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchContactoEntidad(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

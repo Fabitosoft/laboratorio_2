@@ -3,10 +3,10 @@ import {connect} from "react-redux";
 import * as actions from "../../../../../01_actions/01_index";
 import CargarDatos from "../../../../../00_utilities/components/system/cargar_datos";
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
-import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../../00_utilities/templates/fragmentos";
+import {Titulo, SinObjeto} from "../../../../../00_utilities/templates/fragmentos";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 import {
-    USUARIOS as permisos_view
+    ENTIDADES as permisos_view
 } from "../../../../../00_utilities/permisos/types";
 
 import BloqueContactos from '../../../entidades/contactos/components/contactos_bloque';
@@ -115,14 +115,18 @@ class EntidadDetail extends Component {
                 >
                     <div style={styles.slide}>
                         <h2 style={styles.headline}>Contactos</h2>
-                        <BloqueContactos list={entidad.mis_contactos} mis_permisos={mis_permisos} {...this.props}/>
+                        <BloqueContactos
+                            list={entidad.mis_contactos}
+                            mis_permisos={mis_permisos} {...this.props}
+                        />
                     </div>
                     <div style={styles.slide}>
                         <h2 style={styles.headline}>Examenes</h2>
                         <BloqueEntidadExamenes list={entidad.mis_examenes}
                                                examenes_list={examenes}
                                                mis_permisos={mis_permisos}
-                                               {...this.props}/>
+                                               {...this.props}
+                        />
                     </div>
                 </SwipeableViews>
                 <CargarDatos cargarDatos={this.cargarDatos}/>

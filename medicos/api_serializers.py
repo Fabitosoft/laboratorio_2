@@ -91,7 +91,7 @@ class EspecialistaSerializer(serializers.ModelSerializer):
 
         first_name = '%s %s'.strip() % (nombre, nombre_segundo)
         last_name = '%s %s'.strip() % (apellido, apellido_segundo)
-        username = 'e-%s%s%s' % (nombre[0:3], apellido[0:3], apellido_segundo[0:3])
+        username = 'es-%s%s%s' % (nombre[0:3], apellido[0:3], apellido_segundo[0:3])
 
         if User.objects.filter(username__contains=username).exists():
             username = '%s%s' % (username, User.objects.filter(username__contains=username).count())

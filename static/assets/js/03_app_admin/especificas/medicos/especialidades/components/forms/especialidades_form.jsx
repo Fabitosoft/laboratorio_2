@@ -4,22 +4,7 @@ import {MyTextFieldSimple, MyCheckboxSimple} from '../../../../../../00_utilitie
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-import {
-    SelectField
-} from 'redux-form-material-ui'
-import {Field} from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
-
-
 class Form extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            grupo_cups_seleccionado: null,
-            es_especial: false
-        });
-    }
-
     render() {
         const {
             pristine,
@@ -32,12 +17,10 @@ class Form extends Component {
             modal_open,
             element_type
         } = this.props;
-        const {grupo_cups_seleccionado} = this.state;
         return (
             <MyFormTagModal
                 onCancel={() => {
                     onCancel();
-                    this.setState({grupo_cups_seleccionado: null, es_especial: false});
                     reset()
                 }}
                 onSubmit={handleSubmit(onSubmit)}

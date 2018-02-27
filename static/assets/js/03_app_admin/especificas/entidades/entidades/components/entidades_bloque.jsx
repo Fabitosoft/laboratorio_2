@@ -3,7 +3,7 @@ import Tabla from './entidades_tabla';
 import CreateForm from './forms/entidades_form';
 import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
 import {
-    ENTIDADES as permisos_view,
+    ENTIDADES as permisos_view
 } from "../../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 
@@ -12,6 +12,7 @@ class BloqueTab extends Component {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onCreateEntidadUsuario = this.onCreateEntidadUsuario.bind(this);
     }
 
     onDelete(item, tipo) {
@@ -38,6 +39,17 @@ class BloqueTab extends Component {
         } else {
             this.props.createEntidad(item, success_callback, notificarErrorAjaxAction);
         }
+    }
+
+    onCreateEntidadUsuario(item, tipo) {
+        const nombre = item.nombre;
+        const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        cargando();
+        const success_callback = () => {
+            notificarAction(`Se ha creado con éxito el usuario para ${tipo.toLowerCase()} ${nombre}`);
+            noCargando();
+        };
+        this.props.createEntidadUsuario(item.id, success_callback, notificarErrorAjaxAction)
     }
 
     render() {
@@ -68,6 +80,9 @@ class BloqueTab extends Component {
                                 <Tabla
                                     data={_.map(list, e => e)}
                                     permisos={permisos}
+                                    onCreateEntidadUsuario={(item) => {
+                                        this.onCreateEntidadUsuario(item, list_manager_state.singular_name)
+                                    }}
                                     element_type={`${list_manager_state.singular_name}`}
                                     onDelete={(item) => {
                                         this.onDelete(item, list_manager_state.singular_name);
@@ -75,10 +90,12 @@ class BloqueTab extends Component {
                                     }}
                                     updateItem={(item) => this.onSubmit(item, list_manager_state.singular_name)}
                                     onSelectItemEdit={(item) => {
-                                        const {notificarErrorAjaxAction} = this.props;
+                                        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+                                        cargando();
                                         this.props.fetchEntidad(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
+                                                noCargando();
                                             },
                                             notificarErrorAjaxAction
                                         )

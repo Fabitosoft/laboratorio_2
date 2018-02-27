@@ -18,6 +18,10 @@ import MedicosRemitentesList from "./especificas/medicos/medicos_remitentes/cont
 import EntidadesList from "./especificas/entidades/entidades/containers/entidades_list";
 import EntidadesDetail from "./especificas/entidades/entidades/containers/entidad_detail";
 
+
+import PacientesList from "./especificas/pacientes/pacientes/containers/pacientes_list";
+import EspecialistasList from "./especificas/medicos/especialistas/containers/especialistas_list";
+
 const AdminApp = (props) => {
     return (
         <Loading>
@@ -40,6 +44,10 @@ const AdminApp = (props) => {
                                component={EntidadesList}/>
                         <Route exact path='/app/admin/entidades/entidades/detail/:id'
                                component={EntidadesDetail}/>
+                        <Route exact path='/app/admin/pacientes/pacientes/list'
+                               component={PacientesList}/>
+                        <Route exact path='/app/admin/medicos/especialistas/list'
+                               component={EspecialistasList}/>
                     </Switch>
                 </div>
             </Fragment>

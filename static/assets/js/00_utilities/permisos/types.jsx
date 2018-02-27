@@ -95,3 +95,11 @@ export const ENTIDADES_EXAMENES = {
     list: 'list_entidadexamen',
     detail: 'detail_entidadexamen',
 };
+
+export const PACIENTES = {
+    add: 'add_paciente',
+    delete: 'delete_paciente',
+    change: 'change_paciente',
+    list: 'list_paciente',
+    detail: 'detail_paciente',
+};
