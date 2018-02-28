@@ -63,12 +63,12 @@ export function fetchObject(url, id, dispatches = null, callback = null, callbac
     );
 }
 
-export function updateObject(url, id, values, dispatches = null, callback = null, callback_error = null) {
+export function updateObject(url, id, values, dispatches = null, callback = null, callback_error = null, config = null) {
     console.log(`entro nuevo update object para ${url} con id ${id}`);
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/`;
-    const request = axios_instance.put(FULL_URL, values);
+    const request = axios_instance.put(FULL_URL, values, config);
     createRequest(
         request,
         dispatches,

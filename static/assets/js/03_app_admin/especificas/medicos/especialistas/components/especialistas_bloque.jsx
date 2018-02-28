@@ -3,7 +3,8 @@ import Tabla from './especialistas_tabla';
 import CreateForm from './forms/especialistas_form';
 import ListManager from "../../../../../00_utilities/components/CRUDTableManager";
 import {
-    ESPECIALIDADES as permisos_view,
+    ESPECIALISTAS as permisos_view,
+    USUARIOS as permisos_view_usuarios
 } from "../../../../../00_utilities/permisos/types";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 
@@ -12,21 +13,22 @@ class BloqueTab extends Component {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onChangeFirma = this.onChangeFirma.bind(this);
     }
 
     onDelete(item, tipo) {
-        const nombre = item.nombre;
+        const nombre = item.full_name;
         const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
         const success_callback = () => {
             noCargando();
             notificarAction(`Se ha eliminado con éxito ${tipo.toLowerCase()} ${nombre}`)
         };
         cargando();
-        this.props.deletePaciente(item.id, success_callback, notificarErrorAjaxAction)
+        this.props.deleteEspecialista(item.id, success_callback, notificarErrorAjaxAction)
     }
 
     onSubmit(item, tipo) {
-        const nombre = item.nombre;
+        const nombre = item.full_name;
         const {cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
         const success_callback = () => {
             notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${tipo.toLowerCase()} ${nombre}`);
@@ -34,15 +36,40 @@ class BloqueTab extends Component {
         };
         cargando();
         if (item.id) {
-            this.props.updatePaciente(item.id, item, success_callback, notificarErrorAjaxAction);
+            this.props.updateEspecialista(item.id, item, success_callback, notificarErrorAjaxAction);
         } else {
-            this.props.createPaciente(item, success_callback, notificarErrorAjaxAction);
+            this.props.createEspecialista(item, success_callback, notificarErrorAjaxAction);
+        }
+    }
+
+    onChangeFirma(e, item) {
+        const {notificarAction, notificarErrorAjaxAction} = this.props;
+        const error_callback = (error) => {
+            notificarErrorAjaxAction(error);
+        };
+        const file = e.target.files[0];
+        if (file) {
+            let formData = new FormData();
+            formData.append('firma', file);
+            this.props.updateEspecialista(
+                item.id,
+                formData,
+                (especialista) => {
+                    this.props.fetchEspecialista(
+                        especialista.id,
+                        () => notificarAction(`La firma se ha cambiado para ${item.full_name}`),
+                        notificarErrorAjaxAction
+                    )
+                },
+                error_callback
+            )
         }
     }
 
     render() {
         const {list, mis_permisos, especialidades_list} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_usuario = permisosAdapter(mis_permisos, permisos_view_usuarios);
         return (
             <ListManager permisos={permisos} singular_name='especialista' plural_name='especialistas'>
                 {
@@ -68,6 +95,11 @@ class BloqueTab extends Component {
                                     element_type={`${list_manager_state.singular_name}`}
                                 />
                                 <Tabla
+                                    onChangeFirma={this.onChangeFirma}
+                                    updateItem={
+                                        (item) => this.onSubmit(item, list_manager_state.singular_name)
+                                    }
+                                    can_make_user_active={permisos_usuario.make_user_active}
                                     data={_.map(list, e => e)}
                                     permisos={permisos}
                                     element_type={`${list_manager_state.singular_name}`}
@@ -78,7 +110,7 @@ class BloqueTab extends Component {
                                     onSelectItemEdit={(item) => {
                                         const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
                                         cargando();
-                                        this.props.fetchPaciente(item.id, () => {
+                                        this.props.fetchEspecialista(item.id, () => {
                                                 onSelectItem(item);
                                                 handleModalOpen();
                                                 noCargando();

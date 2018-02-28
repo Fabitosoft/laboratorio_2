@@ -6,7 +6,9 @@ import {Titulo} from "../../../../../00_utilities/templates/fragmentos";
 import BloqueEspecialistas from '../components/especialistas_bloque';
 import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../../00_utilities/common";
-import {ESPECIALIDADES as permisos_view} from "../../../../../00_utilities/permisos/types";
+import {
+    ESPECIALISTAS as permisos_view
+} from "../../../../../00_utilities/permisos/types";
 
 class ListadoElementos extends Component {
     constructor(props) {
@@ -31,7 +33,8 @@ class ListadoElementos extends Component {
 
     cargarDatos() {
         this.props.cargando();
-        const cargarEspecialistas = () => this.props.fetchEspecialistas(() => this.props.noCargando(), this.error_callback);
+        const cargarEspecialidades = () => this.props.fetchEspecialidades(() => this.props.noCargando(), this.error_callback);
+        const cargarEspecialistas = () => this.props.fetchEspecialistas(cargarEspecialidades, this.error_callback);
         this.props.fetchMisPermisos(cargarEspecialistas, this.error_callback)
     }
 

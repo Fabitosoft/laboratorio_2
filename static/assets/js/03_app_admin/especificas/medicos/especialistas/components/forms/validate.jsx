@@ -4,11 +4,15 @@ const validate = values => {
     const errors = {};
     const requiredFields = [
         'nombre',
-        'apellido',
+        'apellidos',
         'grupo_sanguineo',
+        'especialidad',
         'tipo_documento',
         'nro_identificacion',
         'genero',
+        'fecha_nacimiento',
+        'universidad',
+        'registro_profesional',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

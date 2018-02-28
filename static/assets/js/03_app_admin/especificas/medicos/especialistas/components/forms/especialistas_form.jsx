@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {reduxForm, reset} from 'redux-form';
-import {MyTextFieldSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple, MySelectField} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -29,8 +29,6 @@ class Form extends Component {
             setSelectItem,
             especialidades_list
         } = this.props;
-
-        console.log(especialidades_list);
         return (
             <MyFormTagModal
                 modelStyle={modelStyle}
@@ -45,6 +43,7 @@ class Form extends Component {
                 modal_open={modal_open}
                 pristine={pristine}
                 element_type={element_type}
+                especialidades_list={especialidades_list}
             >
                 <LectorCedula setSelectItem={setSelectItem}>
                     <CedulaForm/>
@@ -67,6 +66,25 @@ class Form extends Component {
                         className='col-12 col-md-6 col-xl-6'
                         nombre='Teléfono 2'
                         name='telefono_2'
+                    />
+                    <MySelectField
+                        nombre='Especialidad'
+                        name='especialidad'
+                        options={_.map(especialidades_list, e => {
+                            return {value: e.id, primaryText: e.nombre}
+                        })}
+                        className='col-12'
+                    />
+                    <MyTextFieldSimple
+                        className='col-12 col-md-6 col-xl-6'
+                        nombre='Universidad'
+                        name='universidad'
+                        case='U'
+                    />
+                    <MyTextFieldSimple
+                        className='col-12 col-md-6 col-xl-6'
+                        nombre='Nro. Registro Profesional'
+                        name='registro_profesional'
                     />
                 </LectorCedula>
             </MyFormTagModal>

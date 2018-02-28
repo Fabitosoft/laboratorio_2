@@ -23,6 +23,7 @@ config.output.path = path.resolve(__dirname, './static/assets/bundles/deve/');
 config.plugins = config.plugins.concat([
     new BundleTracker({filename: './webpack-stats.json'}),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new ExtractTextPlugin('webpack-style.css'),
     new webpack.NamedModulesPlugin(),
 ]);

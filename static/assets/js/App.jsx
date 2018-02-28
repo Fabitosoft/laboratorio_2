@@ -23,14 +23,12 @@ const store = configureStore();
 
 function configureStore() {
     const store = createStoreWithMiddleware(reducers);
-    if (process.env.NODE_ENV !== "production") {
-        if (module.hot) {
-            // Enable Webpack hot module replacement for reducers
-            module.hot.accept('./02_reducers', () => {
-                const nextRootReducer = require('./02_reducers/index').default;
-                store.replaceReducer(nextRootReducer);
-            });
-        }
+    if (module.hot) {
+        // Enable Webpack hot module replacement for reducers
+        module.hot.accept('./02_reducers', () => {
+            const nextRootReducer = require('./02_reducers/index').default;
+            store.replaceReducer(nextRootReducer);
+        });
     }
     return store;
 }

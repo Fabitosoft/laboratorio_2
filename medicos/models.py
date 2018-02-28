@@ -42,6 +42,10 @@ class MedicoRemitente(TimeStampedModel):
 
 
 class Especialista(TimeStampedModel):
+    def firma_upload_to(instance, filename):
+        nombre_especialista = instance.full_name
+        return "especialistas/firmas/%s.%s" % (nombre_especialista, filename.split('.')[1])
+
     CHOICES_TIPO_DOCUMENTO = (
         ('CC', 'Cédula Ciudadanía'),
         ('CE', 'Cédula Extrangería'),
@@ -73,8 +77,15 @@ class Especialista(TimeStampedModel):
         format='PNG',
         options={'quality': 100},
         null=True,
-        blank=True
+        blank=True,
+        upload_to=firma_upload_to
     )
+
+    class Meta:
+        permissions = (
+            ('list_especialista', 'Can list especialistas'),
+            ('detail_especialista', 'Can detail especialista'),
+        )
 
     @staticmethod
     def existe_documento(tipo_documento: str, nro_identificacion: str) -> bool:
