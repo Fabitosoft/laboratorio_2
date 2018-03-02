@@ -2,16 +2,15 @@ import {REGEX_SOLO_NUMEROS_DINERO} from "../../../../../../00_utilities/common";
 
 const validate = values => {
     const errors = {};
+
     const requiredFields = [
         'nombre',
-        'codigo_cups',
-        'tecnica',
-        'unidad_medida',
-        'valor_referencia',
-        'grupo_cups',
-        'nro_plantilla',
         'subgrupo_cups',
         'costo_referencia',
+        'unidad_medida',
+        'codigo_cups',
+        'grupo_cups',
+        'nro_plantilla',
     ];
     requiredFields.map(field => {
         if (!values[field]) {
@@ -19,8 +18,10 @@ const validate = values => {
         }
     });
 
-    if (!REGEX_SOLO_NUMEROS_DINERO.test(values.costo_referencia)) {
-        errors.costo_referencia = `Este campo debe de ser sólo unidades monetarias`;
+    if (values.costo_referencia && values.costo_referencia < 0) {
+        errors.costo_referencia = `Debe ser un número mayor a 0`;
+    } else if (!REGEX_SOLO_NUMEROS_DINERO.test(values.costo_referencia)) {
+        errors.costo_referencia = `Debe ser un valor`;
     }
     return errors;
 };

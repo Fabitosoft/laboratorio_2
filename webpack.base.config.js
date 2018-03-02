@@ -6,7 +6,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, './static/assets/bundles/'),
-        filename: "[name].js"
+        filename: "app_laboratorio.js"
     },
     plugins: [],
     module: {
@@ -14,9 +14,6 @@ module.exports = {
             {
                 test: /\.jsx$/,
                 loader: 'babel-loader',
-                options: {
-                    presets: ['env']
-                },
                 exclude: '/node_modules/'
             },
             {

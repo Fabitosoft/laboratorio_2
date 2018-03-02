@@ -14,6 +14,7 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
+import './../../css/custom.css';
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -35,6 +36,7 @@ function configureStore() {
 
 import AppIndex from './IndexApp';
 import AppAdmin from './03_app_admin/App';
+import AppLaboratorio from './04_app_laboratorio/App';
 
 const App = () => {
     return (
@@ -47,6 +49,7 @@ const App = () => {
                             <Route exact path='/' component={AppIndex}/>
                             <Route exact path='/app' component={AppIndex}/>
                             <Route path='/app/admin' component={AppAdmin}/>
+                            <Route path='/app/laboratorio' component={AppLaboratorio}/>
                         </Switch>
                     </Fragment>
                 </BrowserRouter>

@@ -7,15 +7,15 @@ import Menu from './00_menu/index';
 import App1 from "./index";
 import PermisosList from "./generales/permisos/containers/permisos_list";
 import GruposPermisosList from "./generales/permisos/containers/grupos_permisos_list";
-import UsuariosList from "./generales/usuarios/containers/usuarios_list";
-import UsuariosDetail from "./generales/usuarios/containers/usuarios_detail";
+import UsuariosList from "./generales/usuarios/usuarios/containers/usuarios_list_container";
+import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_detail";
 
-import DashboardExamenes from "./especificas/examenes/dashboard/containers/dashboar_examenes";
+import DashboardExamenes from "./especificas/examenes/dashboard/containers/examenes_dashboard";
 
 import EspecialidadesList from "./especificas/medicos/especialidades/containers/especialidades_list";
 import MedicosRemitentesList from "./especificas/medicos/medicos_remitentes/containers/medicos_remitentes_list";
 
-import EntidadesList from "./especificas/entidades/entidades/containers/entidades_list";
+import EntidadesList from "./especificas/entidades/entidades/containers/entidades_list_container";
 import EntidadesDetail from "./especificas/entidades/entidades/containers/entidad_detail";
 
 

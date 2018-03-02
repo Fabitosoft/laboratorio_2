@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.local.config');
+var config = require('./webpack.local.config.hl');
 
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
@@ -9,8 +9,8 @@ new WebpackDevServer(webpack(config), {
     historyApiFallback: true,
     headers: {
         'Access-Control-Allow-Origin': '*',
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*"
     },
     watchOptions: {
         aggregateTimeout: 300,

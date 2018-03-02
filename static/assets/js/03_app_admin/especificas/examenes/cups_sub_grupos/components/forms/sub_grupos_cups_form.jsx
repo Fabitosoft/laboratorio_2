@@ -1,9 +1,10 @@
-import React, {Component, Fragment} from 'react';
-import {reduxForm, reset} from 'redux-form';
+import React, {Component} from 'react';
+import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple, MySelectField} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
+
 
 class Form extends Component {
     render() {
@@ -14,24 +15,21 @@ class Form extends Component {
             initialValues,
             onSubmit,
             onCancel,
-            grupos_cups_list,
             handleSubmit,
             modal_open,
-            element_type
+            singular_name,
+            grupos_cups_list,
         } = this.props;
         return (
             <MyFormTagModal
-                onCancel={() => {
-                    onCancel();
-                    reset()
-                }}
+                onCancel={onCancel}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
                 modal_open={modal_open}
                 pristine={pristine}
-                element_type={element_type}
+                element_type={singular_name}
             >
                 <MySelectField
                     className='col-12'
@@ -48,7 +46,7 @@ class Form extends Component {
                 />
                 <MyTextFieldSimple
                     className="col-12"
-                    nombre='Nombre de Grupo'
+                    nombre='Nombre de Sub Grupo'
                     name='nombre'
                     case='U'/>
                 <MyTextFieldSimple
@@ -68,14 +66,8 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
-const afterSubmit = (result, dispatch) => {
-    dispatch(reset('subGrupoCupsForm'));
-};
-
-
 Form = reduxForm({
     form: "subGrupoCupsForm",
-    onSubmitSuccess: afterSubmit,
     validate,
     enableReinitialize: true
 })(Form);

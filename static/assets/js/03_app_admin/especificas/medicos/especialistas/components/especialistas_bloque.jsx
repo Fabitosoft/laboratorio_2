@@ -80,20 +80,23 @@ class BloqueTab extends Component {
                      handleModalClose) => {
                         return (
                             <Fragment>
-                                <CreateForm
-                                    setSelectItem={onSelectItem}
-                                    especialidades_list={especialidades_list}
-                                    onCancel={onCancel}
-                                    item_seleccionado={list_manager_state.item_seleccionado}
-                                    onSubmit={
-                                        (item) => {
-                                            this.onSubmit(item, list_manager_state.singular_name);
-                                            handleModalClose();
+                                {
+                                    list_manager_state.modal_open &&
+                                    <CreateForm
+                                        setSelectItem={onSelectItem}
+                                        especialidades_list={especialidades_list}
+                                        onCancel={onCancel}
+                                        item_seleccionado={list_manager_state.item_seleccionado}
+                                        onSubmit={
+                                            (item) => {
+                                                this.onSubmit(item, list_manager_state.singular_name);
+                                                handleModalClose();
+                                            }
                                         }
-                                    }
-                                    modal_open={list_manager_state.modal_open}
-                                    element_type={`${list_manager_state.singular_name}`}
-                                />
+                                        modal_open={list_manager_state.modal_open}
+                                        element_type={`${list_manager_state.singular_name}`}
+                                    />
+                                }
                                 <Tabla
                                     onChangeFirma={this.onChangeFirma}
                                     updateItem={

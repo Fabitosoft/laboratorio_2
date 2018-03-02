@@ -6,11 +6,13 @@ import ValidarPermisos from "../../../../../00_utilities/permisos/validar_permis
 import {Titulo, SinObjeto} from "../../../../../00_utilities/templates/fragmentos";
 import {permisosAdapter} from "../../../../../00_utilities/common";
 import {
-    ENTIDADES as permisos_view
+    ENTIDADES as permisos_view,
+    CONTACTOS_ENTIDADES as bloque_1_permisos,
+    ENTIDADES_EXAMENES as bloque_2_permisos
 } from "../../../../../00_utilities/permisos/types";
 
-import BloqueContactos from '../../../entidades/contactos/components/contactos_bloque';
-import BloqueEntidadExamenes from '../../../entidades/examenes/components/entidad_examenes_bloque';
+import BloqueContactos from '../../contactos/components/contacto_entidad_list';
+import BloqueEntidadExamenes from '../../examenes/components/entidad_examenes_list';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
@@ -36,8 +38,6 @@ class EntidadDetail extends Component {
         this.cargarDatos = this.cargarDatos.bind(this);
         this.error_callback = this.error_callback.bind(this);
         this.notificar = this.notificar.bind(this);
-        this.actualizarPermiso = this.actualizarPermiso.bind(this);
-        this.actualizarGrupo = this.actualizarGrupo.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -75,25 +75,11 @@ class EntidadDetail extends Component {
 
     }
 
-    actualizarPermiso(permiso) {
-        const {id} = this.props.match.params;
-        const {cargando, noCargando} = this.props;
-        cargando();
-        const CargarPermisosUsuario = () => this.props.fetchOtroUsuarioPermisos(id, () => noCargando(), this.error_callback);
-        this.props.addPermisoUsuario(id, permiso.id, CargarPermisosUsuario, this.error_callback)
-    }
-
-    actualizarGrupo(grupo) {
-        const {id} = this.props.match.params;
-        const {cargando, noCargando} = this.props;
-        cargando();
-        const CargarUsuario = () => this.props.fetchUsuario(id, () => noCargando(), this.error_callback);
-        this.props.addGrupoUsuario(id, grupo.id, CargarUsuario, this.error_callback)
-    }
-
     render() {
         const {entidad, mis_permisos, examenes} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+        const permisos_bloque_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
+        const permisos_bloque_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
 
         if (!entidad) {
             return <SinObjeto/>
@@ -114,18 +100,18 @@ class EntidadDetail extends Component {
                     onChangeIndex={this.handleChange}
                 >
                     <div style={styles.slide}>
-                        <h2 style={styles.headline}>Contactos</h2>
                         <BloqueContactos
-                            list={entidad.mis_contactos}
-                            mis_permisos={mis_permisos} {...this.props}
+                            object_list={entidad.mis_contactos}
+                            permisos_object={permisos_bloque_1}
+                            {...this.props}
                         />
                     </div>
                     <div style={styles.slide}>
-                        <h2 style={styles.headline}>Examenes</h2>
-                        <BloqueEntidadExamenes list={entidad.mis_examenes}
-                                               examenes_list={examenes}
-                                               mis_permisos={mis_permisos}
-                                               {...this.props}
+                        <BloqueEntidadExamenes
+                            permisos_object={permisos_bloque_2}
+                            object_list={entidad.mis_examenes}
+                            examenes_list={examenes}
+                            {...this.props}
                         />
                     </div>
                 </SwipeableViews>

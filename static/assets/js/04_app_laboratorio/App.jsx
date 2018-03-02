@@ -4,7 +4,6 @@ import Loading from '../00_utilities/components/system/loading_overlay';
 
 import Menu from './00_menu/index';
 import AppIndex from './index';
-import ItemsCGunoList from './cguno/items_cguno/containers/items_list';
 
 const App = (props) => {
     return (
@@ -13,8 +12,7 @@ const App = (props) => {
                 <Menu/>
                 <div className="p-3">
                     <Switch>
-                        <Route exact path='/app/proyectos/' component={AppIndex}/>
-                        <Route exact path='/app/proyectos/items/list' component={ItemsCGunoList}/>
+                        <Route exact path='/app/laboratorio/' component={AppIndex}/>
                     </Switch>
                 </div>
             </Fragment>

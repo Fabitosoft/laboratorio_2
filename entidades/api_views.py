@@ -9,7 +9,7 @@ from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, Entid
 
 
 class EntidadViewSet(viewsets.ModelViewSet):
-    queryset = Entidad.objects.prefetch_related('usuario').all()
+    queryset = Entidad.objects.prefetch_related('usuario','mis_examenes','mis_contactos', 'mis_examenes__examen').all()
     serializer_class = EntidadSerializer
 
     @list_route(methods=['get'])

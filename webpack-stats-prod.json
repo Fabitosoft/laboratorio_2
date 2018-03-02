@@ -1,1 +1,1 @@
-{"status":"error","error":"Error","message":"app-5a3945f134a9c10d9057.js from UglifyJs\nUnexpected token: name (timeoutDuration) [app-5a3945f134a9c10d9057.js:83203,4]"}
+{"status":"done","chunks":{"app":[{"name":"app-42b77c84e4bca8f84d91.js","path":"/Users/fabioandresgarciasanchez/PycharmProjects/laboratorio_2/static/assets/bundles/dist/app-42b77c84e4bca8f84d91.js"},{"name":"webpack-style-42b77c84e4bca8f84d91.css","path":"/Users/fabioandresgarciasanchez/PycharmProjects/laboratorio_2/static/assets/bundles/dist/webpack-style-42b77c84e4bca8f84d91.css"}]}}
