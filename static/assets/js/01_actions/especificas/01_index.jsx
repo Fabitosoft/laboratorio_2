@@ -8,3 +8,5 @@ export * from './entidades/entidadesAction';
 export * from './entidades/contactosEntidadesAction';
 export * from './entidades/entidadesExamenesAction';
 export * from './pacientes/pacientesAction';
+export * from './ordenes/ordenesAction';
+export * from './ordenes/ordenExamenAction';

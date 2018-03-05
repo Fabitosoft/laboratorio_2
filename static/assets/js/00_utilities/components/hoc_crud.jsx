@@ -14,6 +14,7 @@ function crudHOC(CreateForm, Tabla) {
             this.onSubmit = this.onSubmit.bind(this);
             this.onDelete = this.onDelete.bind(this);
             this.onSelectItemEdit = this.onSelectItemEdit.bind(this);
+            this.setSelectItem = this.setSelectItem.bind(this);
         }
 
         onDelete(item) {
@@ -53,6 +54,10 @@ function crudHOC(CreateForm, Tabla) {
             );
         }
 
+        setSelectItem(item_seleccionado) {
+            this.setState({item_seleccionado})
+        }
+
         render() {
             const {
                 list,
@@ -83,6 +88,7 @@ function crudHOC(CreateForm, Tabla) {
                             modal_open={modal_open}
                             onCancel={() => this.setState({modal_open: false, item_seleccionado: null})}
                             onSubmit={this.onSubmit}
+                            setSelectItem={this.setSelectItem}
                         />
                     }
 

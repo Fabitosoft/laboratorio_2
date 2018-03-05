@@ -1,18 +1,12 @@
 import React, {Component} from 'react';
-import {reduxForm, reset} from 'redux-form';
+import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
 import CedulaForm from '../../../../../../00_utilities/components/ui/forms/terceros_colombia/datos_cedula_form';
 import LectorCedula from '../../../../../../00_utilities/components/ui/forms/terceros_colombia/lector_cedula_form';
-import asyncValidate from './asyncValidate';
 
-const modelStyle = {
-    width: '100%',
-    height: '100%',
-    maxWidth: 'none',
-};
 
 class Form extends Component {
     render() {
@@ -25,23 +19,19 @@ class Form extends Component {
             onCancel,
             handleSubmit,
             modal_open,
-            element_type,
-            setSelectItem
+            singular_name,
+            setSelectItem,
         } = this.props;
         return (
             <MyFormTagModal
-                modelStyle={modelStyle}
-                onCancel={() => {
-                    onCancel();
-                    reset()
-                }}
+                onCancel={onCancel}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
                 modal_open={modal_open}
                 pristine={pristine}
-                element_type={element_type}
+                element_type={singular_name}
             >
                 <LectorCedula setSelectItem={setSelectItem}>
                     <CedulaForm/>
@@ -78,17 +68,9 @@ function mapPropsToState(state, ownProps) {
     }
 }
 
-const afterSubmit = (result, dispatch) => {
-    dispatch(reset('pacientesForm'));
-};
-
-
 Form = reduxForm({
     form: "pacientesForm",
-    onSubmitSuccess: afterSubmit,
     validate,
-    asyncValidate,
-    asyncBlurFields: ['tipo_documento', 'nro_identificacion'],
     enableReinitialize: true
 })(Form);
 

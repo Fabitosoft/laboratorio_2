@@ -12,7 +12,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'pacientes';
@@ -38,6 +38,14 @@ export const fetchPacientes = (callback = null, callback_error = null) => {
             dispatch({type: FETCH_PACIENTES, payload: response})
         };
         fetchList(current_url_api, dispatches, callback, callback_error);
+    }
+};
+export const fetchPacientesParametros = (parametro, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_PACIENTES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/buscar_x_parametro/?parametro=${parametro}`, dispatches, callback, callback_error);
     }
 };
 export const fetchPaciente = (id, callback = null, callback_error = null) => {

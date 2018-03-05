@@ -47,6 +47,7 @@ MY_APPS = [
     'medicos.apps.MedicosConfig',
     'entidades.apps.EntidadesConfig',
     'pacientes.apps.PacientesConfig',
+    'ordenes.apps.OrdenesConfig',
 ]
 
 THIRD_PART_APPS = [

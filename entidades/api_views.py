@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
+from laboratorio_2.utils_queryset import query_varios_campos_or
 from .models import Entidad, ContactoEntidad, EntidadExamen
 from rest_framework import viewsets
 
@@ -9,18 +10,17 @@ from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, Entid
 
 
 class EntidadViewSet(viewsets.ModelViewSet):
-    queryset = Entidad.objects.prefetch_related('usuario','mis_examenes','mis_contactos', 'mis_examenes__examen').all()
+    queryset = Entidad.objects.prefetch_related('usuario', 'mis_examenes', 'mis_contactos',
+                                                'mis_examenes__examen').all()
     serializer_class = EntidadSerializer
 
     @list_route(methods=['get'])
     def buscar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
-        if len(parametro) > 0:
-            qs = Entidad.objects.filter(
-                Q(nit__icontains=parametro) |
-                Q(nombre__icontains=parametro)
-            ).distinct()
+        if len(parametro) > 5:
+            search_fields = ['nit', 'nombre']
+            qs = query_varios_campos_or(self.queryset, search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 
@@ -37,8 +37,7 @@ class ContactoEntidadViewSet(viewsets.ModelViewSet):
     queryset = ContactoEntidad.objects.all()
     serializer_class = ContactoEntidadSerializer
 
+
 class EntidadExamenViewSet(viewsets.ModelViewSet):
     queryset = EntidadExamen.objects.all()
     serializer_class = EntidadExamenSerializer
-
-

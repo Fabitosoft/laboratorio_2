@@ -3,6 +3,7 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from django.db.models import Q
 
+from laboratorio_2.utils_queryset import query_varios_campos_or
 from .api_serializers import MedicoRemitenteSerializer, EspecialistaSerializer, EspecialidadSerializer
 from .models import MedicoRemitente, Especialista, Especialidad
 
@@ -14,10 +15,10 @@ class MedicoRemitenteViewSet(viewsets.ModelViewSet):
     @list_route(methods=['get'])
     def buscar_nombre(self, request):
         parametro = request.GET.get('parametro')
-        qs = self.get_queryset().filter(
-            Q(nombres__icontains=parametro) |
-            Q(apellidos__icontains=parametro)
-        )
+        qs = None
+        if len(parametro) > 5:
+            search_fields = ['nombres', 'apellidos']
+            qs = query_varios_campos_or(self.queryset, search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

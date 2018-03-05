@@ -12,10 +12,18 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'medicos_remitentes';
+export const fetchMedicosRemitentesXNombres = (nombre, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_MEDICOS_REMITENTES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/buscar_nombre/?parametro=${nombre}`, dispatches, callback, callback_error);
+    }
+};
 export const createMedicoRemitente = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

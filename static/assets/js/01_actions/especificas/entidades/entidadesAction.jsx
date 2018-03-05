@@ -13,10 +13,19 @@ import {
     deleteObject,
     createObject,
     callApiMethod,
-    callApiMethodWithParameters
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'entidades';
+
+export const fetchEntidadesXParametro = (parametro, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ENTIDADES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/buscar_x_parametro/?parametro=${parametro}`, dispatches, callback, callback_error);
+    }
+};
 export const createEntidad = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

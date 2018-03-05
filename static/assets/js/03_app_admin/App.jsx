@@ -11,16 +11,13 @@ import UsuariosList from "./generales/usuarios/usuarios/containers/usuarios_list
 import UsuariosDetail from "./generales/usuarios/usuarios/containers/usuarios_detail";
 
 import DashboardExamenes from "./especificas/examenes/dashboard/containers/examenes_dashboard";
-
-import EspecialidadesList from "./especificas/medicos/especialidades/containers/especialidades_list";
-import MedicosRemitentesList from "./especificas/medicos/medicos_remitentes/containers/medicos_remitentes_list";
+import DashboardMedicos from "./especificas/medicos/dashboard/containers/medicos_dashboard";
 
 import EntidadesList from "./especificas/entidades/entidades/containers/entidades_list_container";
 import EntidadesDetail from "./especificas/entidades/entidades/containers/entidad_detail";
 
 
-import PacientesList from "./especificas/pacientes/pacientes/containers/pacientes_list";
-import EspecialistasList from "./especificas/medicos/especialistas/containers/especialistas_list";
+import PacientesList from "./especificas/pacientes/pacientes/containers/pacientes_list_container";
 
 const AdminApp = (props) => {
     return (
@@ -37,17 +34,13 @@ const AdminApp = (props) => {
 
                         <Route exact path='/app/admin/examenes/list' component={DashboardExamenes}/>
 
-                        <Route exact path='/app/admin/medicos/especialidades/list' component={EspecialidadesList}/>
-                        <Route exact path='/app/admin/medicos/medicos_remitentes/list'
-                               component={MedicosRemitentesList}/>
+                        <Route exact path='/app/admin/medicos/list' component={DashboardMedicos}/>
                         <Route exact path='/app/admin/entidades/entidades/list'
                                component={EntidadesList}/>
                         <Route exact path='/app/admin/entidades/entidades/detail/:id'
                                component={EntidadesDetail}/>
                         <Route exact path='/app/admin/pacientes/pacientes/list'
                                component={PacientesList}/>
-                        <Route exact path='/app/admin/medicos/especialistas/list'
-                               component={EspecialistasList}/>
                     </Switch>
                 </div>
             </Fragment>

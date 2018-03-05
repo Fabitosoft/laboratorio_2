@@ -46,6 +46,10 @@ class Paciente(TimeStampedModel):
 
         return '%s%s %s%s' % (self.nombre, nombre_segundo, self.apellido, apellido_segundo)
 
+    @property
+    def identificacion(self):
+        return '%s %s' % (self.get_tipo_documento_display(), self.nro_identificacion)
+
     class Meta:
         verbose_name_plural = 'Pacientes'
         verbose_name = 'Paciente'

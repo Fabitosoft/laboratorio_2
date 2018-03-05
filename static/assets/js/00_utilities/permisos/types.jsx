@@ -103,3 +103,19 @@ export const PACIENTES = {
     list: 'list_paciente',
     detail: 'detail_paciente',
 };
+
+export const ORDENES = {
+    add: 'add_orden',
+    delete: 'delete_orden',
+    change: 'change_orden',
+    list: 'list_orden',
+    detail: 'detail_orden',
+};
+
+export const ORDENES_EXAMENES = {
+    add: 'add_ordenexamen',
+    delete: 'delete_ordenexamen',
+    change: 'change_ordenexamen',
+    list: 'list_ordenexamen',
+    detail: 'detail_ordenexamen',
+};

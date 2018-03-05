@@ -62,7 +62,7 @@ form .btn {
   height: 100%;
   opacity: 0.9;
   position: absolute;
-  z-index: 99;
+  z-index: 2000;
 }
 .loading-overload-tres {
   border-radius: 10px;
@@ -72,10 +72,10 @@ form .btn {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99;
   background-color: #002077;
   padding: 0.5rem;
   color: #fff;
+  z-index: 2000;
 }
 .left-icon {
   margin: 0 0 0 12px !important;

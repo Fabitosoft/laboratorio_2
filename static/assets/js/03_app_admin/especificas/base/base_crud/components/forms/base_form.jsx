@@ -1,10 +1,9 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import {MyTextFieldSimple} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
-import asyncValidate from './asyncValidate';
 
 
 class Form extends Component {
@@ -51,8 +50,6 @@ function mapPropsToState(state, ownProps) {
 Form = reduxForm({
     form: "algoForm",
     validate,
-    asyncValidate,
-    asyncBlurFields: ['campo'],
     enableReinitialize: true
 })(Form);
 

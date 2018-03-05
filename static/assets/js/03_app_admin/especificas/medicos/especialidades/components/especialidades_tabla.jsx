@@ -11,67 +11,79 @@ class Tabla extends React.Component {
 
         const data = this.props.data;
         const {
+            updateItem,
+            singular_name,
             onDelete,
             onSelectItemEdit,
-            permisos,
-            element_type
+            permisos_object
         } = this.props;
 
 
         return (
-            <div>
-                <ReactTable
-                    data={data}
-                    columns={[
-                        {
-                            Header: "Características",
-                            columns: [
-                                {
-                                    Header: "Nombre",
-                                    accessor: "nombre",
-                                    maxWidth: 400,
-                                    filterable: true,
-                                    filterMethod: (filter, row) => {
-                                        return row[filter.id].includes(filter.value.toUpperCase())
-                                    }
+            <ReactTable
+                data={data}
+                noDataText={`No hay elementos para mostrar tipo ${singular_name}`}
+                columns={[
+                    {
+                        Header: "Caracteristicas",
+                        columns: [
+                            {
+                                Header: "Nombre",
+                                accessor: "nombre",
+                                maxWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toLowerCase())
                                 }
-                            ]
-                        },
-                        {
-                            Header: "Opciones",
-                            columns: [
-                                {
-                                    Header: "Elimi.",
-                                    show: permisos.delete,
-                                    maxWidth: 60,
-                                    Cell: row =>
-                                        <MyDialogButtonDelete
-                                            onDelete={() => {
-                                                onDelete(row.original)
-                                            }}
-                                            element_name={row.original.nombre}
-                                            element_type={element_type}
-                                        />
+                            },
+                        ]
+                    },
+                    {
+                        Header: "Opciones",
+                        columns: [
+                            // {
+                            //     Header: "Activo",
+                            //     accessor: "is_active",
+                            //     show: permisos_object.make_user_active,
+                            //     maxWidth: 60,
+                            //     Cell: row => (
+                            //         <Checkbox
+                            //             checked={row.value}
+                            //             onCheck={() => updateItem({...row.original, is_active: !row.value})}
+                            //         />
+                            //     )
+                            // },
+                            {
+                                Header: "Elimi.",
+                                show: permisos_object.delete,
+                                maxWidth: 60,
+                                Cell: row =>
+                                    <MyDialogButtonDelete
+                                        onDelete={() => {
+                                            onDelete(row.original)
+                                        }}
+                                        element_name={row.original.nombre}
+                                        element_type={singular_name}
+                                    />
 
-                                },
-                                {
-                                    Header: "Editar",
-                                    show: permisos.change,
-                                    maxWidth: 60,
-                                    Cell: row =>
-                                        <IconButtonTableEdit
-                                            onClick={() => {
-                                                onSelectItemEdit(row.original);
-                                            }}/>
+                            },
+                            {
+                                Header: "Editar",
+                                show: permisos_object.change,
+                                maxWidth: 60,
+                                Cell: row =>
+                                    <IconButtonTableEdit
+                                        onClick={() => {
+                                            onSelectItemEdit(row.original);
+                                        }}/>
 
-                                },
-                            ]
-                        }
-                    ]}
-                    defaultPageSize={10}
-                    className="-striped -highlight tabla-maestra"
-                />
-            </div>
+                            },
+                        ]
+                    }
+                ]}
+                defaultPageSize={10}
+                className="-striped -highlight tabla-maestra"
+            />
         );
     }
 }

@@ -68,8 +68,8 @@ class ListadoElementos extends Component {
         const permisos_object_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
 
         const can_see =
-            permisosAdapter(mis_permisos, bloque_1_permisos).list ||
-            permisosAdapter(mis_permisos, bloque_2_permisos).list;
+            permisos_object_1.list ||
+            permisos_object_2.list;
         return (
             <ValidarPermisos can_see={can_see} nombre={this.plural_name}>
                 <Titulo>{this.singular_name}</Titulo>

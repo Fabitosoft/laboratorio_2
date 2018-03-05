@@ -2,9 +2,12 @@ import React, {Fragment} from 'react';
 import MenuBase from '../../00_utilities/components/ui/menu/menu';
 import MenuTerceros from './terceros';
 import MenuPermisos from './permisos';
-import MenuExamenes from './examenes';
-import MenuMedicos from './medicos';
-import MenuEntidades from './entidades';
+import FontIcon from 'material-ui/FontIcon';
+import {Link} from 'react-router-dom'
+
+const iconStyles = {
+    padding: 8,
+};
 
 const Menu = () => {
     return (
@@ -12,11 +15,17 @@ const Menu = () => {
             {mis_permisos => {
                 return (
                     <Fragment>
-                        <MenuExamenes/>
-                        <MenuTerceros/>
-                        <MenuMedicos/>
-                        <MenuEntidades/>
                         <MenuPermisos/>
+                        <MenuTerceros/>
+                        <Link to='/app/admin/examenes/list'>
+                            <FontIcon className="fas fa-syringe" style={iconStyles}/>
+                        </Link>
+                        <Link to='/app/admin/medicos/list'>
+                            <FontIcon className="fas fa-user-md" style={iconStyles}/>
+                        </Link>
+                        <Link to='/app/admin/entidades/entidades/list'>
+                            <FontIcon className="fas fa-hospital" style={iconStyles}/>
+                        </Link>
                     </Fragment>
                 )
             }}
