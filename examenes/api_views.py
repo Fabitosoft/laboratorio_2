@@ -7,7 +7,10 @@ from .models import Examen, CupsSubGrupo, CupsGrupo
 
 
 class ExamenViewSet(viewsets.ModelViewSet):
-    queryset = Examen.objects.select_related('subgrupo_cups', 'subgrupo_cups__grupo').all()
+    queryset = Examen.objects.select_related(
+        'subgrupo_cups',
+        'subgrupo_cups__grupo',
+    ).all()
     serializer_class = ExamenSerializer
 
     @list_route(methods=['get'])

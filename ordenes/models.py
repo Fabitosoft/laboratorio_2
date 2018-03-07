@@ -102,12 +102,14 @@ class OrdenExamen(TimeStampedModel):
                                       verbose_name='Valor Final')
     observaciones = models.TextField(null=True, blank=True)
 
-    # class Meta:
-    #     permissions = [
-    #         ('orden_examen_firmar_como', 'Puede Firmar Examen como Otros'),
-    #         ('orden_examen_verificar', 'Puede Verificar Examen'),
-    #         ('orden_examen_cambiar_estado', 'Puede Cambiar Estado Examen'),
-    #     ]
+    class Meta:
+        permissions = [
+            ('list_pendientes_ordenexamen', 'Can list orden examen pendientes'),
+            ('list_con_resultados_ordenexamen', 'Can list orden examen con resultados'),
+            ('list_verificados_ordenexamen', 'Can list orden examen verificados'),
+            ('firmar_como_ordenexamen', 'Can firmar como orden examen'),
+            ('verificar_ordenexamen', 'Can verificar orden examen'),
+        ]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.examen_estado in [0, 1]:
@@ -124,19 +126,19 @@ class OrdenExamen(TimeStampedModel):
         orden.calcular_totales()
         return delete
 
-    # def firmar(self, especialista):
-    #     if self.examen.multifirma:
-    #         if not self.mis_firmas.filter(especialista=especialista).exists():
-    #             self.mis_firmas.create(especialista=especialista)
-    #     else:
-    #         for firma in self.mis_firmas.all():
-    #             firma.delete()
-    #         self.mis_firmas.create(especialista=especialista)
-#
-#
-# class OrdenExamenFirmas(TimeStampedModel):
-#     orden_examen = models.ForeignKey(OrdenExamen, related_name='mis_firmas')
-#     especialista = models.ForeignKey(Especialista, related_name='mis_examenes_firmados')
+    def firmar(self, especialista):
+        if self.examen.multifirma:
+            if not self.mis_firmas.filter(especialista=especialista).exists():
+                self.mis_firmas.create(especialista=especialista)
+        else:
+            for firma in self.mis_firmas.all():
+                firma.delete()
+            self.mis_firmas.create(especialista=especialista)
+
+
+class OrdenExamenFirmas(TimeStampedModel):
+    orden_examen = models.ForeignKey(OrdenExamen, related_name='mis_firmas', on_delete=models.CASCADE)
+    especialista = models.ForeignKey(Especialista, related_name='mis_examenes_firmados', on_delete=models.PROTECT)
 #
 #
 # class HistorialOrdenExamen(TimeStampedModel):

@@ -1,0 +1,28 @@
+body {
+  text-align: justify;
+  font-size: 11px;
+}
+@page {
+  size: US-Letter;
+  margin: 8cm 2cm 2cm 2cm;
+  @top-right-corner {
+    content: counter(page) " de " counter(pages);
+  }
+}
+@media screen {
+  html {
+    border: solid 3px #000;
+  }
+  body {
+    margin: 8cm 2cm 2cm 2cm;
+    max-width: 215mm !important;
+    min-width: 215mm !important;
+    border: solid 1px #000;
+  }
+}
+.prueba {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-right: #000 1px solid;
+  float: left;
+}

@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/email.min.css' %}">
+</head>
+<body>
+<div style="text-align: justify">
+    <div class="prueba">
+        <strong>Nro: </strong>
+        {{ orden.id }}
+    </div>
+    <div class='prueba'>
+        <strong>Fecha: </strong>
+    </div>
+    <div class='prueba'>
+        <strong>Hora: </strong>
+    </div>
+    <div class='prueba'>
+        <strong>Forma de Pago: </strong>
+        {{ orden.tipo_pago }}
+    </div>
+    <div class='prueba'>
+        <strong>Paciente: </strong>
+        {{ paciente.full_name }}
+    </div>
+    <div class='prueba'>
+        <strong>Id: </strong>
+        {{ paciente.identificacion }}
+    </div>
+    <div class='prueba'>
+        <strong>Edad: </strong>
+    </div>
+    <div class='prueba'>
+        <strong>Teléfono: </strong>
+        {{ paciente.telefono }}
+    </div>
+    <div class='prueba'>
+        <strong>Entidad: </strong>
+        {{ entidad.nombre }}
+    </div>
+    <div class='prueba'>
+        <strong>Médico Remitente: </strong>
+        {{ mi_medico_remitente }}
+    </div>
+</div>
+<div style="clear:both;">
+    {% regroup una_firma|dictsort:"especialista.id" by especialista as especialista_list %}
+    <span>Una Firma</span>
+    <div style="page-break-after: always">
+        {% for especialista in especialista_list %}
+            {% regroup especialista.list|dictsort:"orden_examen.examen.subgrupo_cups.nombre" by orden_examen.examen.subgrupo_cups.nombre as grupo_cup_list %}
+            {% for grupo in grupo_cup_list %}
+                {{ grupo.grouper }}
+                <div class="col-12">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Examen</th>
+                            <th>Resultado</th>
+                            <th>Valores Referencia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for examen in grupo.list %}
+                            {% if not examen.orden_examen.examen.especial %}
+                                <tr>
+                                    <td>{{ examen.orden_examen.examen.nombre }}</td>
+                                    <td>{{ examen.orden_examen.resultado }} {{ examen.orden_examen.examen_unidad_medida }}</td>
+                                    <td class="text-multiline">{{ examen.orden_examen.examen_valor_referencia }}</td>
+                                </tr>
+                                {% if examen.orden_examen.observaciones or examen.orden_examen.tecnica %}
+                                    <tr>
+                                        <td colspan="5" class="info-adicional">
+                                            <div class="info-adicional">
+                                                {% if examen.orden_examen.tecnica %}
+                                                    <span>Técnica</span>
+                                                    <div>
+                                                        {{ examen.orden_examen.tecnica }}
+                                                    </div>
+                                                    <br>
+                                                {% endif %}
+                                                {% if examen.orden_examen.observaciones %}
+                                                    <span>Observaciones</span>
+                                                    <div class="text-multiline">
+                                                        {{ examen.orden_examen.observaciones }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+            {% include 'email/ordenes/firma.html' %}
+        {% endfor %}
+    </div>
+    Dos Firmas
+    <ul>
+        {% for examen in multifirma %}
+            <li>{{ examen.examen.nombre }}</li>
+            <ul>
+                {% for firma in examen.mis_firmas.all %}
+                    <li> {{ firma.especialista }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>

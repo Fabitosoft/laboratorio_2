@@ -7,7 +7,11 @@ from .api_serializers import UsuarioSerializer
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.select_related(
+        'especialista'
+    ).prefetch_related(
+        'groups'
+    ).all()
     serializer_class = UsuarioSerializer
 
     @list_route(methods=['get'])

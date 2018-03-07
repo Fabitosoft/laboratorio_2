@@ -13,12 +13,18 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethod
 }
     from
         '../../00_general_fuctions'
 
 const current_url_api = 'ordenes';
+
+export function enviarOrdenExamenesEmail(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethod(current_url_api, id, 'enviar_email', null, callback, callback_error)
+    }
+}
 
 export const createOrden = (values, callback = null, callback_error = null) => {
         return (dispatch) => {

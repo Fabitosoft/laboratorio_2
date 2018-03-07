@@ -1,32 +1,32 @@
 from rest_framework import serializers
 
-from .models import Orden, OrdenExamen  # , HistorialOrdenExamen, OrdenExamenFirmas
+from .models import Orden, OrdenExamen, OrdenExamenFirmas  # , HistorialOrdenExamen,
 
 
 # from examenes_especiales.api_serializers import BiopsiaSerializer, CitologiaSerializer
 
 
-# class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
-#     firmado_por = serializers.CharField(source='especialista.full_name', read_only=True)
-#     firma_url = serializers.SerializerMethodField()
-#     especialidad = serializers.CharField(source='especialista.especialidad.nombre', read_only=True)
-#
-#     class Meta:
-#         model = OrdenExamenFirmas
-#         fields = [
-#             'id',
-#             'especialista',
-#             'firmado_por',
-#             'especialidad',
-#             'firma_url'
-#         ]
-#
-#     def get_firma_url(self, obj):
-#         if obj.especialista.firma:
-#             return obj.especialista.firma.url
-#         return None
-#
-#
+class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
+    firmado_por = serializers.CharField(source='especialista.full_name', read_only=True)
+    firma_url = serializers.SerializerMethodField()
+    especialidad = serializers.CharField(source='especialista.especialidad.nombre', read_only=True)
+
+    class Meta:
+        model = OrdenExamenFirmas
+        fields = [
+            'id',
+            'especialista',
+            'firmado_por',
+            'especialidad',
+            'firma_url'
+        ]
+
+    def get_firma_url(self, obj):
+        if obj.especialista.firma:
+            return obj.especialista.firma.url
+        return None
+
+
 # class HistorialOrdenExamenSerializer(serializers.ModelSerializer):
 #     generado_por = serializers.CharField(source='generado_por.username', read_only=True)
 #
@@ -81,19 +81,21 @@ from .models import Orden, OrdenExamen  # , HistorialOrdenExamen, OrdenExamenFir
 #
 #
 class OrdenExamenSerializer(serializers.ModelSerializer):
+    entidad_nombre = serializers.CharField(source='orden.entidad.nombre', read_only=True)
     examen_estado_nombre = serializers.CharField(source='get_examen_estado_display', read_only=True)
     sub_categoria_cup_nombre = serializers.CharField(source='examen.subgrupo_cups.nombre', read_only=True)
-    # mis_firmas = OrdenExamenFirmasSerializer(many=True, read_only=True)
+    mis_firmas = OrdenExamenFirmasSerializer(many=True, read_only=True)
     multifirma = serializers.BooleanField(source='examen.multifirma', read_only=True)
 
     class Meta:
         model = OrdenExamen
         fields = [
             'id',
+            'entidad_nombre',
             'examen_estado',
             'sub_categoria_cup_nombre',
             'resultado',
-            # 'mis_firmas',
+            'mis_firmas',
             'examen_valor_referencia',
             'examen_unidad_medida',
             'examen_estado_nombre',

@@ -16,6 +16,9 @@ const Menu = () => {
                         <Link to='/app/laboratorio/ordenes/list'>
                             <FontIcon className="fab fa-wpforms" style={iconStyles}/>
                         </Link>
+                        <Link to='/app/laboratorio/examenes/list'>
+                            <FontIcon className="fas fa-vial" style={iconStyles}/>
+                        </Link>
                     </Fragment>
                 )
             }}

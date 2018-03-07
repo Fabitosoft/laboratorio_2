@@ -8,11 +8,12 @@ from .models import Orden, OrdenExamen, OrdenExamenFirmas
 
 class ImpresionExamenesView(DetailView):
     model = Orden
-    template_name = 'prueba.html'
+    template_name = 'email/ordenes/resultados.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         orden = self.object
+        paciente = orden.paciente
 
         multifirma = OrdenExamen.objects.select_related(
             'examen',
@@ -46,4 +47,8 @@ class ImpresionExamenesView(DetailView):
         context['html'] = 'nueva prueba'
         context['una_firma'] = una_firma
         context['multifirma'] = multifirma
+        context['paciente'] = paciente
+        context['orden'] = orden
+        context['entidad'] = orden.entidad
+        context['medico_remitente'] = orden.medico_remitente
         return context

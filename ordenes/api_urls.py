@@ -6,4 +6,4 @@ from .api_views import (
 
 router = routers.DefaultRouter()
 router.register(r'ordenes', OrdenViewSet)
-router.register(r'ordenes_exames', OrdenExamenViewSet)
+router.register(r'ordenes_examenes', OrdenExamenViewSet)

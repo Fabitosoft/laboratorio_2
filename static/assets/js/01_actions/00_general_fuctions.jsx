@@ -122,7 +122,7 @@ export function callApiMethod(url, id, method, dispatches = null, callback = nul
 
 
 export function callApiMethodWithParameters(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
-    console.log(`entro call api method para ${url} para ${id}`);
+    console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id}`, 'color:red', 'color:blue', 'color:green');
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/${method}/`;

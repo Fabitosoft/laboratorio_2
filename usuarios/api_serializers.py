@@ -17,7 +17,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'last_login',
             'date_joined',
             'is_superuser',
-            'groups'
+            'groups',
+            'especialista'
         ]
 
     def create(self, validated_data):

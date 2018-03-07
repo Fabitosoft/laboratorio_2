@@ -116,6 +116,10 @@ export const ORDENES_EXAMENES = {
     add: 'add_ordenexamen',
     delete: 'delete_ordenexamen',
     change: 'change_ordenexamen',
-    list: 'list_ordenexamen',
     detail: 'detail_ordenexamen',
+    list_pendientes: 'list_pendientes_ordenexamen',
+    list_con_resultados: 'list_con_resultados_ordenexamen',
+    list_verificados: 'list_verificados_ordenexamen',
+    firmar_como: 'firmar_como_ordenexamen',
+    verificar: 'verificar_ordenexamen',
 };

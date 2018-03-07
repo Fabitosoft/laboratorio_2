@@ -193,8 +193,10 @@ class Detail extends Component {
                     <div className="col-md-12 pl-4">
                         <strong>Dirección </strong>{object.direccion_contacto_alternativo}
                     </div>
-                    {entidad &&
-                    <AddExamen {...this.props} entidad={entidad} adicionarExamen={this.adicionarExamen}/>
+                    {
+                        entidad &&
+                        object.estado === 0 &&
+                        <AddExamen {...this.props} entidad={entidad} adicionarExamen={this.adicionarExamen}/>
                     }
                 </div>
                 <TablaExamenes
@@ -210,6 +212,12 @@ class Detail extends Component {
                     <button className='btn btn-primary'
                             onClick={() => this.onSubmit({...object, estado: 1})}>Pagado</button>
                 }
+                <span className='btn btn-primary'
+                      onClick={() => {
+                          this.props.enviarOrdenExamenesEmail(object.id)
+                      }}>
+                    Enviar
+                </span>
                 <CargarDatos cargarDatos={this.cargarDatos}/>
             </ValidarPermisos>
         )
