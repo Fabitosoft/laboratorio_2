@@ -1,9 +1,9 @@
-<div class="col-12">
+<div style="margin-top: -35px;text-align: center;width: 130px">
     {% if especialista.grouper.firma %}
-        <img style="width: 150px" class="firma" src="{{ especialista.grouper.firma.url }}" alt="">
+        <img style="width: 130px" class="firma" src="{{ especialista.grouper.firma.url }}" alt="">
     {% endif %}
-    <div>
-        {{ especialista.grouper.full_name }}<br/>
-        {{ especialista.grouper.especialidad.nombre }}
+    <div style="margin-top: -30px; z-index: 0">
+        <span class="h8e">{{ especialista.grouper.full_name }}</span><br/>
+        <span class="h8e"><small>{{ especialista.grouper.especialidad.nombre }}</small></span>
     </div>
 </div>

@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -53,13 +53,15 @@
 </div>
 <div style="clear:both;">
     {% regroup una_firma|dictsort:"especialista.id" by especialista as especialista_list %}
-    <span>Una Firma</span>
     <div style="page-break-after: always">
+        <span>Una Firma</span>
         {% for especialista in especialista_list %}
-            {% regroup especialista.list|dictsort:"orden_examen.examen.subgrupo_cups.nombre" by orden_examen.examen.subgrupo_cups.nombre as grupo_cup_list %}
-            {% for grupo in grupo_cup_list %}
-                {{ grupo.grouper }}
-                <div class="col-12">
+            <div class="mb-2">
+                {% regroup especialista.list|dictsort:"orden_examen.examen.subgrupo_cups.nombre" by orden_examen.examen.subgrupo_cups.nombre as grupo_cup_list %}
+                {% for grupo in grupo_cup_list %}
+                    <div style="width: 100%; text-align: center">
+                        <span class="h2e">{{ grupo.grouper }}</span>
+                    </div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -72,21 +74,20 @@
                         {% for examen in grupo.list %}
                             {% if not examen.orden_examen.examen.especial %}
                                 <tr>
-                                    <td>{{ examen.orden_examen.examen.nombre }}</td>
-                                    <td>{{ examen.orden_examen.resultado }} {{ examen.orden_examen.examen_unidad_medida }}</td>
-                                    <td class="text-multiline">{{ examen.orden_examen.examen_valor_referencia }}</td>
+                                    <td style="width: 40%">
+                                        {{ examen.orden_examen.examen.nombre }}<br/>
+                                        {% if examen.orden_examen.tecnica %}
+                                            <span class="h6e p-2"
+                                                  style="color: grey"> <strong>Técnica: </strong>{{ examen.orden_examen.tecnica }} </span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="width: 30%">{{ examen.orden_examen.resultado }} {{ examen.orden_examen.examen_unidad_medida }}</td>
+                                    <td style="width: 30%">{{ examen.orden_examen.examen_valor_referencia }}</td>
                                 </tr>
                                 {% if examen.orden_examen.observaciones or examen.orden_examen.tecnica %}
-                                    <tr>
+                                    <tr class="mb-2">
                                         <td colspan="5" class="info-adicional">
                                             <div class="info-adicional">
-                                                {% if examen.orden_examen.tecnica %}
-                                                    <span>Técnica</span>
-                                                    <div>
-                                                        {{ examen.orden_examen.tecnica }}
-                                                    </div>
-                                                    <br>
-                                                {% endif %}
                                                 {% if examen.orden_examen.observaciones %}
                                                     <span>Observaciones</span>
                                                     <div class="text-multiline">
@@ -102,9 +103,9 @@
 
                         </tbody>
                     </table>
-                </div>
-            {% endfor %}
-            {% include 'email/ordenes/firma.html' %}
+                {% endfor %}
+                {% include 'email/ordenes/firma.html' %}
+            </div>
         {% endfor %}
     </div>
     Dos Firmas

@@ -105,7 +105,7 @@ class OrdenViewSet(viewsets.ModelViewSet):
             base_url=request.build_absolute_uri()
         )
 
-        main_doc = html.render([CSS(string='body {font-size: 11px;}')])
+        main_doc = html.render()
 
         ctx = {
             'titulo': 'titulo de prueba ctx',
@@ -140,9 +140,13 @@ class OrdenViewSet(viewsets.ModelViewSet):
             page_body.children += header_body.all_children()
             page_body.children += footer_body.all_children()
 
-        output = BytesIO()
+        # output = BytesIO()
+        # main_doc.write_pdf(
+        #     target=output
+        # )
+
         main_doc.write_pdf(
-            target=output
+            target='correo-prueba.pdf'
         )
 
         msg = EmailMultiAlternatives(
