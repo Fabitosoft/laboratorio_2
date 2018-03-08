@@ -1,6 +1,7 @@
 body {
   text-align: justify;
-  font-size: 10px;
+  font-size: 14px;
+  font-family: Arial;
 }
 @page {
   size: US-Letter;
@@ -23,33 +24,57 @@ body {
 .prueba {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+  font-size: 1rem;
   border-right: #000 1px solid;
   float: left;
 }
-.h1e {
-  font-size: 2rem;
+.resultado-examenes {
+  color: #000;
 }
-.h2e {
-  font-size: 1.7rem;
-}
-.h3e {
-  font-size: 1.5rem;
-}
-.h4e {
-  font-size: 1.3rem;
-}
-.h5e {
+.resultado-examenes .tabla {
   font-size: 1.1rem;
 }
-.h6e {
+.resultado-examenes .resultado {
   font-size: 0.9rem;
 }
-.h7e {
-  font-size: 0.7rem;
+.resultado-examenes .tecnica {
+  font-size: 0.85rem;
+  color: #87cefa;
 }
-.h8e {
-  font-size: 0.6rem;
+.resultado-examenes .observaciones {
+  font-size: 0.85rem;
+  color: #696969;
 }
-.info-adicional {
-  color: #808080;
+.resultado-examenes .nombre-examen {
+  font-size: 1.1rem;
+}
+.resultado-examenes .valor-referencia {
+  font-size: 0.9rem;
+}
+.resultado-examenes .info-adicional {
+  color: #87cefa;
+}
+.resultado-examenes .grupo-subcups-titulo {
+  font-size: 1.8rem;
+  color: #87cefa;
+}
+.resultado-examenes .especialista-especialidad {
+  font-size: 0.9rem;
+}
+.resultado-examenes .especialista-nombre {
+  font-size: 1;
+}
+.resultado-examenes .firma {
+  width: 2.1in;
+  padding: 10px;
+  text-align: center;
+}
+.resultado-examenes .firma-imagen {
+  width: 100%;
+}
+.resultado-examenes tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }

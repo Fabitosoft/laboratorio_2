@@ -1,38 +1,39 @@
 {#style="page-break-after: always;#}
 {% regroup multifirma|dictsort:"examen.subgrupo_cups.nombre" by examen.subgrupo_cups.nombre as grupo_cup_list %}
 {% for grupo in grupo_cup_list %}
-    <div style="clear: both">
+    <div style="clear: both; page-break-inside:avoid ">
         <div style="width: 100%; text-align: center">
-            <span class="h2e">{{ grupo.grouper }}</span>
+            <span class="grupo-subcups-titulo">{{ grupo.grouper }}</span>
         </div>
         {% for orden_examen in grupo.list %}
             {% if not orden_examen.examen.especial %}
 
-                <table class="table table-striped">
+                <table class="table table-striped tabla">
                     <thead>
                     <tr>
                         <th>Examen</th>
                         <th>Resultado</th>
-                        <th>Valores Referencia</th>
+                        <th>Valor Referencia</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td style="width: 45%">
-                            {{ orden_examen.examen.nombre }}<br/>
+                            <span class="nombre-examen">{{ orden_examen.examen.nombre }}</span><br/>
                             {% if orden_examen.tecnica %}
-                                <div class="h7e p-2" style="color: grey">
+                                <div class="tecnica">
                                     <strong>Técnica: </strong>{{ orden_examen.tecnica }}
                                 </div>
                             {% endif %}
                             {% if orden_examen.observaciones %}
-                                <div class="h7e p-2" style="color: grey">
+                                <div class="observaciones">
                                     <strong>Observaciones: </strong>{{ orden_examen.observaciones }}
                                 </div>
                             {% endif %}
                         </td>
                         <td style="width: 27.5%">{{ orden_examen.resultado }} {{ orden_examen.examen_unidad_medida }}</td>
-                        <td style="width: 27.5%">{{ orden_examen.examen_valor_referencia }}</td>
+                        <td class="valor-referencia" style="width: 27.5%">
+                            {{ orden_examen.examen_valor_referencia }}</td>
                     </tr>
                     </tbody>
                 </table>
