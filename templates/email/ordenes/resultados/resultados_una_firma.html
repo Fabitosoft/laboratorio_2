@@ -1,0 +1,47 @@
+{% regroup una_firma|dictsort:"especialista.id" by especialista as especialista_list %}
+{% for especialista in especialista_list %}
+    <div class="mb-2">
+        {% regroup especialista.list|dictsort:"orden_examen.examen.subgrupo_cups.nombre" by orden_examen.examen.subgrupo_cups.nombre as grupo_cup_list %}
+        {% for grupo in grupo_cup_list %}
+            <div style="width: 100%; text-align: center">
+                <span class="h2e">{{ grupo.grouper }}</span>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Examen</th>
+                    <th>Resultado</th>
+                    <th>Valores Referencia</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for examen in grupo.list %}
+                    {% if not examen.orden_examen.examen.especial %}
+                        <tr>
+                            <td style="width: 45%">
+                                {{ examen.orden_examen.examen.nombre }}<br/>
+                                {% if examen.orden_examen.tecnica %}
+                                    <div class="h7e p-2" style="color: grey">
+                                        <strong>Técnica: </strong>{{ examen.orden_examen.tecnica }}
+                                    </div>
+                                {% endif %}
+                                {% if examen.orden_examen.observaciones %}
+                                    <div class="h7e p-2" style="color: grey">
+                                        <strong>Observaciones: </strong>{{ examen.orden_examen.observaciones }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td style="width: 27.5%">{{ examen.orden_examen.resultado }} {{ examen.orden_examen.examen_unidad_medida }}</td>
+                            <td style="width: 27.5%">{{ examen.orden_examen.examen_valor_referencia }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+                </tbody>
+            </table>
+        {% endfor %}
+        <div>
+            {% include 'email/ordenes/resultados/firma.html' %}
+        </div>
+    </div>
+{% endfor %}

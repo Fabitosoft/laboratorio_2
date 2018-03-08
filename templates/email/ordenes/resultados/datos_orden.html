@@ -1,0 +1,30 @@
+<div style="text-align: justify">
+    <div class="prueba">
+        <strong>Nro: </strong>
+        {{ orden.id }}
+    </div>
+    <div class='prueba'>
+        <strong>Paciente: </strong>
+        {{ paciente.full_name }}
+    </div>
+    <div class='prueba'>
+        <strong>Edad: </strong>
+        {{ paciente.fecha_nacimiento|timesince }}
+    </div>
+    <div class='prueba'>
+        <strong>Id: </strong>
+        {{ paciente.identificacion }}
+    </div>
+    <div class='prueba'>
+        <strong>Teléfono: </strong>
+        {{ orden.numero_contacto_alternativo }}
+    </div>
+    <div class='prueba'>
+        <strong>Entidad: </strong>
+        {{ entidad.nombre }}
+    </div>
+    <div class='prueba'>
+        <strong>Médico Remitente: </strong>
+        {{ medico_remitente.full_name }}
+    </div>
+</div>

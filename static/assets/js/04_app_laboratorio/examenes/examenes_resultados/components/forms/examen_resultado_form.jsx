@@ -108,29 +108,33 @@ class Form extends Component {
                 element_type={`Resultado ${initialValues.examen_nombre}`}
                 modelStyle={modelStyle}
             >
-                <div className="col-12">
+                <div className="col-md-4">
                     <strong>Examen: </strong>{initialValues.examen_nombre}<br/>
-                    <strong>Paciente: </strong>{initialValues.paciente_nombre}<br/>
-                    <strong>Entidad: </strong>{initialValues.entidad_nombre}<br/>
+                </div>
+                <div className="col-md-4">
+                    <strong>Paciente: </strong>{initialValues.paciente_nombre}
+                </div>
+                <div className="col-md-4">
+                    <strong>Entidad: </strong>{initialValues.entidad_nombre}
                 </div>
                 <MyTextFieldSimple
-                    className="col-12 col-md-6"
+                    className="col-12 col-md-8 col-lg-4"
                     nombre='Valor Referencia'
                     multiLine={true}
-                    rows={10}
+                    rows={5}
                     name='examen_valor_referencia'
                     disabled={initialValues.examen_estado > 1}
                 />
-                <div className="col-12 col-md-6">
+                <div className="col-12 col-md-4 col-lg-4">
                     <div className="row">
                         <MyTextFieldSimple
-                            className="col-12"
+                            className="col-12 col-md-6"
                             nombre='Técnica'
                             name='tecnica'
                             disabled={initialValues.examen_estado > 1}
                         />
                         <MyTextFieldSimple
-                            className="col-12"
+                            className="col-12 col-md-6"
                             nombre='Unidad Medida'
                             name='examen_unidad_medida'
                             disabled={initialValues.examen_estado > 1}
@@ -140,11 +144,19 @@ class Form extends Component {
                             nombre='Resultado'
                             name='resultado'
                             multiLine={true}
-                            rows={4}
+                            rows={2}
                             disabled={initialValues.examen_estado > 1}
                         />
                     </div>
                 </div>
+                <MyTextFieldSimple
+                    className="col-12 col-lg-4"
+                    nombre='Observaciones'
+                    name='observaciones'
+                    multiLine={true}
+                    rows={3}
+                    disabled={initialValues.examen_estado > 1}
+                />
                 <div className="col-12">
                     <div className="row">
                         {initialValues.mis_firmas.map(firma => {

@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/email.min.css' %}">
+</head>
+<body>
+{% include 'email/ordenes/resultados/datos_orden.html' %}
+<div style="clear:both;">
+    {% if una_firma %}
+        {% include 'email/ordenes/resultados/resultados_una_firma.html' %}
+    {% endif %}
+    {% if multifirma %}
+        {% include 'email/ordenes/resultados/resultados_multifirma.html' %}
+    {% endif %}
+</div>
+</body>
+</html>

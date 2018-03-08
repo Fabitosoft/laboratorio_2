@@ -1,0 +1,47 @@
+{#style="page-break-after: always;#}
+{% regroup multifirma|dictsort:"examen.subgrupo_cups.nombre" by examen.subgrupo_cups.nombre as grupo_cup_list %}
+{% for grupo in grupo_cup_list %}
+    <div style="clear: both">
+        <div style="width: 100%; text-align: center">
+            <span class="h2e">{{ grupo.grouper }}</span>
+        </div>
+        {% for orden_examen in grupo.list %}
+            {% if not orden_examen.examen.especial %}
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Examen</th>
+                        <th>Resultado</th>
+                        <th>Valores Referencia</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="width: 45%">
+                            {{ orden_examen.examen.nombre }}<br/>
+                            {% if orden_examen.tecnica %}
+                                <div class="h7e p-2" style="color: grey">
+                                    <strong>Técnica: </strong>{{ orden_examen.tecnica }}
+                                </div>
+                            {% endif %}
+                            {% if orden_examen.observaciones %}
+                                <div class="h7e p-2" style="color: grey">
+                                    <strong>Observaciones: </strong>{{ orden_examen.observaciones }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td style="width: 27.5%">{{ orden_examen.resultado }} {{ orden_examen.examen_unidad_medida }}</td>
+                        <td style="width: 27.5%">{{ orden_examen.examen_valor_referencia }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div>
+                    {% for firma in orden_examen.mis_firmas.all %}
+                        {% include 'email/ordenes/resultados/firma_multiple.html' with firma=firma %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}

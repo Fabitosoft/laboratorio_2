@@ -1,17 +1,17 @@
 import os
+from smtplib import SMTPException
 
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Count, F
 from io import BytesIO
 
-from django.template import Context
 from django.template.loader import get_template, render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework import viewsets
-from xhtml2pdf import pisa
-from weasyprint import HTML, CSS, default_url_fetcher
+from rest_framework import viewsets, serializers
+from weasyprint import HTML, CSS
 
+from ordenes.mixins import OrdenesResultadosMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
 from .models import Orden, OrdenExamen, OrdenExamenFirmas
 from medicos.models import Especialista
@@ -26,7 +26,7 @@ def get_page_body(boxes):
         return get_page_body(box.all_children())
 
 
-class OrdenViewSet(viewsets.ModelViewSet):
+class OrdenViewSet(OrdenesResultadosMixin, viewsets.ModelViewSet):
     queryset = Orden.objects.select_related(
         'medico_remitente',
         'paciente',
@@ -44,52 +44,25 @@ class OrdenViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def enviar_email(self, request, pk=None):
         orden = self.get_object()
+        context_examenes = {}
 
-        multifirma = OrdenExamen.objects.select_related(
-            'examen',
-        ).prefetch_related(
-            'mis_firmas',
-            'mis_firmas__especialista',
-            'mis_firmas__especialista__especialidad',
-        ).annotate(
-            can_firmas=Count("mis_firmas")
-        ).filter(
-            orden=orden,
-            can_firmas__gt=1,
-            examen__especial=False,
-        )
+        tipo_envio = request.POST.get('tipo_envio')
 
-        una_firma = OrdenExamenFirmas.objects.select_related(
-            'especialista',
-            'especialista__especialidad',
-            'orden_examen',
-            'orden_examen__examen',
-            'orden_examen__examen__subgrupo_cups',
-        ).annotate(
-            especialist=F('especialista'),
-            can_firmas=Count("orden_examen__mis_firmas")
-        ).filter(
-            orden_examen__orden=orden,
-            orden_examen__examen__especial=False,
-            can_firmas=1
-        ).order_by('especialista')
+        send_to = []
 
-        # pdf = render_to_pdf('email/ordenes/resultados.html', {
-        #     'una_firma': una_firma,
-        #     'multifirma': multifirma
-        # })
-        text_content = render_to_string('email/ordenes/resultados.html', {
-            'una_firma': una_firma,
-            'multifirma': multifirma,
-            'paciente': orden.paciente,
-            'orden': orden,
-            'entidad': orden.entidad,
-            'medico_remitente': orden.medico_remitente,
-        })
+        if tipo_envio == 'Cliente' or tipo_envio == 'Ambos':
+            send_to.append(orden.paciente.email)
+
+        if tipo_envio == 'Entidad' or tipo_envio == 'Ambos':
+            send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
+
+        self.generar_resultados(orden, context_examenes)
+
+        text_content = render_to_string('email/ordenes/resultados/cuerpo_correo.html', {})
 
         ctx = {
-            'una_firma': una_firma,
-            'multifirma': multifirma,
+            'una_firma': context_examenes['una_firma'],
+            'multifirma': context_examenes['multifirma'],
             'paciente': orden.paciente,
             'orden': orden,
             'entidad': orden.entidad,
@@ -98,7 +71,7 @@ class OrdenViewSet(viewsets.ModelViewSet):
 
         # https://gist.github.com/pikhovkin/5642563
 
-        html_get_template = get_template('email/ordenes/resultados.html').render(ctx)
+        html_get_template = get_template('email/ordenes/resultados/resultados.html').render(ctx)
 
         html = HTML(
             string=html_get_template,
@@ -140,24 +113,27 @@ class OrdenViewSet(viewsets.ModelViewSet):
             page_body.children += header_body.all_children()
             page_body.children += footer_body.all_children()
 
-        # output = BytesIO()
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+
         # main_doc.write_pdf(
-        #     target=output
+        #     target='correo-prueba.pdf'
         # )
 
-        main_doc.write_pdf(
-            target='correo-prueba.pdf'
-        )
-
         msg = EmailMultiAlternatives(
-            'prueba',
+            'Resultados de examenes',
             text_content,
-            'webmaster@odecopack.co',
-            to=['fabio.garcia.sanchez@gmail.com']
+            'Laboratorios Collazos <webmaster@odecopack.co>',
+            to=send_to
         )
         msg.attach_alternative(text_content, "text/html")
-        msg.attach('prueba', output.getvalue(), 'application/pdf')
-        msg.send()
+        msg.attach('Resultados Orden de Laboratorio %s' % orden.id, output.getvalue(), 'application/pdf')
+        try:
+            msg.send()
+        except Exception as e:
+            raise serializers.ValidationError('Se há presentado un error al intentar enviar el correo, envío fallido')
         return Response({'resultado': 'ok'})
 
     @list_route(methods=['get'])

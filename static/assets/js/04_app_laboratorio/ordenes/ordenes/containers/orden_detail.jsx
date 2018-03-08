@@ -135,6 +135,19 @@ class Detail extends Component {
         );
     }
 
+    enviarCorreo(tipo) {
+        const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        cargando();
+        const success_callback = () => {
+            notificarAction(`Se ha enviado correctamente los resultados`);
+            noCargando();
+        };
+        this.props.enviarOrdenExamenesEmail(object.id, tipo, success_callback, (r) => {
+            notificarErrorAjaxAction(r, 60000);
+            noCargando();
+        })
+    }
+
     render() {
         const {object, mis_permisos, entidades_list} = this.props;
         const {modal_open} = this.state;
@@ -214,9 +227,21 @@ class Detail extends Component {
                 }
                 <span className='btn btn-primary'
                       onClick={() => {
-                          this.props.enviarOrdenExamenesEmail(object.id)
+                          this.enviarCorreo('Cliente')
                       }}>
-                    Enviar
+                    Enviar A Cliente
+                </span>
+                <span className='btn btn-primary'
+                      onClick={() => {
+                          this.enviarCorreo('Entidad')
+                      }}>
+                    Enviar A Entidad
+                </span>
+                <span className='btn btn-primary'
+                      onClick={() => {
+                          this.enviarCorreo('Ambos')
+                      }}>
+                    Enviar Ambos
                 </span>
                 <CargarDatos cargarDatos={this.cargarDatos}/>
             </ValidarPermisos>

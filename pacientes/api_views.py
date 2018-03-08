@@ -32,19 +32,3 @@ class PacienteViewSet(viewsets.ModelViewSet):
             validacion_reponse.update({'nro_identificacion': 'Ya exite'})
 
         return Response(validacion_reponse)
-
-    @list_route(http_method_names=['get', ])
-    def searcg_by_and(self, request):
-        search_fields = request.GET.get('search_fields')
-        parametro = request.GET.get('parametro')
-        qs = query_varios_campos_and(self.queryset, search_fields, parametro)
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)
-
-    @list_route(http_method_names=['get', ])
-    def searcg_by_or(self, request):
-        search_fields = request.GET.get('search_fields')
-        parametro = request.GET.get('parametro')
-        qs = query_varios_campos_or(self.queryset, search_fields, parametro)
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)

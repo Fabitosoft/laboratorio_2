@@ -59,10 +59,10 @@ class Tabla extends React.Component {
         return (
             <ReactTable
                 data={data.sort((a, b) => {
-                    if (a.examen_nombre > b.examen_nombre) {
+                    if (a.id > b.id) {
                         return 1;
                     }
-                    if (a.examen_nombre < b.examen_nombre) {
+                    if (a.id < b.id) {
                         return -1;
                     }
                     return 0;
