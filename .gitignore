@@ -1,6 +1,5 @@
 db.sqlite3
 .idea/*
-/laboratorio_2/settings/production.py
 /secretsLocal.json
 /cositas
 /node_modules
