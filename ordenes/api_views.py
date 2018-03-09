@@ -125,7 +125,7 @@ class OrdenViewSet(OrdenesResultadosMixin, viewsets.ModelViewSet):
         msg = EmailMultiAlternatives(
             'Resultados de examenes',
             text_content,
-            'Laboratorios Collazos <webmaster@odecopack.co>',
+            'Laboratorios Collazos <fabio.garcia.sanchez@gmail.com>',
             to=send_to
         )
         msg.attach_alternative(text_content, "text/html")
