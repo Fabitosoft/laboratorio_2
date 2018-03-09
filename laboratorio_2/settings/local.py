@@ -89,3 +89,6 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(SITE_ROOT, 'webpack-stats.json'),
     }
 }
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'

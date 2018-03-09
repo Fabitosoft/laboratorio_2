@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+
+
 def str_to_bool(s):
     if s == 'True':
         return True
@@ -18,6 +20,7 @@ def str_to_bool(s):
         return False
     else:
         raise ValueError
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -110,6 +113,12 @@ DATABASES = {
     }
 }
 
+########## STATIC FILE CONFIGURATION
+STATICFILES_DIRS = [
+    os.path.normpath(os.path.join(SITE_ROOT, "static"))
+]
+########## END STATIC FILE CONFIGURATION
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -147,8 +156,3 @@ USE_THOUSAND_SEPARATOR = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = "media"
-STATIC_ROOT = "/static/"
