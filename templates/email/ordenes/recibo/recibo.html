@@ -1,0 +1,141 @@
+{% load static %}
+<style>
+    div {
+        font-size: 10px;
+    }
+
+    .datos {
+        font-size: 0.6rem;
+        margin-left: -1.2cm;
+        margin-top: -0.4cm;
+    }
+
+    .datos .td1 {
+
+    }
+
+    .datos .td2 {
+        padding-left: 2rem;
+    }
+
+    .recibo {
+        color: #000;
+        font-size: 12px;
+    }
+
+    .recibo tr {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .recibo table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .recibo th,
+    .recibo td {
+        font-size: 9px;
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .recibo .dinero {
+        text-align: right;
+    }
+
+    .recibo tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .recibo td, .recibo th {
+        border-bottom: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+    }
+</style>
+<div>
+    <table style="width: 100%">
+        <tr>
+            <td style="text-align: justify; width: 10cm" class="datos">
+                <table>
+                    <tr>
+                        <td class="td1"><strong>Registro: </strong>{{ orden.id }}</td>
+                        <td class="td2"><strong>Paciente: </strong>{{ orden.paciente.full_name|title }}</td>
+                    </tr>
+                    <tr>
+                        <td class="td1">
+                            <strong>Edad: </strong>{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
+                        <td class="td2"><strong>Id: </strong>{{ orden.paciente.identificacion|title }}</td>
+                    </tr>
+                    <tr>
+                        <td class="td1"><strong>Teléfono: </strong>{{ orden.orden.numero_contacto_alternativo }}</td>
+                        <td class="td2"><strong>Entidad: </strong>{{ orden.entidad.nombre|title }}</td>
+                    </tr>
+                    <tr>
+                        <td class="td1"><strong>Médico Remitente: </strong>{{ orden.medico_remitente.full_name|title }}
+                        </td>
+                        <td class="td2"><strong>Forma de Pago: </strong>{{ orden.get_tipo_pago_display }}</td>
+                    </tr>
+                    <tr>
+                        <td class="td1"><strong>Fecha: </strong>{{ orden.created }}
+                        </td>
+                        <td class="td2"><strong>Impresión: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 7cm; text-align: right">
+                Cra 42 Nro 5B53 (2do PISO)<br/>
+                B. Tequendama - Cali<br/>
+                Tel: 403 11 98 - PBX: 553 27 37 - Cel: 3182032203<br/>
+                mylabcollazos@hotmail.com <br/>
+                NIT: 800.200.522-3
+            </td>
+            <td style="text-align: right">
+                <img style="width: 2cm" src="{% static 'img/logo.png' %}" alt="">
+            </td>
+        </tr>
+    </table>
+    <div class="recibo">
+        <table class="table table-striped tabla">
+            <thead>
+            <tr>
+                <th style="width: 70%">Examen</th>
+                <th class="dinero" style="width: 10%">Valor</th>
+                <th class="dinero" style="width: 10%">Descuento</th>
+                <th class="dinero" style="width: 10%">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for examen in orden.mis_examenes.all %}
+                <tr>
+                    <td>
+                        $ {{ examen.examen_nombre }}
+                    </td>
+                    <td class="dinero">
+                        $ {{ examen.valor_total }}
+                    </td>
+                    <td class="dinero">
+                        $ {{ examen.valor_descuento }}
+                    </td>
+                    <td class="dinero">
+                        $ {{ examen.valor_final }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td><strong>Totales</strong></td>
+                <td class="dinero"><strong>$ {{ orden.valor_total }}</strong></td>
+                <td class="dinero"><strong> $ {{ orden.valor_descuento }}</strong></td>
+                <td class="dinero" style="border-bottom: black double"><strong> $ {{ orden.valor_final }}</strong></td>
+            </tr>
+            </tfoot>
+        </table>
+        <span>Valor a pagar el paciente: <strong> $ {{ orden.valor_final }}</strong></span>
+    </div>
+</div>

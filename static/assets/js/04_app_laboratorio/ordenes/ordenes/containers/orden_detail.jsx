@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+import PrinJs from 'print-js';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
@@ -23,6 +24,8 @@ class Detail extends Component {
         this.adicionarExamen = this.adicionarExamen.bind(this);
         this.eliminarExamen = this.eliminarExamen.bind(this);
         this.cambiarDescuentoExamen = this.cambiarDescuentoExamen.bind(this);
+        this.imprimirExamenes = this.imprimirExamenes.bind(this);
+        this.imprimirRecibo = this.imprimirRecibo.bind(this);
     }
 
     componentDidMount() {
@@ -138,7 +141,16 @@ class Detail extends Component {
     enviarCorreo(tipo) {
         const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
         cargando();
-        const success_callback = () => {
+        const success_callback = (response) => {
+            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.setAttribute('download', 'prueba.pdf');
+            //
+            // document.body.appendChild(link);
+            // link.click();
+            PrinJs(url)
+            //window.open(url, "_blank");
             notificarAction(`Se ha enviado correctamente los resultados`);
             noCargando();
         };
@@ -147,6 +159,35 @@ class Detail extends Component {
             noCargando();
         })
     }
+
+    imprimirExamenes() {
+        const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        cargando();
+        const success_callback = (response) => {
+            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
+            PrinJs(url);
+            noCargando();
+        };
+        this.props.printOrdenExamenes(object.id, success_callback, (r) => {
+            notificarErrorAjaxAction(r, 60000);
+            noCargando();
+        })
+    }
+
+    imprimirRecibo() {
+        const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        cargando();
+        const success_callback = (response) => {
+            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
+            PrinJs(url);
+            noCargando();
+        };
+        this.props.printOrdenRecibo(object.id, success_callback, (r) => {
+            notificarErrorAjaxAction(r, 60000);
+            noCargando();
+        })
+    }
+
 
     render() {
         const {object, mis_permisos, entidades_list} = this.props;
@@ -158,6 +199,8 @@ class Detail extends Component {
         }
 
         const entidad = entidades_list[object.entidad];
+
+        const cant_exam_verificados = object.mis_examenes.filter(e => e.examen_estado > 1).length;
 
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de orden'>
@@ -222,27 +265,31 @@ class Detail extends Component {
                 />
                 {
                     object.estado === 0 &&
+                    object.mis_examenes.length > 0 &&
                     <button className='btn btn-primary'
                             onClick={() => this.onSubmit({...object, estado: 1})}>Pagado</button>
                 }
-                <span className='btn btn-primary'
-                      onClick={() => {
-                          this.enviarCorreo('Cliente')
-                      }}>
-                    Enviar A Cliente
-                </span>
-                <span className='btn btn-primary'
-                      onClick={() => {
-                          this.enviarCorreo('Entidad')
-                      }}>
-                    Enviar A Entidad
-                </span>
-                <span className='btn btn-primary'
-                      onClick={() => {
-                          this.enviarCorreo('Ambos')
-                      }}>
-                    Enviar Ambos
-                </span>
+                {
+                    object.estado === 1 &&
+                    cant_exam_verificados > 0 &&
+                    <Fragment>
+                            <span className='btn btn-primary' onClick={() => {
+                                this.enviarCorreo('Cliente')
+                            }}>Enviar A Cliente</span>
+                        <span className='btn btn-primary' onClick={() => {
+                            this.enviarCorreo('Entidad')
+                        }}>Enviar A Entidad</span>
+                        <span className='btn btn-primary' onClick={() => {
+                            this.enviarCorreo('Ambos')
+                        }}>Enviar Ambos</span>
+                        <span className='btn btn-primary' onClick={() => {
+                            this.imprimirExamenes()
+                        }}>Imprimir Examenes</span>
+                        <span className='btn btn-primary' onClick={() => {
+                            this.imprimirRecibo()
+                        }}>Imprimir Recibo</span>
+                    </Fragment>
+                }
                 <CargarDatos cargarDatos={this.cargarDatos}/>
             </ValidarPermisos>
         )

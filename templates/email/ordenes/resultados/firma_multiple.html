@@ -2,8 +2,8 @@
     {% if firma %}
         <img class="firma-imagen" src="{{ firma.especialista.firma.url }}" alt="">
     {% endif %}
-    <div style="margin-top: -30px">
+    <div>
         <span class="especialista-nombre">{{ firma.especialista.full_name }}</span><br/>
-        <span class="especialista-especialidad"><small>{{ firma.especialidad.nombre }}</small></span>
+        <span class="especialista-especialidad"><small>{{ firma.especialista.especialidad.nombre }}</small></span>
     </div>
 </div>

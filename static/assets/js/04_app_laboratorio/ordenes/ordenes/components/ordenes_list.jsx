@@ -24,6 +24,7 @@ class List extends Component {
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
+        this.props.history.push(`/app/laboratorio/ordenes/detail/${item.id}`)
     }
 
 
@@ -46,8 +47,8 @@ class List extends Component {
 
     createObjectMethod(item, successCallback) {
         const {cargando, notificarErrorAjaxAction} = this.props;
-        const success_method = () => {
-            this.successSubmitCallback(item);
+        const success_method = (response) => {
+            this.successSubmitCallback(response);
             successCallback();
         };
         cargando();

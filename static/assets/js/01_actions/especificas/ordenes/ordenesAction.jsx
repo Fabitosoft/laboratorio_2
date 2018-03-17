@@ -13,7 +13,8 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethodWithParameters,
+    callApiMethodWithParametersPDF
 }
     from
         '../../00_general_fuctions'
@@ -25,6 +26,21 @@ export function enviarOrdenExamenesEmail(id, tipo_envio, callback = null, callba
         let params = new URLSearchParams();
         params.append('tipo_envio', tipo_envio);
         callApiMethodWithParameters(current_url_api, id, 'enviar_email', params, null, callback, callback_error)
+    }
+}
+
+
+export function printOrdenExamenes(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados', null, null, callback, callback_error)
+    }
+}
+
+
+
+export function printOrdenRecibo(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_recibo', null, null, callback, callback_error)
     }
 }
 

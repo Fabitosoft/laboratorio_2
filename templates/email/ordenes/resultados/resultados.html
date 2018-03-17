@@ -1,19 +1,111 @@
-{% load static %}
+<style>
+    .resultado-examenes {
+        color: #000;
+        font-size: 12px;
+    }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    .resultado-examenes .prueba {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        font-size: 0.8rem;
+        border-right: #000 1px solid;
+        float: left;
+    }
 
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/email.min.css' %}">
-</head>
-<body>
-{% include 'email/ordenes/resultados/datos_orden.html' %}
-<div style="clear:both;" class="resultado-examenes">
+    .resultado-examenes .grupo-examenes-multifirma {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .resultado-examenes .grupo-examenes {
+        margin-top: 1rem;
+    }
+
+    .resultado-examenes .tabla {
+        font-size: 0.8rem;
+    }
+
+    .resultado-examenes .resultado {
+        font-size: 0.7rem;
+    }
+
+    .resultado-examenes .tecnica {
+        font-size: 0.7rem;
+        color: #00bfff;
+    }
+
+    .resultado-examenes .observaciones {
+        text-align: justify;
+        font-size: 0.7rem;
+        color: #696969;
+    }
+
+    .resultado-examenes .nombre-examen {
+        font-size: 0.9rem;
+    }
+
+    .resultado-examenes .valor-referencia {
+        text-align: justify;
+        font-size: 0.7rem;
+    }
+
+    .resultado-examenes .info-adicional {
+        color: #87cefa;
+    }
+
+    .resultado-examenes .grupo-subcups-titulo {
+        font-size: 1.4rem;
+        color: #00bfff;
+    }
+
+    .resultado-examenes .especialista-especialidad {
+        font-size: 0.6rem;
+    }
+
+    .resultado-examenes .especialista-nombre {
+        font-size: 0.7rem;
+    }
+
+    .resultado-examenes .firma {
+        width: 5cm;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .resultado-examenes .firma-imagen {
+        width: 70%;
+    }
+
+    .resultado-examenes tr {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .resultado-examenes table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .resultado-examenes th,
+    .resultado-examenes td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .resultado-examenes tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .resultado-examenes table, .resultado-examenes td, .resultado-examenes th {
+        border-bottom: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+    }
+
+</style>
+<div class="resultado-examenes">
     {% if una_firma %}
         {% include 'email/ordenes/resultados/resultados_una_firma.html' %}
     {% endif %}
@@ -21,5 +113,3 @@
         {% include 'email/ordenes/resultados/resultados_multifirma.html' %}
     {% endif %}
 </div>
-</body>
-</html>

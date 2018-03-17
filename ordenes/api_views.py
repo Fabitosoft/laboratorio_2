@@ -1,32 +1,23 @@
-import os
-from smtplib import SMTPException
-
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Q, Count, F
+from django.db.models import Q
 from io import BytesIO
 
-from django.template.loader import get_template, render_to_string
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import viewsets, serializers
-from weasyprint import HTML, CSS
 
-from ordenes.mixins import OrdenesResultadosMixin
+from ordenes.mixins import OrdenesPDFMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
-from .models import Orden, OrdenExamen, OrdenExamenFirmas
+from .models import Orden, OrdenExamen
 from medicos.models import Especialista
 
 
 # from examenes_especiales.models import Biopsia, Citologia
 
-def get_page_body(boxes):
-    for box in boxes:
-        if box.element_tag == 'body':
-            return box
-        return get_page_body(box.all_children())
 
-
-class OrdenViewSet(OrdenesResultadosMixin, viewsets.ModelViewSet):
+class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
     queryset = Orden.objects.select_related(
         'medico_remitente',
         'paciente',
@@ -44,97 +35,75 @@ class OrdenViewSet(OrdenesResultadosMixin, viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def enviar_email(self, request, pk=None):
         orden = self.get_object()
-        context_examenes = {}
-
         tipo_envio = request.POST.get('tipo_envio')
-
         send_to = []
-
         if tipo_envio == 'Cliente' or tipo_envio == 'Ambos':
             send_to.append(orden.paciente.email)
 
         if tipo_envio == 'Entidad' or tipo_envio == 'Ambos':
             send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
 
-        self.generar_resultados(orden, context_examenes)
+        main_doc = self.generar_pdf(request, orden)
+
+        es_prueba = True
 
         text_content = render_to_string('email/ordenes/resultados/cuerpo_correo.html', {})
 
-        ctx = {
-            'una_firma': context_examenes['una_firma'],
-            'multifirma': context_examenes['multifirma'],
-            'paciente': orden.paciente,
-            'orden': orden,
-            'entidad': orden.entidad,
-            'medico_remitente': orden.medico_remitente,
-        }
+        if es_prueba:
+            main_doc.write_pdf(
+                target='correo-prueba.pdf',
+                zoom=1,
+            )
+        else:
+            output = BytesIO()
+            main_doc.write_pdf(
+                target=output
+            )
 
-        # https://gist.github.com/pikhovkin/5642563
+            msg = EmailMultiAlternatives(
+                'Resultados de examenes',
+                text_content,
+                'Laboratorios Collazos <fabio.garcia.sanchez@gmail.com>',
+                to=send_to
+            )
+            msg.attach_alternative(text_content, "text/html")
+            msg.attach('Resultados Orden de Laboratorio %s' % orden.id, output.getvalue(), 'application/pdf')
+            try:
+                msg.send()
+            except Exception as e:
+                raise serializers.ValidationError(
+                    'Se há presentado un error al intentar enviar el correo, envío fallido')
+        return Response({'resultado': 'ok'})
 
-        html_get_template = get_template('email/ordenes/resultados/resultados.html').render(ctx)
-
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-
-        main_doc = html.render()
-
-        ctx = {
-            'titulo': 'titulo de prueba ctx',
-        }
-        html_get_template = get_template('email/cabecera.html').render(ctx)
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        header = html.render(
-            stylesheets=[CSS(string='div {position: fixed; top: 1cm; left: 1cm;}')])
-
-        header_page = header.pages[0]
-        header_body = get_page_body(header_page._page_box.all_children())
-        header_body = header_body.copy_with_children(header_body.all_children())
-
-        html_get_template = get_template('email/pie_pagina.html').render(ctx)
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        footer = html.render(
-            stylesheets=[CSS(string='div {position: fixed; bottom: 1cm; left: 1cm;}')])
-
-        footer_page = footer.pages[0]
-        footer_body = get_page_body(footer_page._page_box.all_children())
-        footer_body = footer_body.copy_with_children(header_body.all_children())
-
-        for i, page in enumerate(main_doc.pages):
-            page_body = get_page_body(page._page_box.all_children())
-
-            page_body.children += header_body.all_children()
-            page_body.children += footer_body.all_children()
-
+    @detail_route(methods=['post'])
+    def print_resultados(self, request, pk=None):
+        orden = self.get_object()
+        main_doc = self.generar_resultados_pdf(request, orden)
         output = BytesIO()
         main_doc.write_pdf(
             target=output
         )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
-        # main_doc.write_pdf(
-        #     target='correo-prueba.pdf'
-        # )
-
-        msg = EmailMultiAlternatives(
-            'Resultados de examenes',
-            text_content,
-            'Laboratorios Collazos <fabio.garcia.sanchez@gmail.com>',
-            to=send_to
+    @detail_route(methods=['post'])
+    def print_recibo(self, request, pk=None):
+        orden = self.get_object()
+        main_doc = self.generar_recibo_pdf(request, orden)
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
         )
-        msg.attach_alternative(text_content, "text/html")
-        msg.attach('Resultados Orden de Laboratorio %s' % orden.id, output.getvalue(), 'application/pdf')
-        try:
-            msg.send()
-        except Exception as e:
-            raise serializers.ValidationError('Se há presentado un error al intentar enviar el correo, envío fallido')
-        return Response({'resultado': 'ok'})
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
     @list_route(methods=['get'])
     def buscar_x_parametro(self, request):

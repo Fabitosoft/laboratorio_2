@@ -1,7 +1,7 @@
 {#style="page-break-after: always;#}
 {% regroup multifirma|dictsort:"examen.subgrupo_cups.nombre" by examen.subgrupo_cups.nombre as grupo_cup_list %}
 {% for grupo in grupo_cup_list %}
-    <div style="clear: both; page-break-inside:avoid ">
+    <div style="clear: both; page-break-inside:avoid " class="grupo-examenes-multifirma">
         <div style="width: 100%; text-align: center">
             <span class="grupo-subcups-titulo">{{ grupo.grouper }}</span>
         </div>
