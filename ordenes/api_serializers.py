@@ -2,8 +2,7 @@ from rest_framework import serializers
 
 from .models import Orden, OrdenExamen, OrdenExamenFirmas  # , HistorialOrdenExamen,
 
-
-# from examenes_especiales.api_serializers import BiopsiaSerializer, CitologiaSerializer
+from examenes_especiales.api_serializers import CitologiaSerializer
 
 
 class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
@@ -81,6 +80,7 @@ class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
 #
 #
 class OrdenExamenSerializer(serializers.ModelSerializer):
+    nro_examen_especial = serializers.SerializerMethodField()
     entidad_nombre = serializers.CharField(source='orden.entidad.nombre', read_only=True)
     examen_estado_nombre = serializers.CharField(source='get_examen_estado_display', read_only=True)
     sub_categoria_cup_nombre = serializers.CharField(source='examen.subgrupo_cups.nombre', read_only=True)
@@ -92,6 +92,8 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'entidad_nombre',
+            'nro_examen',
+            'nro_examen_especial',
             'examen_estado',
             'sub_categoria_cup_nombre',
             'resultado',
@@ -112,8 +114,17 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'multifirma',
             'especial',
             'nro_plantilla',
-            'observaciones'
+            'observaciones',
+            'citologia',
+            'biopsia',
         ]
+        extra_kwargs = {
+            'citologia': {'required': False, 'allow_null': True},
+            'biopsia': {'required': False, 'allow_null': True},
+        }
+
+    def get_nro_examen_especial(self, obj):
+        return obj.get_numero_examen_especial()
 
 
 class OrdenSerializer(serializers.ModelSerializer):

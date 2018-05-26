@@ -22,6 +22,8 @@ import entidadExamenesReducer from './especificas/entidades/entidadExamenesReduc
 import pacientesReducer from './especificas/pacientes/pacientesReducer';
 import ordenesReducer from './especificas/ordenes/ordenesReducer';
 import ordenesExamenReducer from './especificas/ordenes/ordenExamenReducer';
+import citologiasExamenReducer from './especificas/examenes_especiales/citilogiasReducer';
+import biopsiasExamenReducer from './especificas/examenes_especiales/biopsiasReducer';
 
 
 const rootReducer = combineReducers({
@@ -46,6 +48,8 @@ const rootReducer = combineReducers({
     pacientes: pacientesReducer,
     ordenes: ordenesReducer,
     ordenes_examenes: ordenesExamenReducer,
+    citologias: citologiasExamenReducer,
+    biopsias: biopsiasExamenReducer,
 });
 
 export default rootReducer;

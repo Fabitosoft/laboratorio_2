@@ -73,6 +73,7 @@ class OrdenExamen(TimeStampedModel):
         (3, 'Impreso'),
     )
     examen_estado = models.PositiveIntegerField(default=0, choices=EXAMEN_ESTADO_CHOICES)
+    nro_examen = models.PositiveIntegerField(null=True, blank=True)
     examen = models.ForeignKey(Examen, related_name='resultados', on_delete=models.PROTECT)
     orden = models.ForeignKey(Orden, related_name='mis_examenes', on_delete=models.PROTECT)
     tecnica = models.CharField(max_length=100, verbose_name='Técnica', blank=True, null=True)
@@ -112,11 +113,11 @@ class OrdenExamen(TimeStampedModel):
         ]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.examen_estado in [0, 1]:
-            if self.resultado:
-                self.examen_estado = 1
-            else:
-                self.examen_estado = 0
+        # if self.examen_estado in [0, 1]:
+        #     if self.resultado:
+        #         self.examen_estado = 1
+        #     else:
+        #         self.examen_estado = 0
         super().save(force_insert, force_update, using, update_fields)
         self.orden.calcular_totales()
 
@@ -134,6 +135,25 @@ class OrdenExamen(TimeStampedModel):
             for firma in self.mis_firmas.all():
                 firma.delete()
             self.mis_firmas.create(especialista=especialista)
+
+    def get_tipo_examen_especial(self):
+        tipo = None
+        if hasattr(self, 'biopsia'):
+            tipo = self.biopsia
+        if hasattr(self, 'citologia'):
+            tipo = self.citologia
+        return tipo
+
+    def generar_nro_examen_especial(self):
+        tipo_examen = self.get_tipo_examen_especial()
+        if tipo_examen:
+            tipo_examen.generar_numero()
+
+    def get_numero_examen_especial(self):
+        tipo_examen = self.get_tipo_examen_especial()
+        if tipo_examen:
+            return tipo_examen.get_numero_examen()
+        return ''
 
 
 class OrdenExamenFirmas(TimeStampedModel):

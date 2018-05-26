@@ -1,0 +1,64 @@
+{% load verbose_names static %}
+<div style="clear: both; page-break-after: always; page-break-before: always" class="grupo-examenes">
+    <div style="text-align: center">
+        <span class="grupo-subcups-titulo">{{ examen.examen.nombre }}</span>
+    </div>
+    {% if citologia.A1_1 %}
+        {% get_verbose_field_name citologia "A1_1" %}
+        <br/>
+    {% endif %}
+    {% if citologia.A1_2 %}
+        {% get_verbose_field_name citologia "A1_2" %}
+    {% endif %}
+    {% if citologia.A1_1 or citologia.A1_2 %}
+        <div style="padding-left: 6px">
+            {% if citologia.A1_1a %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_1a citologia=citologia nombre_campo='A1_1a' %}
+                <br/>
+            {% endif %}
+            {% if citologia.A1_1b %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_1b citologia=citologia nombre_campo='A1_1b' %}
+                <br/>
+            {% endif %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_i citologia=citologia nombre_campo='A1_i' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_ii citologia=citologia nombre_campo='A1_ii' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_iii citologia=citologia nombre_campo='A1_iii' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_iv citologia=citologia nombre_campo='A1_iv' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_v citologia=citologia nombre_campo='A1_v' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_vi citologia=citologia nombre_campo='A1_vi' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A1_vii citologia=citologia nombre_campo='A1_vii' %}<br/>
+        </div>
+    {% endif %}
+    {% if citologia.A3 %}
+        {% get_verbose_field_name citologia "A3" %}:
+        <div style="padding-left: 6px">
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A3a citologia=citologia nombre_campo='A3a' %}<br/>
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.A3b citologia=citologia nombre_campo='A3b' %}<br/>
+        </div>
+    {% endif %}
+    {% if citologia.B1 %}
+        <div style="padding-top: 10px">
+            {% get_verbose_field_name citologia "B1" %}:
+            <div style="padding-left: 6px">
+                {% if citologia.B1a %}
+                    {% get_verbose_field_name citologia "B1a" %}:
+                    <div style="padding-left: 6px">
+                        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1a_i citologia=citologia nombre_campo='B1a_i' %}<br/>
+                        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1a_ii citologia=citologia nombre_campo='B1a_ii' %}<br/>
+                        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1a_iii citologia=citologia nombre_campo='B1a_iii' %}<br/>
+                        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1a_iv citologia=citologia nombre_campo='B1a_iv' %}<br/>
+                    </div>
+                {% endif %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1b citologia=citologia nombre_campo='B1b' %}<br/>
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1b citologia=citologia nombre_campo='B1c' %}<br/>
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.B1b citologia=citologia nombre_campo='B1d' %}<br/>
+            </div>
+        </div>
+    {% endif %}
+    {% include 'email/ordenes/resultados/especiales/observaciones.html' with observaciones=citologia.observaciones %}
+    <div>
+        {% for firma in examen.mis_firmas.all %}
+            {% include 'email/ordenes/resultados/firma_multiple.html' with firma=firma %}
+        {% endfor %}
+    </div>
+</div>

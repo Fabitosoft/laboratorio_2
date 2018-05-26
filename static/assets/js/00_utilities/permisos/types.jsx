@@ -123,3 +123,19 @@ export const ORDENES_EXAMENES = {
     firmar_como: 'firmar_como_ordenexamen',
     verificar: 'verificar_ordenexamen',
 };
+
+export const CITOLOGIAS = {
+    add: 'add_citologia',
+    delete: 'delete_citologia',
+    change: 'change_citologia',
+    list: 'list_citologia',
+    detail: 'detail_citologia',
+};
+
+export const BIOPSIAS = {
+    add: 'add_biopsia',
+    delete: 'delete_biopsia',
+    change: 'change_biopsia',
+    list: 'list_biopsia',
+    detail: 'detail_biopsia',
+};

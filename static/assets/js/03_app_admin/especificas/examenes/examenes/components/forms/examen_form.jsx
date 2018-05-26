@@ -80,7 +80,7 @@ class Form extends Component {
                             className="col-12"
                             nombre='Uni. Medida'
                             name='unidad_medida'
-                            case='U'/>
+                        />
                         <MyTextFieldSimple
                             className="col-12"
                             nombre='Costo Referencia'

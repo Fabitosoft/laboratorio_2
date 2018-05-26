@@ -1,6 +1,8 @@
-from django.core.mail import EmailMultiAlternatives
-from django.db.models import Q
+import datetime
 from io import BytesIO
+
+from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q, Max
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -12,9 +14,7 @@ from ordenes.mixins import OrdenesPDFMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
 from .models import Orden, OrdenExamen
 from medicos.models import Especialista
-
-
-# from examenes_especiales.models import Biopsia, Citologia
+from examenes_especiales.models import Biopsia, Citologia
 
 
 class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
@@ -124,6 +124,27 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(elaborado_por=self.request.user)
 
+    def perform_update(self, serializer):
+        orden = serializer.save()
+        if orden.estado == 1:
+            qs = OrdenExamen.objects.filter(
+                nro_examen__isnull=False,
+            ).aggregate(
+                ultimo_indice=Max('nro_examen')
+            )
+            ultimo_indice_examen = qs.get('ultimo_indice')
+            if not ultimo_indice_examen:
+                ultimo_indice_examen = 200000
+
+            mis_examenes = orden.mis_examenes
+
+            for examen in mis_examenes.all():
+                if not examen.nro_examen:
+                    ultimo_indice_examen = ultimo_indice_examen + 1
+                    examen.nro_examen = ultimo_indice_examen
+                    examen.save()
+                    examen.generar_nro_examen_especial()
+
 
 class OrdenExamenViewSet(viewsets.ModelViewSet):
     queryset = OrdenExamen.objects.select_related(
@@ -186,12 +207,8 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         orden_examen = serializer.save(creado_por=self.request.user)
-
-    #     if orden_examen.especial:
-    #         if orden_examen.nro_plantilla == 1:
-    #             Biopsia.objects.create(orden_examen=orden_examen)
-    #         if orden_examen.nro_plantilla == 2:
-    #             Citologia.objects.create(orden_examen=orden_examen)
-
-    def perform_update(self, serializer):
-        serializer.save(modificado_por=self.request.user)
+        if orden_examen.especial:
+            if orden_examen.nro_plantilla == 1:
+                Biopsia.objects.create(orden_examen=orden_examen)
+            if orden_examen.nro_plantilla == 2:
+                Citologia.objects.create(orden_examen=orden_examen)

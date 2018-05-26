@@ -3,7 +3,7 @@ import {reduxForm} from 'redux-form';
 import {
     MyTextFieldSimple,
     MyCheckboxSimple,
-    MySelectField
+    MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
@@ -35,15 +35,17 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <MySelectField
+                <MyCombobox
                     className='col-12'
                     nombre='Examen'
                     name='examen'
-                    options={
+                    valueField='id'
+                    textField='nombre'
+                    data={
                         _.map(examenes_list, e => {
                             return {
-                                value: e.id,
-                                primaryText: e.nombre
+                                id: e.id,
+                                nombre: e.nombre
                             }
                         })
                     }

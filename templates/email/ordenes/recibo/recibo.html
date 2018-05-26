@@ -113,7 +113,7 @@
             {% for examen in orden.mis_examenes.all %}
                 <tr>
                     <td>
-                        $ {{ examen.examen_nombre }}
+                        {{ examen.examen_nombre }}
                     </td>
                     <td class="dinero">
                         $ {{ examen.valor_total }}

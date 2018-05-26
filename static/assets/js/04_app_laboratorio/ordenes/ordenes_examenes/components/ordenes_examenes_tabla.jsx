@@ -73,6 +73,16 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
+                                Header: "Consecutivo Examen",
+                                accessor: "nro_examen",
+                                maxWidth: 150,
+                                show: orden.estado === 1,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
                                 Header: "Nombre",
                                 accessor: "examen_nombre",
                                 maxWidth: 250,
@@ -108,7 +118,7 @@ class Tabla extends React.Component {
                                 },
                                 Cell: row => {
                                     return (
-                                        orden.estado===0 ?
+                                        orden.estado === 0 ?
                                             <EditableCell cellInfo={row}
                                                           cambiarDescuentoExamen={cambiarDescuentoExamen}/> :
                                             pesosColombianos(row.value)

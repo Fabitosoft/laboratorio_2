@@ -12,6 +12,11 @@
         float: left;
     }
 
+    .resultado-examenes .multilinea {
+        white-space: pre-line;
+        text-align: justify;
+    }
+
     .resultado-examenes .grupo-examenes-multifirma {
         margin-top: 2rem;
         margin-bottom: 2rem;
@@ -111,5 +116,15 @@
     {% endif %}
     {% if multifirma %}
         {% include 'email/ordenes/resultados/resultados_multifirma.html' %}
+    {% endif %}
+    {% if especiales %}
+        {% for examen in especiales.all %}
+            {% if examen.examen.nro_plantilla == 1 %}
+                {% include 'email/ordenes/resultados/especiales/1_plantilla_biopsia/1_platinlla_biopsia.html' with biopsia=examen.biopsia examen=examen %}
+            {% endif %}
+            {% if examen.examen.nro_plantilla == 2 %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/2_platinlla_citologia.html' with citologia=examen.citologia examen=examen %}
+            {% endif %}
+        {% endfor %}
     {% endif %}
 </div>

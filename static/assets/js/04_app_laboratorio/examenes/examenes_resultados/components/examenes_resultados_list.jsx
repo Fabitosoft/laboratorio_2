@@ -50,13 +50,20 @@ class List extends Component {
 
     updateObjectMethod(item, successCallback) {
         const {cargarOrdenesExamenes, cargando, notificarErrorAjaxAction} = this.props;
+        let updateMethod = this.props.updateOrdenExamen;
+        if (item.es_citologia) {
+            updateMethod = this.props.updateCitologia;
+        }
+        if (item.es_biopsia) {
+            updateMethod = this.props.updateBiopsia;
+        }
         const success_method = () => {
             this.successSubmitCallback(item);
             successCallback();
             cargarOrdenesExamenes();
         };
         cargando();
-        this.props.updateOrdenExamen(item.id, item, success_method, notificarErrorAjaxAction);
+        updateMethod(item.id, item, success_method, notificarErrorAjaxAction);
     }
 
     deleteObjectMethod(item, successCallback) {

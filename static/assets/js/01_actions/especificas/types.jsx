@@ -74,16 +74,34 @@ export const FETCH_PACIENTE = 'fetch_paciente';
 export const CLEAR_PACIENTES = 'clear_pacientes';
 export const UPDATE_PACIENTE = 'update_paciente';
 
-export const CREATE_ORDEN='create_orden';
-export const DELETE_ORDEN='delete_orden';
-export const FETCH_ORDENES='fetch_ordenes';
-export const FETCH_ORDEN='fetch_orden';
-export const CLEAR_ORDENES='clear_ordenes';
-export const UPDATE_ORDEN='update_orden';
+export const CREATE_ORDEN = 'create_orden';
+export const DELETE_ORDEN = 'delete_orden';
+export const FETCH_ORDENES = 'fetch_ordenes';
+export const FETCH_ORDEN = 'fetch_orden';
+export const CLEAR_ORDENES = 'clear_ordenes';
+export const UPDATE_ORDEN = 'update_orden';
 
-export const CREATE_ORDEN_EXAMEN='create_orden_examen';
-export const DELETE_ORDEN_EXAMEN='delete_orden_examen';
-export const FETCH_ORDENES_EXAMENES='fetch_ordenes_examenes';
-export const FETCH_ORDEN_EXAMEN='fetch_orden_examen';
-export const CLEAR_ORDENES_EXAMENES='clear_ordenes_examenes';
-export const UPDATE_ORDEN_EXAMEN='update_orden_examen';
+export const CREATE_ORDEN_EXAMEN = 'create_orden_examen';
+export const DELETE_ORDEN_EXAMEN = 'delete_orden_examen';
+export const FETCH_ORDENES_EXAMENES = 'fetch_ordenes_examenes';
+export const FETCH_ORDEN_EXAMEN = 'fetch_orden_examen';
+export const CLEAR_ORDENES_EXAMENES = 'clear_ordenes_examenes';
+export const UPDATE_ORDEN_EXAMEN = 'update_orden_examen';
+
+export const CITOLOGIA_TYPES = {
+    create: 'create_citologia',
+    delete: 'delete_citologia',
+    fetch_all: 'fetch_citologias',
+    fetch: 'fetch_citologia',
+    clear: 'clear_citologias',
+    update: 'update_citologia',
+};
+
+export const BIOPSIA_TYPES = {
+    create: 'create_biopsia',
+    delete: 'delete_biopsia',
+    fetch_all: 'fetch_biopsias',
+    fetch: 'fetch_biopsia',
+    clear: 'clear_biopsias',
+    update: 'update_biopsia',
+};

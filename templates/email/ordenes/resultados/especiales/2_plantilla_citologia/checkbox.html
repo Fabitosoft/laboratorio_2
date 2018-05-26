@@ -1,0 +1,5 @@
+{% load verbose_names static %}
+
+{% if valor %} <img style="height: 8px" src="{% static 'img/002-check.png' %}" alt="">{% else %}
+    <img style="height: 8px" src="{% static 'img/001-square.png' %}"
+         alt=""> {% endif %} {% get_verbose_field_name citologia nombre_campo %}

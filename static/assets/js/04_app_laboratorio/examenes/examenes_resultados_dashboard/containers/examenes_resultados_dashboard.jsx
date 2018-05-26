@@ -136,6 +136,8 @@ function mapPropsToState(state, ownProps) {
         mis_permisos: state.mis_permisos,
         bloque_1_list: state.ordenes_examenes,
         especialistas_list: state.especialistas,
+        citologias_list: state.citologias,
+        biopsias_list: state.biopsias,
         mi_cuenta: state.mi_cuenta
     }
 }

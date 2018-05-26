@@ -58,6 +58,7 @@ MY_APPS = [
     'entidades.apps.EntidadesConfig',
     'pacientes.apps.PacientesConfig',
     'ordenes.apps.OrdenesConfig',
+    'examenes_especiales.apps.ExamenesEspecialesConfig',
 ]
 
 THIRD_PART_APPS = [
@@ -142,7 +143,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 

@@ -46,7 +46,7 @@ MyTextFieldSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect,dropUp}) => {
+const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, dropUp}) => {
     return (
         <DropdownList {...input}
                       data={data}
@@ -62,7 +62,7 @@ const renderDropdownList = ({input, data, valueField, textField, placeholder, on
 
 
 export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id',dropUp} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', dropUp} = props;
     return (
         <Field
             {...props}
@@ -75,32 +75,47 @@ export const MyDropdownList = (props) => {
     )
 };
 
-const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect}) => {
+const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect, meta: {touched, error, warning}}) => {
     return (
-        <Combobox {...input}
-                  data={data}
-                  placeholder={placeholder}
-                  valueField={valueField}
-                  textField={textField}
-                  onChange={input.onChange}
-                  onSelect={onSelect}
-        />
+        <Fragment>
+            <Combobox {...input}
+                      data={data}
+                      placeholder={placeholder}
+                      valueField={valueField}
+                      textField={textField}
+                      onChange={e => {
+                          input.onChange(typeof(e) === 'string' ? e : e[valueField]);
+                      }}
+                      onSelect={onSelect}
+                      onBlur={() => input.onBlur()}
+            />
+            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
+                <span>{warning}</span>))}
+        </Fragment>
     )
 };
 
-
 export const MyCombobox = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect} = props;
+    const {busy = false, textField = 'name', valuesField = 'id', autoFocus = false, onSelect, className, metodoBusqueda = null} = props;
     return (
-        <Field
-            {...props}
-            component={renderCombobox}
-            valueField={valuesField}
-            textField={textField}
-            autoFocus={autoFocus}
-            onSelect={onSelect}
-            busy={busy}
-        />
+        <div className={`${className} mb-4`}>
+            <label>{props.nombre}:</label>
+            <Field
+                {...props}
+                component={renderCombobox}
+                valueField={valuesField}
+                textField={textField}
+                autoFocus={autoFocus}
+                onChange={(v, c) => {
+                    if (metodoBusqueda) {
+                        metodoBusqueda(v, c);
+                    }
+                    return (v[valuesField])
+                }}
+                onSelect={onSelect}
+                busy={busy}
+            />
+        </div>
     )
 };
 

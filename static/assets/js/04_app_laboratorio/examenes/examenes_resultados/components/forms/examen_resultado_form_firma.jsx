@@ -4,7 +4,7 @@ const Firma = (props) => {
     const {
         mi_cuenta,
         setSelectItem,
-        initialValues,
+        examen,
         notificarErrorAjaxAction,
         permisos_object,
         quitarFirmaOrdenExamen,
@@ -20,7 +20,7 @@ const Firma = (props) => {
     } = props;
     const onClickFirmarComo = () => {
         firmarComoOrdenExamen(
-            initialValues.id,
+            examen.id,
             especialista,
             (response) => {
                 setSelectItem(response)
@@ -31,7 +31,7 @@ const Firma = (props) => {
 
     const onQuitarFirmaClick = () => {
         quitarFirmaOrdenExamen(
-            initialValues.id,
+            examen.id,
             id,
             (response) => {
                 setSelectItem(response)
@@ -55,7 +55,7 @@ const Firma = (props) => {
                         mi_cuenta.especialista === especialista ||
                         permisos_object.firmar_como
                     ) &&
-                    initialValues.examen_estado <= 1 &&
+                    examen.examen_estado < 1 &&
                     !firmar_como &&
                     <span
                         style={{position: "absolute", cursor: "pointer", bottom: "5px", right: "25px"}}

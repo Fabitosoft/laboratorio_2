@@ -27,20 +27,30 @@ function crudHOC(CreateForm, Tabla) {
             );
         }
 
-        onSubmit(item, uno = null, dos = null, cerrar_modal = true) {
+        onSubmit(item, uno = null, dos = null, cerrar_modal = true, other_item_to_set = null) {
             const {method_pool} = this.props;
+            let item_to_set = item;
+            if (other_item_to_set) {
+                item_to_set = other_item_to_set
+            }
             if (item.id) {
                 method_pool.updateObjectMethod(
                     item,
                     () => {
-                        this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : item});
+                        this.setState({
+                            modal_open: !cerrar_modal,
+                            item_seleccionado: cerrar_modal ? null : item_to_set
+                        });
                     }
                 );
             } else {
                 method_pool.createObjectMethod(
                     item,
                     () => {
-                        this.setState({modal_open: !cerrar_modal, item_seleccionado: cerrar_modal ? null : item});
+                        this.setState({
+                            modal_open: !cerrar_modal,
+                            item_seleccionado: cerrar_modal ? null : item_to_set
+                        });
                     }
                 );
             }

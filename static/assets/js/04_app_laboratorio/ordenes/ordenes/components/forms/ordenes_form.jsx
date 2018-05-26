@@ -12,19 +12,14 @@ class Form extends Component {
         this.state = ({
             busy_paciente: false,
             busy_medico_remitente: false,
-            busy_entidad: false,
-            paciente: null,
-            medico_remitente: null,
-            entidad: null
+            busy_entidad: false
         })
     }
 
     componentDidMount() {
-        const {initialValues} = this.props;
-        if (initialValues) {
-            const {paciente, medico_remitente, entidad} = initialValues;
-            this.setState({paciente, entidad, medico_remitente});
-        }
+        this.props.fetchEntidades();
+        this.props.fetchPacientes();
+        this.props.fetchMedicosRemitentes();
     }
 
     render() {
@@ -46,16 +41,13 @@ class Form extends Component {
         const {
             busy_paciente,
             busy_medico_remitente,
-            busy_entidad,
-            paciente,
-            entidad,
-            medico_remitente
+            busy_entidad
         } = this.state;
         return (
             <MyFormTagModal
                 onCancel={onCancel}
                 onSubmit={handleSubmit((values) => {
-                    onSubmit({...values, entidad, paciente, medico_remitente, tipo_pago: values.tipo_pago.id})
+                    onSubmit({...values, tipo_pago: values.tipo_pago.id})
                 })}
                 reset={reset}
                 initialValues={initialValues}
@@ -66,22 +58,19 @@ class Form extends Component {
             >
                 <MyCombobox
                     name='paciente'
-                    placeholder='Paciente...'
-                    onChange={(a, b) => {
-                        if (b.length > 3) {
-                            this.setState({busy_paciente: true});
-                            this.props.fetchPacientesParametros(b, () => {
-                                this.setState({busy_paciente: false});
-                            })
-                        } else {
-                            this.props.clearPacientes();
-                        }
-                    }}
+                    nombre='Paciente...'
                     textField='name'
                     valuesField='id'
-                    onSelect={p => {
-                        this.setState({paciente: p.id})
-                    }}
+                    // metodoBusqueda={(a, b) => {
+                    //     if (b.length > 3) {
+                    //         this.setState({busy_paciente: true});
+                    //         this.props.fetchPacientesParametros(b, () => {
+                    //             this.setState({busy_paciente: false});
+                    //         })
+                    //     } else {
+                    //         this.props.clearPacientes();
+                    //     }
+                    // }}
                     data={_.map(pacientes_list, p => {
                         return {id: p.id, name: p.full_name}
                     })}
@@ -90,20 +79,20 @@ class Form extends Component {
                 />
                 <MyCombobox
                     name='medico_remitente'
-                    placeholder='Médico Remitente...'
-                    onChange={(a, b) => {
-                        if (b.length > 3) {
-                            this.setState({busy_medico_remitente: true});
-                            this.props.fetchMedicosRemitentesXNombres(b, () => {
-                                this.setState({busy_medico_remitente: false});
-                            })
-                        } else {
-                            this.props.clearMedicosRemitentes();
-                        }
-                    }}
-                    onSelect={p => {
-                        this.setState({medico_remitente: p.id})
-                    }}
+                    nombre='Médico Remitente...'
+                    valueField='id'
+                    textField='name'
+                    // metodoBusqueda={(a, b) => {
+                    //     console.log('entro')
+                    //     if (b.length > 3) {
+                    //         this.setState({busy_medico_remitente: true});
+                    //         this.props.fetchMedicosRemitentesXNombres(b, () => {
+                    //             this.setState({busy_medico_remitente: false});
+                    //         })
+                    //     } else {
+                    //         this.props.clearMedicosRemitentes();
+                    //     }
+                    // }}
                     data={_.map(medicos_remitentes_list, p => {
                         return {id: p.id, name: p.full_name}
                     })}
@@ -111,20 +100,19 @@ class Form extends Component {
                 />
                 <MyCombobox
                     name='entidad'
-                    placeholder='Entidad...'
-                    onChange={(a, b) => {
-                        if (b.length > 3) {
-                            this.setState({busy_entidad: true});
-                            this.props.fetchEntidadesXParametro(b, () => {
-                                this.setState({busy_entidad: false});
-                            })
-                        } else {
-                            this.props.clearEntidades();
-                        }
-                    }}
-                    onSelect={p => {
-                        this.setState({entidad: p.id})
-                    }}
+                    nombre='Entidad...'
+                    valueField='id'
+                    textField='name'
+                    // metodoBusqueda={(a, b) => {
+                    //     if (b.length > 3) {
+                    //         this.setState({busy_entidad: true});
+                    //         this.props.fetchEntidadesXParametro(b, () => {
+                    //             this.setState({busy_entidad: false});
+                    //         })
+                    //     } else {
+                    //         this.props.clearEntidades();
+                    //     }
+                    // }}
                     data={_.map(entidades_list, p => {
                         return {id: p.id, name: p.nombre}
                     })}
@@ -133,7 +121,7 @@ class Form extends Component {
                 <MyDropdownList
                     dropUp
                     name='tipo_pago'
-                    placeholder='Forma de Pago...'
+                    placeholder='Formas de Pago...'
                     data={[
                         {id: 'EFECTIVO', name: 'Efectivo'},
                         {id: 'TARJETA', name: 'Tarjeta'},
@@ -171,7 +159,7 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "algoForm",
+    form: "ordenenForm",
     validate,
     enableReinitialize: true
 })(Form);

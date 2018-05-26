@@ -1,7 +1,6 @@
-from django.http import HttpResponse
 from django.db.models import Count, F
 
-from django.template.loader import get_template, render_to_string
+from django.template.loader import get_template
 from weasyprint import HTML, CSS
 
 from ordenes.models import OrdenExamenFirmas, OrdenExamen
@@ -48,7 +47,22 @@ class OrdenesPDFMixin(object):
             can_firmas=1,
             orden_examen__examen_estado__gte=2
         )
+
+        especiales = OrdenExamen.objects.select_related(
+            'examen',
+            'examen__subgrupo_cups',
+        ).prefetch_related(
+            'mis_firmas',
+            'mis_firmas__especialista',
+            'mis_firmas__especialista__especialidad'
+        ).filter(
+            orden=orden,
+            examen__especial=True,
+            examen_estado__gte=2
+        )
+
         context['multifirma'] = multifirma
+        context['especiales'] = especiales
         context['una_firma'] = una_firma
         return context
 
@@ -56,6 +70,7 @@ class OrdenesPDFMixin(object):
         context = self.generar_resultados(orden)
         ctx = {
             'una_firma': context['una_firma'],
+            'especiales': context['especiales'],
             'multifirma': context['multifirma'],
             'paciente': orden.paciente,
             'orden': orden,

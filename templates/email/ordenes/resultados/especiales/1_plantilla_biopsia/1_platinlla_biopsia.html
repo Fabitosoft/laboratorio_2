@@ -1,0 +1,34 @@
+{#style="page-break-after: always;#}
+
+{% load verbose_names static %}
+<div style="clear: both; page-break-after: always; page-break-before: always" class="grupo-examenes">
+    <div style="text-align: center">
+        <span class="grupo-subcups-titulo">{{ examen.examen.nombre }}</span>
+    </div>
+    <div class="resultado-examenes">
+        <div>
+            <h1 style="text-align: center">{% get_verbose_field_name biopsia "descripcion_macroscopica" %}</h1>
+            <div class="multilinea" style="padding-left: 10px">
+                {{ biopsia.descripcion_macroscopica }}
+            </div>
+        </div>
+        <div>
+            <h1 style="text-align: center">{% get_verbose_field_name biopsia "descripcion_microscopica" %}</h1>
+            <div class="multilinea" style="padding-left: 10px">
+                {{ biopsia.descripcion_microscopica }}
+            </div>
+        </div>
+        <div>
+            <h1 style="text-align: center">{% get_verbose_field_name biopsia "diagnostico" %}</h1>
+            <div class="multilinea" style="padding-left: 10px">
+                {{ biopsia.diagnostico }}
+            </div>
+        </div>
+    </div>
+    {% include 'email/ordenes/resultados/especiales/observaciones.html' with observaciones=biopsia.observaciones %}
+    <div>
+        {% for firma in examen.mis_firmas.all %}
+            {% include 'email/ordenes/resultados/firma_multiple.html' with firma=firma %}
+        {% endfor %}
+    </div>
+</div>

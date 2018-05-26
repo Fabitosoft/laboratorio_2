@@ -10,3 +10,5 @@ export * from './entidades/entidadesExamenesAction';
 export * from './pacientes/pacientesAction';
 export * from './ordenes/ordenesAction';
 export * from './ordenes/ordenExamenAction';
+export * from './examenes_especiales/citologiasAction';
+export * from './examenes_especiales/biopsiasAction';
