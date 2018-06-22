@@ -3,6 +3,7 @@ from io import BytesIO
 
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Max
+from django.conf import settings
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -58,7 +59,7 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
                 'Resultados de examenes',
                 text_content,
                 bcc=['fabiogarciasanchez@gmail.com'],
-                from_email='Laboratorios Collazos <mylabcollazos@hotmail.com>',
+                from_email='Laboratorios Collazos <%s>' % settings.RESULTADOS_FROM_EMAIL,
                 to=send_to
             )
             msg.attach_alternative(text_content, "text/html")
@@ -67,7 +68,7 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
                 msg.send()
             except Exception as e:
                 raise serializers.ValidationError(
-                    'Se há presentado un error al intentar enviar el correo, envío fallido')
+                    'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e)
         return Response({'resultado': 'ok'})
 
     @detail_route(methods=['post'])
