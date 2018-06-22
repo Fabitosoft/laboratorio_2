@@ -16,7 +16,6 @@ class ExamenViewSet(viewsets.ModelViewSet):
     @list_route(methods=['get'])
     def examenes_entidad(self, request):
         id_entidad = request.GET.get('id_entidad')
-        print(id_entidad)
         qs = self.get_queryset().filter(
             mis_entidades__entidad_id=id_entidad
         )

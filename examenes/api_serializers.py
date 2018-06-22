@@ -40,6 +40,7 @@ class ExamenSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'codigo_cups',
+            'no_email',
             'nombre',
             'nombre_corto',
             'valor_referencia',

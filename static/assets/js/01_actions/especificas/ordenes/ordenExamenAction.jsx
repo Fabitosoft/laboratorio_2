@@ -13,7 +13,8 @@ import {
     deleteObject,
     createObject,
     callApiMethod,
-    callApiMethodWithParameters
+    callApiMethodWithParameters,
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'ordenes_examenes';
@@ -39,6 +40,14 @@ export const fetchOrdenesExamenes = (callback = null, callback_error = null) => 
             dispatch({type: FETCH_ORDENES_EXAMENES, payload: response})
         };
         fetchList(current_url_api, dispatches, callback, callback_error);
+    }
+};
+export const fetchOrdenesExamenes_por_orden = (orden_id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDENES_EXAMENES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/por_orden/?orden_id=${orden_id}`, dispatches, callback, callback_error);
     }
 };
 export const fetchOrdenesExamenesxEstado = (estado, callback = null, callback_error = null) => {

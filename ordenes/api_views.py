@@ -23,12 +23,6 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
         'paciente',
         'entidad',
         'elaborado_por'
-    ).prefetch_related(
-        'mis_examenes__examen',
-        'mis_examenes__mis_firmas',
-        'mis_examenes__mis_firmas__especialista',
-        'mis_examenes__mis_firmas__especialista__especialidad',
-        'mis_examenes__examen__subgrupo_cups',
     ).all()
     serializer_class = OrdenSerializer
 
@@ -43,9 +37,9 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
         if tipo_envio == 'Entidad' or tipo_envio == 'Ambos':
             send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
 
-        main_doc = self.generar_pdf(request, orden)
+        main_doc = self.generar_resultados_pdf(request, orden, es_email=True)
 
-        es_prueba = True
+        es_prueba = False
 
         text_content = render_to_string('email/ordenes/resultados/cuerpo_correo.html', {})
 
@@ -63,7 +57,8 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
             msg = EmailMultiAlternatives(
                 'Resultados de examenes',
                 text_content,
-                'Laboratorios Collazos <fabio.garcia.sanchez@gmail.com>',
+                bcc=['fabiogarciasanchez@gmail.com'],
+                from_email='Laboratorios Collazos <mylabcollazos@hotmail.com>',
                 to=send_to
             )
             msg.attach_alternative(text_content, "text/html")
@@ -152,8 +147,8 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
         'orden__paciente',
         'examen__subgrupo_cups',
         'orden__entidad',
-        # 'mi_biopsia',
-        # 'mi_citologia'
+        'biopsia',
+        'citologia'
     ).prefetch_related(
         # 'mis_bitacoras__generado_por',
         'mis_firmas__especialista',
@@ -176,6 +171,13 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
     @list_route(methods=['get'])
     def verificados(self, request):
         qs = self.get_queryset().filter(orden__estado=1, examen_estado__in=[2, 3])
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def por_orden(self, request):
+        orden_id = self.request.GET.get('orden_id')
+        qs = self.get_queryset().filter(orden_id=orden_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
 

@@ -25,7 +25,6 @@ class Biopsia(ExamenEspecial):
         return Biopsia.objects.all()
 
 
-
 class Citologia(ExamenEspecial):
     nomenclatura = 'CIT'
     # PLANTILLA 2

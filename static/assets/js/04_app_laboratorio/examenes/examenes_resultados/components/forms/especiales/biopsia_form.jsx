@@ -43,7 +43,7 @@ class FormExamenEstandar extends Component {
                 submitting={submitting}
                 modal_open={modal_open}
                 pristine={pristine}
-                element_type={`Resultado ${item_seleccionado.examen_nombre}`}
+                element_type={`Resultado ${item_seleccionado.examen_nombre} (${item_seleccionado.nro_examen_especial})`}
                 modelStyle={modelStyle}
             >
                 <InfoExamenForm examen={item_seleccionado}/>

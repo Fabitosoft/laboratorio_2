@@ -30,32 +30,72 @@ class CitologiaViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = CitologiaSerializer
 
+    def clearCampos(self, citologia, campos_array):
+        campos = Citologia._meta.get_fields()
+        for campo in campos:
+            es_booleano = Citologia._meta.get_field(campo.name).get_internal_type() == 'BooleanField'
+            if campo.name in campos_array and es_booleano:
+                setattr(citologia, campo.name, False)
+        citologia.save()
+
     def clear_A1_1(self, citologia):
         campo = citologia.A1_1
         if not campo:
-            citologia.A1_1a = False
-            citologia.A1_1b = False
-            citologia.save()
+            self.clearCampos(citologia, ['A1_1a', 'A1_1b'])
 
     def clear_A1(self, citologia):
         campo = citologia.A1_1
         campo_dos = citologia.A1_2
         if not campo and not campo_dos:
-            citologia.A1_i = False
-            citologia.A1_ii = False
-            citologia.A1_iii = False
-            citologia.A1_iv = False
-            citologia.A1_v = False
-            citologia.A1_vi = False
-            citologia.A1_vii = False
-            citologia.save()
+            self.clearCampos(citologia, ['A1_i', 'A1_ii', 'A1_iii', 'A1_iv', 'A1_iv', 'A1_v', 'A1_vi', 'A1_vii'])
 
     def clear_A3(self, citologia):
         campo = citologia.A3
         if not campo:
-            citologia.A3a = False
-            citologia.A3b = False
+            self.clearCampos(citologia, ['A3a', 'A3b'])
+        else:
+            campos = Citologia._meta.get_fields()
+            for campo in campos:
+                es_booleano = Citologia._meta.get_field(campo.name).get_internal_type() == 'BooleanField'
+                if campo.name not in ['A3a', 'A3b', 'A3'] and es_booleano:
+                    setattr(citologia, campo.name, False)
             citologia.save()
+
+    def clear_B1(self, citologia):
+        campo = citologia.B1
+        if not campo:
+            self.clearCampos(citologia, ['B1a', 'B1b', 'B1c', 'B1d'])
+
+    def clear_B1a(self, citologia):
+        campo = citologia.B1
+        campo_dos = citologia.B1a
+        if not campo or not campo_dos:
+            self.clearCampos(citologia, ['B1a_i', 'B1a_ii', 'B1a_iii', 'B1a_iv'])
+
+    def clear_B2(self, citologia):
+        campo = citologia.B2
+        if not campo:
+            self.clearCampos(citologia, ['B2a', 'B2b'])
+
+    def clear_B3(self, citologia):
+        campo = citologia.B3
+        if not campo:
+            self.clearCampos(citologia, ['B3a'])
+
+    def clear_B6(self, citologia):
+        campo = citologia.B6
+        if not campo:
+            self.clearCampos(citologia, ['B6a', 'B6a_i', 'B6a_ii'])
+
+    def clear_B6a(self, citologia):
+        campo = citologia.B6a
+        if not campo:
+            self.clearCampos(citologia, ['B6a_i', 'B6a_ii'])
+
+    def clear_B8(self, citologia):
+        campo = citologia.B8
+        if not campo:
+            self.clearCampos(citologia, ['B8a', 'B8b', 'B8c', 'B8d'])
 
     def perform_update(self, serializer):
         super().perform_update(serializer)
@@ -66,6 +106,18 @@ class CitologiaViewSet(viewsets.ModelViewSet):
         self.clear_A1_1(citologia)
         self.clear_A1(citologia)
         self.clear_A3(citologia)
+
+        self.clear_B1a(citologia)
+        self.clear_B1(citologia)
+
+        self.clear_B2(citologia)
+        self.clear_B3(citologia)
+
+        self.clear_B6(citologia)
+        self.clear_B6a(citologia)
+
+        self.clear_B8(citologia)
+
         for campo in campos:
             es_booleano = Citologia._meta.get_field(campo.name).get_internal_type() == 'BooleanField'
             if es_booleano:
@@ -73,8 +125,4 @@ class CitologiaViewSet(viewsets.ModelViewSet):
                     valor = getattr(citologia, campo.name)
                     if valor:
                         respondidas_booleanas += 1
-        if respondidas_booleanas > 0:
-            examen.resultado = 'Con resultados'
-        else:
-            examen.resultado = None
         examen.save()

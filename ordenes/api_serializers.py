@@ -129,10 +129,10 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
 
 class OrdenSerializer(serializers.ModelSerializer):
     paciente_nombre = serializers.CharField(source='paciente.full_name', read_only=True)
+    paciente_email = serializers.CharField(source='paciente.email', read_only=True)
     paciente_identificacion = serializers.CharField(source='paciente.identificacion', read_only=True)
     entidad_nombre = serializers.CharField(source='entidad.nombre', read_only=True)
     medico_remitente_nombre = serializers.CharField(source='medico_remitente.full_name', read_only=True)
-    mis_examenes = OrdenExamenSerializer(many=True, read_only=True)
     cajero = serializers.CharField(source='elaborado_por.get_full_name', read_only=True)
     estado_nombre = serializers.CharField(source='get_estado_display', read_only=True)
 
@@ -144,6 +144,7 @@ class OrdenSerializer(serializers.ModelSerializer):
             'paciente',
             'cajero',
             'paciente_nombre',
+            'paciente_email',
             'paciente_identificacion',
             'entidad_nombre',
             'medico_remitente_nombre',
@@ -158,5 +159,4 @@ class OrdenSerializer(serializers.ModelSerializer):
             'valor_total',
             'valor_descuento',
             'valor_final',
-            'mis_examenes',
         ]

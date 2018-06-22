@@ -73,13 +73,23 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Consecutivo Examen",
+                                Header: "Nro. Examen",
                                 accessor: "nro_examen",
-                                maxWidth: 150,
+                                maxWidth: 100,
                                 show: orden.estado === 1,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
+                            {
+                                Header: "Nro. Examen Especial",
+                                accessor: "nro_examen_especial",
+                                maxWidth: 150,
+                                show: orden.estado === 1,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row._original.nro_examen_especial ? row[filter.id].includes(filter.value.toUpperCase()) : false
                                 }
                             },
                             {

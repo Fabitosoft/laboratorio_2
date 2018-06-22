@@ -12,7 +12,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethodWithParameters, fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'examenes';
@@ -30,6 +30,14 @@ export const deleteExamen = (id, callback = null, callback_error = null) => {
             dispatch({type: DELETE_EXAMEN, payload: id})
         };
         deleteObject(current_url_api, id, dispatches, callback, callback_error)
+    }
+};
+export const fetchExamenes_por_entidad = (entidad_id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_EXAMENES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/examenes_entidad/?id_entidad=${entidad_id}`, dispatches, callback, callback_error);
     }
 };
 export const fetchExamenes = (callback = null, callback_error = null) => {

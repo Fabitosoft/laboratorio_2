@@ -13,11 +13,14 @@ import {
     ORDENES as permisos_view
 } from "../../../../00_utilities/permisos/types";
 
+import OrdenInformacion from '../components/informacion_orden_detail';
+
 class Detail extends Component {
     constructor(props) {
         super(props);
         this.state = ({
-            modal_open: false
+            modal_open: false,
+            mostrar_enviar_correo: false,
         });
         this.cargarDatos = this.cargarDatos.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -67,10 +70,12 @@ class Detail extends Component {
                 }, notificarErrorAjaxAction
             );
             const cargarMedicoRemitente = () => this.props.fetchMedicoRemitente(orden.medico_remitente, cargarPaciente, notificarErrorAjaxAction);
-            this.props.fetchEntidad(orden.entidad, cargarMedicoRemitente, notificarErrorAjaxAction);
+            const cargarExamenesEntidad = (entidad) => this.props.fetchExamenes_por_entidad(entidad.id, cargarMedicoRemitente, notificarErrorAjaxAction);
+            this.props.fetchEntidad(orden.entidad, cargarExamenesEntidad, notificarErrorAjaxAction);
         };
         const cargarOrden = () => this.props.fetchOrden(id, cargarPropiedades, notificarErrorAjaxAction);
-        this.props.fetchMisPermisos(cargarOrden, notificarErrorAjaxAction);
+        const cargarExamenes = () => this.props.fetchOrdenesExamenes_por_orden(id, cargarOrden, notificarErrorAjaxAction);
+        this.props.fetchMisPermisos(cargarExamenes, notificarErrorAjaxAction);
 
     }
 
@@ -190,9 +195,18 @@ class Detail extends Component {
 
 
     render() {
-        const {object, mis_permisos, entidades_list} = this.props;
-        const {modal_open} = this.state;
+        const {
+            object,
+            mis_permisos,
+            entidades_list,
+            ordenes_examenes_list,
+            examenes_entidad_list
+        } = this.props;
+        const {modal_open, mostrar_enviar_correo} = this.state;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
+
+        const examenes_orden_array = _.map(ordenes_examenes_list, e => e);
+        const examenes_entidad_array = _.map(examenes_entidad_list, e => e);
 
         if (!object) {
             return <SinObjeto/>
@@ -200,7 +214,7 @@ class Detail extends Component {
 
         const entidad = entidades_list[object.entidad];
 
-        const cant_exam_verificados = object.mis_examenes.filter(e => e.examen_estado > 1).length;
+        const cant_exam_verificados = examenes_orden_array.filter(e => e.examen_estado > 1).length;
 
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de orden'>
@@ -224,31 +238,7 @@ class Detail extends Component {
                 />
                 }
                 <div className="row">
-                    <div className="col-12 pb-3">
-                        <strong>Paciente:</strong> {object.paciente_nombre}<br/>
-                        <small>{object.paciente_identificacion}</small>
-                    </div>
-                    <div className="col-md-6">
-                        <strong>Entidad:</strong> {object.entidad_nombre}<br/>
-                    </div>
-                    <div className="col-md-6">
-                        <strong>Médico Remitente:</strong> {object.medico_remitente_nombre}
-                    </div>
-                    <div className="col-md-6">
-                        <strong>Forma de Pago:</strong> {object.tipo_pago}
-                    </div>
-                    <div className="col-12 pt-4">
-                        <h4>Contacto Alternativo</h4>
-                    </div>
-                    <div className="col-md-6 col-xl-6 pl-4">
-                        <strong>Nombre </strong>{object.nombre_contacto_alternativo}
-                    </div>
-                    <div className="col-md-6 col-xl-8 pl-4">
-                        <strong>Número </strong>{object.numero_contacto_alternativo}
-                    </div>
-                    <div className="col-md-12 pl-4">
-                        <strong>Dirección </strong>{object.direccion_contacto_alternativo}
-                    </div>
+                    <OrdenInformacion object={object}/>
                     {
                         entidad &&
                         object.estado === 0 &&
@@ -258,36 +248,61 @@ class Detail extends Component {
                 <TablaExamenes
                     singular_name='examen de orden'
                     permisos_object={permisos}
-                    data={object.mis_examenes}
+                    data={examenes_orden_array}
                     onDelete={this.eliminarExamen}
                     cambiarDescuentoExamen={this.cambiarDescuentoExamen}
                     orden={object}
                 />
                 {
                     object.estado === 0 &&
-                    object.mis_examenes.length > 0 &&
+                    examenes_orden_array.length > 0 &&
                     <button className='btn btn-primary'
                             onClick={() => this.onSubmit({...object, estado: 1})}>Pagado</button>
                 }
                 {
                     object.estado === 1 &&
+                    <span className='btn btn-primary m-2' onClick={() => {
+                        this.imprimirRecibo()
+                    }}>Imprimir Recibo</span>
+                }
+                {
                     cant_exam_verificados > 0 &&
                     <Fragment>
-                            <span className='btn btn-primary' onClick={() => {
-                                this.enviarCorreo('Cliente')
-                            }}>Enviar A Cliente</span>
-                        <span className='btn btn-primary' onClick={() => {
-                            this.enviarCorreo('Entidad')
-                        }}>Enviar A Entidad</span>
-                        <span className='btn btn-primary' onClick={() => {
-                            this.enviarCorreo('Ambos')
-                        }}>Enviar Ambos</span>
-                        <span className='btn btn-primary' onClick={() => {
+                        {/*<span className='btn btn-primary' onClick={() => {*/}
+                        {/*this.enviarCorreo('Ambos')*/}
+                        {/*}}>Enviar Ambos</span>*/}
+
+                        <span className='btn btn-primary m-2' onClick={() => {
                             this.imprimirExamenes()
                         }}>Imprimir Examenes</span>
-                        <span className='btn btn-primary' onClick={() => {
-                            this.imprimirRecibo()
-                        }}>Imprimir Recibo</span>
+                        {
+                            !mostrar_enviar_correo &&
+                            <i className="far fa-plus-circle puntero"
+                               onClick={() => this.setState({mostrar_enviar_correo: true})}>
+                            </i>
+                        }
+                        {
+                            mostrar_enviar_correo &&
+                            <i className="far fa-minus-circle puntero"
+                               onClick={() => this.setState({mostrar_enviar_correo: false})}>
+                            </i>
+                        }
+
+                        {
+                            mostrar_enviar_correo &&
+                            <Fragment>
+                                <span className='btn btn-primary m-2' onClick={() => {
+                                    this.enviarCorreo('Entidad')
+                                }}>Enviar A Entidad</span>
+
+                                {
+                                    object.paciente_email &&
+                                    <span className='btn btn-primary m-2' onClick={() => {
+                                        this.enviarCorreo('Cliente')
+                                    }}>Cliente ({object.paciente_email.toLowerCase()})</span>
+                                }
+                            </Fragment>
+                        }
                     </Fragment>
                 }
                 <CargarDatos cargarDatos={this.cargarDatos}/>
@@ -302,7 +317,9 @@ function mapPropsToState(state, ownProps) {
     return {
         mis_permisos: state.mis_permisos,
         object: state.ordenes[id],
+        ordenes_examenes_list: state.ordenes_examenes,
         pacientes_list: state.pacientes,
+        examenes_entidad_list: state.examenes,
         medicos_remitentes_list: state.medicos_remitentes,
         entidades_list: state.entidades
     }

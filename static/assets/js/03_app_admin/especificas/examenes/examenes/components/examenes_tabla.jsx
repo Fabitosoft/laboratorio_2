@@ -83,14 +83,24 @@ class Tabla extends React.Component {
                                 )
                             },
                             {
+                                Header: "No Email",
+                                accessor: "no_email",
+                                maxWidth: 80,
+                                Cell: row => (
+                                    <Checkbox
+                                        checked={row.value}
+                                        onCheck={() => updateItem({...row.original, no_email: !row.value})}
+                                    />
+                                )
+                            },
+                            {
                                 Header: "Especial",
                                 accessor: "especial",
                                 maxWidth: 60,
                                 Cell: row => {
                                     return (row.value ? <i className='far fa-check-circle'></i> : <span></span>)
                                 }
-                            }
-                            ,
+                            },
                         ]
                     },
                     {

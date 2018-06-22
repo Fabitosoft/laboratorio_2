@@ -22,7 +22,7 @@ class List extends Component {
     successSubmitCallback(item) {
         const nombre = item.nombre;
         const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
+        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito el ${this.singular_name.toLowerCase()}`);
         noCargando()
     }
 
@@ -30,7 +30,7 @@ class List extends Component {
     successDeleteCallback(item) {
         const nombre = item.nombre;
         const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
+        notificarAction(`Se ha eliminado con éxito el ${this.singular_name.toLowerCase()}`);
         noCargando()
     }
 
@@ -51,19 +51,23 @@ class List extends Component {
     updateObjectMethod(item, successCallback) {
         const {cargarOrdenesExamenes, cargando, notificarErrorAjaxAction} = this.props;
         let updateMethod = this.props.updateOrdenExamen;
+        let fetchObjectMethod = this.props.fetchOrdenExamen;
         if (item.es_citologia) {
             updateMethod = this.props.updateCitologia;
+            fetchObjectMethod = this.props.fetchCitologia;
         }
         if (item.es_biopsia) {
             updateMethod = this.props.updateBiopsia;
+            fetchObjectMethod = this.props.fetchBiopsia;
         }
-        const success_method = () => {
-            this.successSubmitCallback(item);
+        const success_method = (response) => {
+            this.successSubmitCallback(response);
             successCallback();
             cargarOrdenesExamenes();
         };
         cargando();
-        updateMethod(item.id, item, success_method, notificarErrorAjaxAction);
+        const fetchObject = () => fetchObjectMethod(item.id, success_method, notificarErrorAjaxAction);
+        updateMethod(item.id, item, fetchObject, notificarErrorAjaxAction);
     }
 
     deleteObjectMethod(item, successCallback) {

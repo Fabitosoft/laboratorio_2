@@ -26,6 +26,7 @@ class FormExamenEstandar extends Component {
             modal_open,
             cargarOrdenesExamenes,
             item_seleccionado,
+            disabled,
         } = this.props;
         return (
             <MyFormTagModal
@@ -49,7 +50,7 @@ class FormExamenEstandar extends Component {
                     multiLine={true}
                     rows={5}
                     name='examen_valor_referencia'
-                    disabled={item_seleccionado.examen_estado > 1}
+                    disabled={disabled}
                 />
                 <div className="col-12 col-md-4 col-lg-4">
                     <div className="row">
@@ -57,13 +58,13 @@ class FormExamenEstandar extends Component {
                             className="col-12 col-md-6"
                             nombre='Técnica'
                             name='tecnica'
-                            disabled={item_seleccionado.examen_estado > 1}
+                            disabled={disabled}
                         />
                         <MyTextFieldSimple
                             className="col-12 col-md-6"
                             nombre='Unidad Medida'
                             name='examen_unidad_medida'
-                            disabled={item_seleccionado.examen_estado > 1}
+                            disabled={disabled}
                         />
                         <MyTextFieldSimple
                             className="col-12"
@@ -71,7 +72,7 @@ class FormExamenEstandar extends Component {
                             name='resultado'
                             multiLine={true}
                             rows={2}
-                            disabled={item_seleccionado.examen_estado > 1}
+                            disabled={disabled}
                         />
                     </div>
                 </div>
@@ -81,9 +82,12 @@ class FormExamenEstandar extends Component {
                     name='observaciones'
                     multiLine={true}
                     rows={3}
-                    disabled={item_seleccionado.examen_estado > 1}
+                    disabled={disabled}
                 />
-                <FirmaForm {...this.props} examen={item_seleccionado}/>
+                {
+                    (submitting || pristine) &&
+                    <FirmaForm {...this.props} examen={item_seleccionado}/>
+                }
             </MyFormTagModal>
         )
     }

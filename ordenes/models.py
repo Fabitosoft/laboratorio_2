@@ -153,7 +153,7 @@ class OrdenExamen(TimeStampedModel):
         tipo_examen = self.get_tipo_examen_especial()
         if tipo_examen:
             return tipo_examen.get_numero_examen()
-        return ''
+        return None
 
 
 class OrdenExamenFirmas(TimeStampedModel):

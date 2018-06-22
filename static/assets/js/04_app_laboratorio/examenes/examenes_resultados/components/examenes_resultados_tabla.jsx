@@ -28,12 +28,12 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Orden",
-                                accessor: "orden",
-                                maxWidth: 100,
+                                Header: "Nro.Examen",
+                                accessor: "nro_examen_especial",
+                                maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].toString().includes(filter.value.toUpperCase())
+                                    return row._original.nro_examen_especial ? row[filter.id].includes(filter.value.toUpperCase()) : false
                                 }
                             },
                             {

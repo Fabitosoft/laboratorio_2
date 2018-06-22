@@ -53,6 +53,7 @@ class Examen(models.Model):
                                            verbose_name='Costo Referencia del Examen')
     multifirma = models.BooleanField(default=False, verbose_name='Multiple Firma')
     especial = models.BooleanField(default=False, verbose_name='Plantilla Especial')
+    no_email = models.BooleanField(default=False)
     nro_plantilla = models.PositiveIntegerField(verbose_name='Nro. Plantilla Especial', blank=True, null=True,
                                                 choices=FORMULARIO_PLANTILLA_CHOICES)
 

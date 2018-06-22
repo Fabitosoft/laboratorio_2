@@ -27,6 +27,9 @@ class FormExamenEstandar extends Component {
             onCancel,
             handleSubmit,
             modal_open,
+            notificarErrorAjaxAction,
+            noCargando,
+            cargando,
             cargarOrdenesExamenes,
             item_seleccionado,
             disabled,
@@ -40,6 +43,7 @@ class FormExamenEstandar extends Component {
             B2,
             B3,
             B6,
+            B6a,
             B8,
         } = this.props;
         return (
@@ -48,16 +52,23 @@ class FormExamenEstandar extends Component {
                     onCancel();
                     cargarOrdenesExamenes();
                 }}
-                onSubmit={handleSubmit((v) => onSubmit({
-                    ...v,
-                    es_citologia: true
-                }, null, null, false, item_seleccionado))}
+                onSubmit={handleSubmit((v) => {
+                    onSubmit({
+                            ...v,
+                            es_citologia: true
+                        },
+                        null,
+                        null,
+                        false,
+                        item_seleccionado);
+                })
+                }
                 reset={reset}
                 initialValues={initialValues}
                 submitting={submitting}
                 modal_open={modal_open}
                 pristine={pristine}
-                element_type={`Resultado ${item_seleccionado.examen_nombre}`}
+                element_type={`Resultado ${item_seleccionado.examen_nombre} (${item_seleccionado.nro_examen_especial})`}
                 modelStyle={modelStyle}
             >
                 <InfoExamenForm examen={item_seleccionado}/>
@@ -87,7 +98,7 @@ class FormExamenEstandar extends Component {
                                     disabled={A1_1 || A1_2 || disabled}
                                 />
                                 <div className='col-12'>
-                                    <div className="row pl-3">
+                                    <div className="row pl-4 m-0 p-0 m-0">
                                         {
                                             A1_1 &&
                                             <Fragment>
@@ -174,246 +185,283 @@ class FormExamenEstandar extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
-                            <div className="row">
+                        {
+                            !A3 &&
+                            <Fragment>
                                 <div className="col-12">
-                                    <h4>Las B</h4>
-                                </div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <h4>Las B</h4>
+                                        </div>
 
-                                <MyCheckboxSimple
-                                    name='B1'
-                                    nombre='Negativa para lesión intraepitelial o malignidad'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                {
-                                    B1 &&
-                                    <div className='col-12'>
-                                        <div className="row pl-3">
-                                            <MyCheckboxSimple
-                                                name='B1a'
-                                                nombre='Con cambios celulares reactivos asociados a'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                            {
-                                                B1a &&
-                                                <div className='col-12'>
-                                                    <div className="row pl-3">
-                                                        <MyCheckboxSimple
-                                                            name='B1a_i'
-                                                            nombre='Inflamación'
-                                                            className="col-12 col-md-6 col-lg-4"
-                                                            disabled={disabled}
-                                                        />
-                                                        <MyCheckboxSimple
-                                                            name='B1a_ii'
-                                                            nombre='Irradiación'
-                                                            className="col-12 col-md-6 col-lg-4"
-                                                            disabled={disabled}
-                                                        />
-                                                        <MyCheckboxSimple
-                                                            name='B1a_iii'
-                                                            nombre='Dispositivo Intrauterino'
-                                                            className="col-12 col-md-6 col-lg-4"
-                                                            disabled={disabled}
-                                                        />
-                                                        <MyCheckboxSimple
-                                                            name='B1a_iv'
-                                                            nombre='Reparación'
-                                                            className="col-12 col-md-6 col-lg-4"
-                                                            disabled={disabled}
-                                                        />
-                                                    </div>
+                                        <MyCheckboxSimple
+                                            name='B1'
+                                            nombre='Negativa para lesión intraepitelial o malignidad'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        {
+                                            B1 &&
+                                            <div className='col-12'>
+                                                <div className="row pl-4 m-0 p-0 m-0">
+                                                    <MyCheckboxSimple
+                                                        name='B1a'
+                                                        nombre='Con cambios celulares reactivos asociados a'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                    {
+                                                        B1a &&
+                                                        <div className='col-12'>
+                                                            <div className="row pl-4 m-0 p-0 m-0">
+                                                                <MyCheckboxSimple
+                                                                    name='B1a_i'
+                                                                    nombre='Inflamación'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                                <MyCheckboxSimple
+                                                                    name='B1a_ii'
+                                                                    nombre='Irradiación'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                                <MyCheckboxSimple
+                                                                    name='B1a_iii'
+                                                                    nombre='Dispositivo Intrauterino'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                                <MyCheckboxSimple
+                                                                    name='B1a_iv'
+                                                                    nombre='Reparación'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    <MyCheckboxSimple
+                                                        name='B1b'
+                                                        nombre='Con Cambios por Atrofia'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B1c'
+                                                        nombre='Con Células glandulares benignas post-histerectomía'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B1d'
+                                                        nombre='Con presencia de células endometriales fuera de fase'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
                                                 </div>
-                                            }
-                                            <MyCheckboxSimple
-                                                name='B1b'
-                                                nombre='Con Cambios por Atrofia'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B1c'
-                                                nombre='Con Células glandulares benignas post-histerectomía'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B1d'
-                                                nombre='Con presencia de células endometriales fuera de fase'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                        </div>
-                                    </div>
-                                }
+                                            </div>
+                                        }
 
-                                <MyCheckboxSimple
-                                    name='B2'
-                                    nombre='Anormalidad en células epiteliales escamosas'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                {
-                                    B2 &&
-                                    <div className='col-12'>
-                                        <div className="row pl-3">
-                                            <MyCheckboxSimple
-                                                name='B2a'
-                                                nombre='De significado indeterminado (ASC-US)'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B2b'
-                                                nombre='Que no permite excluir lesión intraepitelial de alto grado'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                        </div>
-                                    </div>
-                                }
+                                        <MyCheckboxSimple
+                                            name='B2'
+                                            nombre='Anormalidad en células epiteliales escamosas'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        {
+                                            B2 &&
+                                            <div className='col-12'>
+                                                <div className="row pl-4 m-0 p-0 m-0">
+                                                    <MyCheckboxSimple
+                                                        name='B2a'
+                                                        nombre='De significado indeterminado (ASC-US)'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B2b'
+                                                        nombre='Que no permite excluir lesión intraepitelial de alto grado'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                </div>
+                                            </div>
+                                        }
 
-                                <MyCheckboxSimple
-                                    name='B3'
-                                    nombre='Lesión escamosa epitelial de bajo grado'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                {
-                                    B3 &&
-                                    <div className='col-12'>
-                                        <div className="row pl-3">
-                                            <MyCheckboxSimple
-                                                name='B3a'
-                                                nombre='Incluye cambios por VPH'
-                                                className="col-12"
-                                                disabled={disabled}
-                                            />
-                                        </div>
-                                    </div>
-                                }
-                                <MyCheckboxSimple
-                                    name='B4'
-                                    nombre='Lesión escamosa epitelial de alto grado'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='B5'
-                                    nombre='Carcinoma escamocelular'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
+                                        <MyCheckboxSimple
+                                            name='B3'
+                                            nombre='Lesión escamosa epitelial de bajo grado'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        {
+                                            B3 &&
+                                            <div className='col-12'>
+                                                <div className="row pl-4 m-0 p-0 m-0">
+                                                    <MyCheckboxSimple
+                                                        name='B3a'
+                                                        nombre='Incluye cambios por VPH'
+                                                        className="col-12"
+                                                        disabled={disabled}
+                                                    />
+                                                </div>
+                                            </div>
+                                        }
+                                        <MyCheckboxSimple
+                                            name='B4'
+                                            nombre='Lesión escamosa epitelial de alto grado'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='B5'
+                                            nombre='Carcinoma escamocelular'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
 
-                                <MyCheckboxSimple
-                                    name='B6'
-                                    nombre='Anormalidades en'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='B7'
-                                    nombre='Adenocarcinoma endocervical in situ'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='B8'
-                                    nombre='Adenocarcinoma'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                {
-                                    B8 &&
-                                    <div className='col-12'>
-                                        <div className="row pl-3">
-                                            <MyCheckboxSimple
-                                                name='B8a'
-                                                nombre='Endocervical'
-                                                className="col-12 col-md-6 col-lg-4"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B8b'
-                                                nombre='Endometrial'
-                                                className="col-12 col-md-6 col-lg-4"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B8c'
-                                                nombre='Extrauterino'
-                                                className="col-12 col-md-6 col-lg-4"
-                                                disabled={disabled}
-                                            />
-                                            <MyCheckboxSimple
-                                                name='B8d'
-                                                nombre='De sitio no especificado'
-                                                className="col-12 col-md-6 col-lg-4"
-                                                disabled={disabled}
-                                            />
-                                        </div>
+                                        <MyCheckboxSimple
+                                            name='B6'
+                                            nombre='Anormalidades en'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        {
+                                            B6 &&
+                                            <div className='col-12'>
+                                                <div className="row pl-4 m-0 p-0 m-0">
+                                                    <MyCheckboxSimple
+                                                        name='B6a'
+                                                        nombre='Células epiteliales'
+                                                        className="col-12 col-md-6 col-lg-4"
+                                                        disabled={disabled}
+                                                    />
+                                                    {
+                                                        B6a &&
+                                                        <div className='col-12'>
+                                                            <div className="row pl-4 m-0 p-0 m-0">
+                                                                <MyCheckboxSimple
+                                                                    name='B6a_i'
+                                                                    nombre='Endocervicales sin ninguna otra especificación'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                                <MyCheckboxSimple
+                                                                    name='B6a_ii'
+                                                                    nombre='Endometriales sin ninguna otra especificación'
+                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    disabled={disabled}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        <MyCheckboxSimple
+                                            name='B7'
+                                            nombre='Adenocarcinoma endocervical in situ'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='B8'
+                                            nombre='Adenocarcinoma'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        {
+                                            B8 &&
+                                            <div className='col-12'>
+                                                <div className="row pl-4 m-0 p-0 m-0">
+                                                    <MyCheckboxSimple
+                                                        name='B8a'
+                                                        nombre='Endocervical'
+                                                        className="col-12 col-md-6 col-lg-4"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B8b'
+                                                        nombre='Endometrial'
+                                                        className="col-12 col-md-6 col-lg-4"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B8c'
+                                                        nombre='Extrauterino'
+                                                        className="col-12 col-md-6 col-lg-4"
+                                                        disabled={disabled}
+                                                    />
+                                                    <MyCheckboxSimple
+                                                        name='B8d'
+                                                        nombre='De sitio no especificado'
+                                                        className="col-12 col-md-6 col-lg-4"
+                                                        disabled={disabled}
+                                                    />
+                                                </div>
+                                            </div>
+                                        }
+                                        <MyCheckboxSimple
+                                            name='B9'
+                                            nombre='Otra Neoplastia Maligna'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
                                     </div>
-                                }
-                                <MyCheckboxSimple
-                                    name='B9'
-                                    nombre='Otra Neoplastia Maligna'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-12">
-                            <div className="row">
-                                <div className="col-12">
-                                    <h4>Las C</h4>
                                 </div>
-                                <MyCheckboxSimple
-                                    name='C1'
-                                    nombre='No se observan microorganismos patógenos'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C2'
-                                    nombre='Bacterias morfológicamente consistentes con actinomyces'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C3'
-                                    nombre='Desviación de la flora sugestiva de vaginosis bacteriana'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C4'
-                                    nombre='Trichonomas vaginalis'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C5'
-                                    nombre='Hongos mofológicamente compatibles con Candida Sp'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C6'
-                                    nombre='Cambios citopáticos asociados a Herpes'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                                <MyCheckboxSimple
-                                    name='C7'
-                                    nombre='No se observan microorganismos'
-                                    className="col-12"
-                                    disabled={disabled}
-                                />
-                            </div>
-                        </div>
+
+                                <div className="col-12">
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <h4>Las C</h4>
+                                        </div>
+                                        <MyCheckboxSimple
+                                            name='C1'
+                                            nombre='No se observan microorganismos patógenos'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C2'
+                                            nombre='Bacterias morfológicamente consistentes con actinomyces'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C3'
+                                            nombre='Desviación de la flora sugestiva de vaginosis bacteriana'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C4'
+                                            nombre='Trichonomas vaginalis'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C5'
+                                            nombre='Hongos mofológicamente compatibles con Candida Sp'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C6'
+                                            nombre='Cambios citopáticos asociados a Herpes'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='C7'
+                                            nombre='No se observan microorganismos'
+                                            className="col-12"
+                                            disabled={disabled}
+                                        />
+                                    </div>
+                                </div>
+                            </Fragment>
+                        }
                     </div>
                 </div>
                 <MyTextFieldSimple
@@ -424,7 +472,10 @@ class FormExamenEstandar extends Component {
                     multiLine={true}
                     rows={3}
                 />
-                <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Citología"}}/>
+                {
+                    (submitting || pristine) &&
+                    <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Citología"}}/>
+                }
             </MyFormTagModal>
         )
     }
@@ -443,6 +494,7 @@ function mapPropsToState(state, ownProps) {
         B2,
         B3,
         B6,
+        B6a,
         B8,
     } = selector(state,
         'A1_1',
@@ -455,6 +507,7 @@ function mapPropsToState(state, ownProps) {
         'B2',
         'B3',
         'B6',
+        'B6a',
         'B8',
     );
     return {
@@ -469,6 +522,7 @@ function mapPropsToState(state, ownProps) {
         B2: B2,
         B3: B3,
         B6: B6,
+        B6a: B6a,
         B8: B8,
     }
 }
