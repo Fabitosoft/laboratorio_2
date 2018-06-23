@@ -22,11 +22,10 @@ const styles = {
         opacity: 0,
     },
 };
-
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['full_name'], ['asc']);
         const {
             updateItem,
             singular_name,

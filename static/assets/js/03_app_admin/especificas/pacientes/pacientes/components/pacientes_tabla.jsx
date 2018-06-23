@@ -9,7 +9,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data, ['nombre', 'nombre_segundo', 'apellido', 'apellido_segundo'], ['asc', 'asc', 'asc', 'asc']);
         const {
             updateItem,
             singular_name,
@@ -30,38 +30,13 @@ class Tabla extends React.Component {
                             {
                                 Header: "Nombre",
                                 accessor: "nombre",
-                                maxWidth: 100,
+                                maxWidth: 300,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
-                                }
-                            },
-                            {
-                                Header: "Segundo Nombre",
-                                accessor: "nombre_segundo",
-                                maxWidth: 100,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
-                                }
-                            },
-                            {
-                                Header: "Apellido",
-                                accessor: "apellido",
-                                maxWidth: 100,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
-                                }
-                            },
-                            {
-                                Header: "Segundo Apellido",
-                                accessor: "apellido_segundo",
-                                maxWidth: 100,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
-                                }
+                                    const nombre = `${row._original.nombre} ${row._original.nombre_segundo} ${row._original.apellido} ${row._original.apellido_segundo}`;
+                                    return nombre.includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => `${row.original.nombre} ${row.original.nombre_segundo} ${row.original.apellido} ${row.original.apellido_segundo}`.trim()
                             },
                             {
                                 Header: "Tipo Doc.",
@@ -75,7 +50,7 @@ class Tabla extends React.Component {
                             {
                                 Header: "Nro. Doc.",
                                 accessor: "nro_identificacion",
-                                maxWidth: 80,
+                                maxWidth: 120,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].toString().includes(filter.value.toUpperCase())

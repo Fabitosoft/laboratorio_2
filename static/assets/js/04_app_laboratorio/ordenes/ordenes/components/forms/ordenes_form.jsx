@@ -71,7 +71,7 @@ class Form extends Component {
                     //         this.props.clearPacientes();
                     //     }
                     // }}
-                    data={_.map(pacientes_list, p => {
+                    data={_.map(_.orderBy(pacientes_list, ['full_name'], ['asc']), p => {
                         return {id: p.id, name: p.full_name}
                     })}
                     autoFocus={true}
@@ -93,7 +93,7 @@ class Form extends Component {
                     //         this.props.clearMedicosRemitentes();
                     //     }
                     // }}
-                    data={_.map(medicos_remitentes_list, p => {
+                    data={_.map(_.orderBy(medicos_remitentes_list, ['full_name'], ['asc']), p => {
                         return {id: p.id, name: p.full_name}
                     })}
                     busy={busy_medico_remitente}
@@ -113,7 +113,7 @@ class Form extends Component {
                     //         this.props.clearEntidades();
                     //     }
                     // }}
-                    data={_.map(entidades_list, p => {
+                    data={_.map(_.orderBy(entidades_list, ['nombre'], ['asc']), p => {
                         return {id: p.id, name: p.nombre}
                     })}
                     busy={busy_entidad}

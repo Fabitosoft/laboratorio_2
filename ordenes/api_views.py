@@ -32,11 +32,15 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
         orden = self.get_object()
         tipo_envio = request.POST.get('tipo_envio')
         send_to = []
-        if tipo_envio == 'Cliente' or tipo_envio == 'Ambos':
+        if tipo_envio == 'Cliente':
             send_to.append(orden.paciente.email)
 
-        if tipo_envio == 'Entidad' or tipo_envio == 'Ambos':
-            send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
+        if tipo_envio == 'Entidad':
+            contactos_entidad = orden.entidad.mis_contactos.filter(enviar_correo=True)
+            if contactos_entidad.exists():
+                send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
+            else:
+                raise serializers.ValidationError('No tiene correos registrados para envío')
 
         main_doc = self.generar_resultados_pdf(request, orden, es_email=True)
 

@@ -69,7 +69,13 @@ class Detail extends Component {
                     noCargando();
                 }, notificarErrorAjaxAction
             );
-            const cargarMedicoRemitente = () => this.props.fetchMedicoRemitente(orden.medico_remitente, cargarPaciente, notificarErrorAjaxAction);
+            const cargarMedicoRemitente = () => {
+                if (orden.medico_remitente) {
+                    this.props.fetchMedicoRemitente(orden.medico_remitente, cargarPaciente, notificarErrorAjaxAction);
+                } else {
+                    cargarPaciente();
+                }
+            };
             const cargarExamenesEntidad = (entidad) => this.props.fetchExamenes_por_entidad(entidad.id, cargarMedicoRemitente, notificarErrorAjaxAction);
             this.props.fetchEntidad(orden.entidad, cargarExamenesEntidad, notificarErrorAjaxAction);
         };
