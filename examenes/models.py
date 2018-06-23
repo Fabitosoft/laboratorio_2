@@ -42,8 +42,11 @@ class Examen(models.Model):
 
     subgrupo_cups = models.ForeignKey(CupsSubGrupo, related_name="mis_examenes", null=True, blank=True,
                                       on_delete=models.PROTECT)
-    codigo_cups = models.PositiveIntegerField(help_text='Código de clasificación única en procedimientos en salud',
-                                              unique=True)
+    codigo_cups = models.CharField(
+        help_text='Código de clasificación única en procedimientos en salud',
+        unique=True,
+        max_length=10
+    )
     nombre = models.CharField(verbose_name='Nombre del Examen', max_length=300, unique=True)
     nombre_corto = models.CharField(verbose_name='Nombre del Examen (Corto)', max_length=100, blank=True, null=True)
     valor_referencia = models.TextField(verbose_name='Valor de Referencia', blank=True, null=True)
