@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from .api_serializers import CitologiaSerializer, BiopsiaSerializer
 from .models import Citologia, Biopsia
@@ -10,6 +10,7 @@ class BiopsiaViewSet(viewsets.ModelViewSet):
         'orden_examen__examen',
     ).all()
     serializer_class = BiopsiaSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         super().perform_update(serializer)
@@ -29,6 +30,7 @@ class CitologiaViewSet(viewsets.ModelViewSet):
         'orden_examen__examen',
     ).all()
     serializer_class = CitologiaSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def clearCampos(self, citologia, campos_array):
         campos = Citologia._meta.get_fields()

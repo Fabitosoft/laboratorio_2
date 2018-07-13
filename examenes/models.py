@@ -53,7 +53,7 @@ class Examen(models.Model):
     unidad_medida = models.CharField(max_length=50, verbose_name='Unidad de Medida', blank=True, null=True)
     tecnica = models.CharField(max_length=100, verbose_name='Técnica', blank=True, null=True)
     costo_referencia = models.DecimalField(max_digits=10, decimal_places=1, default=0,
-                                           verbose_name='Costo Referencia del Examen')
+                                           verbose_name='Costo Referencia del Examen', null=True, blank=True)
     multifirma = models.BooleanField(default=False, verbose_name='Multiple Firma')
     especial = models.BooleanField(default=False, verbose_name='Plantilla Especial')
     no_email = models.BooleanField(default=False)

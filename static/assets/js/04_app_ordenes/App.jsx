@@ -7,8 +7,9 @@ import AppIndex from './index';
 
 import OrdenesList from './ordenes/ordenes/containers/ordenes_list_container';
 import OrdenDetail from './ordenes/ordenes/containers/orden_detail';
-import OrdenesExamenesList from './examenes/examenes_resultados_dashboard/containers/examenes_resultados_dashboard';
 import PacientesList from "../03_app_admin/especificas/pacientes/pacientes/containers/pacientes_list_container";
+import MedicosRemitentesList
+    from "../03_app_admin/especificas/medicos/dashboard/containers/medicos_dashboard";
 
 const App = (props) => {
     return (
@@ -17,11 +18,12 @@ const App = (props) => {
                 <Menu/>
                 <div className="p-3">
                     <Switch>
-                        <Route exact path='/app/laboratorio/' component={AppIndex}/>
-                        <Route exact path='/app/laboratorio/ordenes/list' component={OrdenesList}/>
-                        <Route exact path='/app/laboratorio/ordenes/detail/:id' component={OrdenDetail}/>
-                        <Route exact path='/app/laboratorio/examenes/list' component={OrdenesExamenesList}/>
-                        <Route exact path='/app/laboratorio/pacientes/pacientes/list' component={PacientesList}/>
+                        <Route exact path='/app/ordenes/' component={AppIndex}/>
+                        <Route exact path='/app/ordenes/ordenes/list' component={OrdenesList}/>
+                        <Route exact path='/app/ordenes/ordenes/detail/:id' component={OrdenDetail}/>
+                        <Route exact path='/app/ordenes/pacientes/pacientes/list' component={PacientesList}/>
+                        <Route exact path='/app/ordenes/medicos/dashboard'
+                               component={MedicosRemitentesList}/>
                     </Switch>
                 </div>
             </Fragment>

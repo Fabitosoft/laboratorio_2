@@ -11,6 +11,7 @@ from .models import MedicoRemitente, Especialista, Especialidad
 class MedicoRemitenteViewSet(viewsets.ModelViewSet):
     queryset = MedicoRemitente.objects.select_related('especialidad').all()
     serializer_class = MedicoRemitenteSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @list_route(methods=['get'])
     def buscar_nombre(self, request):
@@ -24,6 +25,7 @@ class MedicoRemitenteViewSet(viewsets.ModelViewSet):
 
 
 class EspecialidadViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
 
@@ -38,7 +40,7 @@ class EspecialidadViewSet(viewsets.ModelViewSet):
 class EspecialistaViewSet(viewsets.ModelViewSet):
     queryset = Especialista.objects.select_related('especialidad', 'user').all()
     serializer_class = EspecialistaSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated]
 
     @list_route(methods=['get'])
     def mi_cuenta(self, request):

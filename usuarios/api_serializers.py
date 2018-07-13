@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -18,7 +19,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'date_joined',
             'is_superuser',
             'groups',
-            'especialista'
+            'especialista',
+            'mi_entidad'
         ]
 
     def create(self, validated_data):
@@ -26,3 +28,20 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class LoginUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Unable to log in with provided credentials.")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')

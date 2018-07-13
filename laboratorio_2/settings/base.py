@@ -67,8 +67,13 @@ THIRD_PART_APPS = [
     'imagekit',
     'crispy_forms',
     'rest_framework',
+    'knox',
     'webpack_loader',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + MY_APPS + THIRD_PART_APPS

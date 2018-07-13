@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
@@ -12,6 +12,7 @@ class ExamenViewSet(viewsets.ModelViewSet):
         'subgrupo_cups__grupo',
     ).all()
     serializer_class = ExamenSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @list_route(methods=['get'])
     def examenes_entidad(self, request):
@@ -35,10 +36,12 @@ class ExamenViewSet(viewsets.ModelViewSet):
 
 
 class CupsGrupoViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CupsGrupo.objects.prefetch_related('mis_subgrupos').all()
     serializer_class = CupsGrupoSerializer
 
 
 class CupsSubGrupoViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CupsSubGrupo.objects.all()
     serializer_class = CupsSubGrupoSerializer

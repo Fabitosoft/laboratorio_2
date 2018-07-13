@@ -4,12 +4,13 @@ from rest_framework.response import Response
 
 from laboratorio_2.utils_queryset import query_varios_campos_or
 from .models import Entidad, ContactoEntidad, EntidadExamen
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, EntidadExamenSerializer
 
 
 class EntidadViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Entidad.objects.prefetch_related(
         'usuario',
         'mis_examenes',
@@ -38,11 +39,13 @@ class EntidadViewSet(viewsets.ModelViewSet):
 
 
 class ContactoEntidadViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = ContactoEntidad.objects.all()
     serializer_class = ContactoEntidadSerializer
 
 
 class EntidadExamenViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = EntidadExamen.objects.select_related(
         'examen'
     ).all()

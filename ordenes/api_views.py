@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
-from rest_framework import viewsets, serializers
+from rest_framework import viewsets, serializers, permissions
 
 from ordenes.mixins import OrdenesPDFMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
@@ -26,6 +26,7 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
         'elaborado_por'
     ).all()
     serializer_class = OrdenSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @detail_route(methods=['post'])
     def enviar_email(self, request, pk=None):
@@ -160,6 +161,7 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
         'mis_firmas__especialista__especialidad'
     ).all().order_by('pk')
     serializer_class = OrdenExamenSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @list_route(methods=['get'])
     def pendientes(self, request):

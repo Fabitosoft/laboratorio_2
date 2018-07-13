@@ -13,13 +13,13 @@ const Menu = () => {
             {mis_permisos => {
                 return (
                     <Fragment>
-                        <Link to='/app/laboratorio/ordenes/list'>
+                        <Link to='/app/ordenes/ordenes/list'>
                             <FontIcon className="fab fa-wpforms" style={iconStyles}/>
                         </Link>
-                        <Link to='/app/laboratorio/examenes/list'>
-                            <FontIcon className="fas fa-vial" style={iconStyles}/>
+                        <Link to='/app/ordenes/medicos/dashboard'>
+                            <FontIcon className="fas fa-user-md" style={iconStyles}/>
                         </Link>
-                        <Link to='/app/laboratorio/pacientes/pacientes/list'>
+                        <Link to='/app/ordenes/pacientes/pacientes/list'>
                             <FontIcon className="fas fa-user" style={iconStyles}/>
                         </Link>
                     </Fragment>

@@ -8,6 +8,7 @@ import permisosReducer from './generales/permisos/permisosReducer';
 import usuariosReducer from './generales/usuariosReducer';
 import loadingReducer from './generales/loadingReducer';
 import miCuentaReducer from './generales/miCuentaReducer';
+import auth from './generales/authentication/authenticationReducer';
 
 
 import examenesReducer from './especificas/examenes/examenesReducer';
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
     esta_cargando: loadingReducer,
     notifications: NotifyReducer,
     form: formReducer,
+    auth,
     examenes: examenesReducer,
     cups_grupos: cupsGruposReducer,
     cups_subgrupos: cupsSubGruposReducer,

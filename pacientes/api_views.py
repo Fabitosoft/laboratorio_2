@@ -3,12 +3,13 @@ from rest_framework.response import Response
 
 from laboratorio_2.utils_queryset import query_varios_campos_or
 from .models import Paciente
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from .api_serializers import PacienteSerializer
 
 
 class PacienteViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Paciente.objects.all()
     serializer_class = PacienteSerializer
 

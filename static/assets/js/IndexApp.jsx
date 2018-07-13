@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import * as actions from "./01_actions/01_index";
 import Loading from "./00_utilities/components/system/loading_overlay";
 import CargarDatos from "./00_utilities/components/system/cargar_datos";
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 
 const Boton = (props) => {
     const {nombre, icono, link} = props;
@@ -12,7 +12,7 @@ const Boton = (props) => {
             <Link to={link}>
                 <div className='icono'>
                     <div className="row">
-                        <div className="col-12"><i className={`fas ${icono} fa-3x`}></i></div>
+                        <div className="col-12"><i className={`${icono} fa-3x`}></i></div>
                         <div className="col-12">{nombre}</div>
                     </div>
                 </div>
@@ -47,7 +47,10 @@ class IndexApp extends Component {
     }
 
     render() {
-        const {mi_cuenta: {is_staff, is_superuser}} = this.props;
+        const {mi_cuenta, mi_cuenta: {is_staff, is_superuser, mi_entidad}} = this.props;
+        if (mi_entidad) {
+            return <Redirect to='/app/entidades/'/>
+        }
         return <Loading>
             <div className="mt-3">
                 <div className="container text-center">
@@ -60,24 +63,27 @@ class IndexApp extends Component {
                             <Boton
                                 nombre='Admin'
                                 link='/app/admin/'
-                                icono='fa-cogs'
+                                icono='fas fa-cogs'
                             />
                         }
                         <Boton
-                            nombre='Laboratorio'
-                            link='/app/laboratorio/'
-                            icono='fa-medkit'
+                            nombre='Ordenes'
+                            link='/app/ordenes/'
+                            icono='fab fa-wpforms'
+                        />
+                        <Boton
+                            nombre='Resultados'
+                            link='/app/resultados/'
+                            icono='fas fa-vial'
                         />
                         <div className="col-4"></div>
                         <div className="col-4 boton-index mt-4">
-                            <a href="/accounts/logout/?next=/">
-                                <div className='icono'>
-                                    <div className="row">
-                                        <div className="col-12"><i className={`fas fa-sign-out-alt`}></i></div>
-                                        <div className="col-12">Salir</div>
-                                    </div>
+                            <div className='icono puntero' onClick={() => this.props.logout()}>
+                                <div className="row">
+                                    <div className="col-12"><i className={`fas fa-sign-out-alt`}></i></div>
+                                    <div className="col-12">Salir</div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                         <div className="col-4"></div>
                         <CargarDatos cargarDatos={this.cargarDatos}/>
