@@ -71,12 +71,13 @@ class RootContainerComponent extends Component {
                     <Notify/>
                     <Switch>
                         <PrivateRoute exact path="/" component={AppIndex}/>
-                        <Route exact path='/app' component={AppIndex}/>
+                        <PrivateRoute exact path='/app' component={AppIndex}/>
                         <Route path='/app/login' component={Login}/>
                         <Route path='/app/admin' component={AppAdmin}/>
                         <Route path='/app/ordenes' component={AppOrdenes}/>
                         <Route path='/app/resultados' component={AppResultados}/>
                         <Route path='/app/entidades' component={AppEntidades}/>
+                        <Route component={NotFound}/>
                     </Switch>
                     <div style={{position: 'fixed', left: 10, bottom: 10}}>
                         {
