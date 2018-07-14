@@ -27,9 +27,7 @@ class Login extends Component {
             pristine,
             submitting,
             reset,
-            puntos_ventas,
             auth,
-            error
         } = this.props;
 
         if (auth.isAuthenticated) {
@@ -40,7 +38,9 @@ class Login extends Component {
         const mensaje_error = error_login && error_login.error ? error_login.error[0] : null;
         return (
             <div className="container form-signin pt-3 text-center" style={{width: '400px'}}>
-                <i className="fas fa-lock fa-5x"></i>
+                <div className='text-center'>
+                    <img style={{width: '300px'}} className='img-fluid' src={`${img_static_url}/logo.png`} alt="logo"/>
+                </div>
                 <form onSubmit={handleSubmit(this.onSubmit)}>
                     <MyTextFieldSimple
                         name='username'

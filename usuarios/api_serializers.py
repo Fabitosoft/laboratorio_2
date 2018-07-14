@@ -38,7 +38,7 @@ class LoginUserSerializer(serializers.Serializer):
         user = authenticate(**data)
         if user and user.is_active:
             return user
-        raise serializers.ValidationError("Unable to log in with provided credentials.")
+        raise serializers.ValidationError({'error': 'El usuario y la contraseña no coinciden con ningún usuario!'})
 
 
 class UserSerializer(serializers.ModelSerializer):
