@@ -22,6 +22,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'especialista',
             'mi_entidad'
         ]
+        extra_kwargs = {
+            'especialista': {'read_only': True},
+            'mi_entidad': {'read_only': True},
+        }
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

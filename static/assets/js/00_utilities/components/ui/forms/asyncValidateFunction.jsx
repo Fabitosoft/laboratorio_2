@@ -24,6 +24,7 @@ const asyncValidateFunction = (values, dispatch, props, blurredField, URL) => {
         if (localStorage.token) {
             headers["Authorization"] = `Token ${localStorage.token}`;
         }
+        axios.defaults.headers = headers;
         axios.get(FULL_URL)
             .then((request) => {
                 resolve(request.data);
