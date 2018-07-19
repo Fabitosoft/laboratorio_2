@@ -19,8 +19,10 @@ import 'popper.js/dist/popper.js';
 import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
 import './../../css/custom.css';
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
+
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+const theme = createMuiTheme();
 
 
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise, thunk)(createStore);
@@ -106,7 +108,7 @@ export default class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <MuiThemeProvider theme={getMuiTheme()}>
+                <MuiThemeProvider theme={theme}>
                     <RootContainer/>
                 </MuiThemeProvider>
             </Provider>

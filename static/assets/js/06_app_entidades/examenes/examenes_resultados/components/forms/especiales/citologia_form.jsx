@@ -469,7 +469,7 @@ class FormExamenEstandar extends Component {
                     nombre='Observaciones'
                     name='observaciones'
                     disabled={disabled}
-                    multiLine={true}
+                    multiline={true}
                     rows={3}
                 />
                 {

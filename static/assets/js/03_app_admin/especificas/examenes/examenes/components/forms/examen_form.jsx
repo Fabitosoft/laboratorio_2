@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
-import {reduxForm} from 'redux-form';
+import {reduxForm, formValueSelector} from 'redux-form';
 import {
     MyTextFieldSimple,
-    MySelectField,
-    MyCheckboxSimple
+    MyCheckboxSimple,
+    MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
@@ -16,14 +16,6 @@ const modelStyle = {
 };
 
 class Form extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            grupo_cups_seleccionado: null,
-            es_especial: false
-        });
-    }
-
     render() {
         const {
             pristine,
@@ -35,11 +27,12 @@ class Form extends Component {
             handleSubmit,
             modal_open,
             singular_name,
+            valores,
             grupos_cups_list,
         } = this.props;
-        const {grupo_cups_seleccionado, es_especial} = this.state;
+
         const grupos_cups_disponibles = _.map(_.pickBy(grupos_cups_list, grupo => grupo.mis_subgrupos.length > 0), g => g);
-        const grupo_cups = grupo_cups_seleccionado ? grupo_cups_seleccionado : initialValues ? initialValues.grupo_cups : null;
+        const grupo_cups = valores && valores.grupo_cups ? valores.grupo_cups : null;
         return (
             <MyFormTagModal
                 modelStyle={modelStyle}
@@ -71,7 +64,7 @@ class Form extends Component {
                     className="col-12 col-md-8 col-lg-7"
                     nombre='Valor de Referencia'
                     name='valor_referencia'
-                    multiLine={true}
+                    multiline={true}
                     rows={6}
                     case='U'/>
                 <div className="col-12 col-md-4 col-lg-5">
@@ -96,61 +89,70 @@ class Form extends Component {
 
                 <div className="col-12">
                     <div className="row">
-                        <MySelectField
+                        <MyCombobox
                             className='col-12 col-md-4'
                             nombre='Grupo Cups'
                             name='grupo_cups'
-                            onChange={(a, b, c) => this.setState({grupo_cups_seleccionado: b})}
-                            options={
-                                _.map(grupos_cups_disponibles, e => {
-                                    return {
-                                        value: e.id,
-                                        primaryText: e.nombre
-                                    }
-                                })
-                            }
+                            data={_.map(grupos_cups_disponibles, e => {
+                                return {
+                                    value: e.id,
+                                    primaryText: e.nombre
+                                }
+                            })}
+                            textField='primaryText'
+                            valuesField='value'
+                            placeholder='Subgrupo Cups...'
                         />
 
                         {
                             grupo_cups &&
-                            <MySelectField
+                            <MyCombobox
                                 className='col-12 col-md-8'
+                                name="subgrupo_cups"
                                 nombre='Subgrupo Cups'
-                                name='subgrupo_cups'
-                                options={
-                                    grupos_cups_list[grupo_cups].mis_subgrupos.map(e => {
-                                        return {
-                                            value: e.id,
-                                            primaryText: e.nombre
-                                        }
-                                    })
-                                }
+                                data={grupos_cups_list[grupo_cups].mis_subgrupos.map(e => {
+                                    return {
+                                        value: e.id,
+                                        primaryText: e.nombre
+                                    }
+                                })}
+                                textField='primaryText'
+                                valuesField='value'
+                                placeholder='Subgrupo Cups...'
                             />
                         }
                     </div>
                 </div>
                 <MyCheckboxSimple className="col-12" nombre="Multifirma" name='multifirma'/>
-                <MyCheckboxSimple className="col-12" nombre="Especial" name='especial'
-                                  onClick={(e) => this.setState({es_especial: e.target.checked})}/>
-                {((initialValues && initialValues.especial) || es_especial) &&
-                <MySelectField
-                    className='col-12 col-md-6'
-                    nombre='Tipo Plantilla'
-                    name='nro_plantilla'
-                    options={[
-                        {value: 1, primaryText: 'Biopsia'},
-                        {value: 2, primaryText: 'Citología'}
-                    ]}
-                />
+                <MyCheckboxSimple className="col-12" nombre="Especial" name='especial'/>
+                {
+                    valores &&
+                    valores.especial &&
+                    <MyCombobox
+                        className='col-12 col-md-6'
+                        name="nro_plantilla"
+                        nombre='Tipo Plantilla'
+                        data={[
+                            {value: 1, primaryText: 'Biopsia'},
+                            {value: 2, primaryText: 'Citología'}
+                        ]}
+                        textField='primaryText'
+                        valuesField='value'
+                        placeholder='Tipo Plantilla...'
+
+                    />
                 }
             </MyFormTagModal>
         )
     }
 }
 
+const selector = formValueSelector('examenForm')
+
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
+        valores: selector(state, 'especial', 'grupo_cups'),
         initialValues: item_seleccionado
     }
 }

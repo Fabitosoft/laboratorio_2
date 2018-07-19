@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import {
     MyTextFieldSimple,
-    MySelectField
+    MyCombobox
 } from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
@@ -33,6 +33,7 @@ class Form extends Component {
         } = this.props;
         return (
             <MyFormTagModal
+                fullScreen={true}
                 onCancel={onCancel}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
@@ -65,13 +66,19 @@ class Form extends Component {
                         nombre='Teléfono 2'
                         name='telefono_2'
                     />
-                    <MySelectField
+
+                    <MyCombobox
+                        className='col-12'
                         nombre='Especialidad'
                         name='especialidad'
-                        options={_.map(especialidades_list, e => {
-                            return {value: e.id, primaryText: e.nombre}
-                        })}
-                        className='col-12'
+                        data={
+                            _.map(especialidades_list, e => {
+                                return {value: e.id, primaryText: e.nombre}
+                            })
+                        }
+                        textField='primaryText'
+                        valuesField='value'
+                        placeholder='Especialidad...'
                     />
                     <MyTextFieldSimple
                         className='col-12 col-md-6 col-xl-6'

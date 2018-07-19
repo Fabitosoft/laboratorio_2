@@ -24,7 +24,7 @@ class List extends Component {
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()
-        this.props.history.push(`/app/laboratorio/ordenes/detail/${item.id}`)
+        this.props.history.push(`/app/ordenes/ordenes/detail/${item.id}`)
     }
 
 

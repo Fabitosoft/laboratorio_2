@@ -1,5 +1,5 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
 import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
 import {Link} from 'react-router-dom'
@@ -72,7 +72,7 @@ class Tabla extends React.Component {
                             //     Cell: row => (
                             //         <Checkbox
                             //             checked={row.value}
-                            //             onCheck={() => updateItem({...row.original, is_active: !row.value})}
+                            //             onChange={() => updateItem({...row.original, is_active: !row.value})}
                             //         />
                             //     )
                             // },
@@ -95,7 +95,7 @@ class Tabla extends React.Component {
                                 show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/laboratorio/ordenes/detail/${row.original.id}`}>
+                                    <Link to={`/app/ordenes/ordenes/detail/${row.original.id}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 

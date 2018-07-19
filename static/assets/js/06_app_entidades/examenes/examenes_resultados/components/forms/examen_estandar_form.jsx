@@ -47,7 +47,7 @@ class FormExamenEstandar extends Component {
                 <MyTextFieldSimple
                     className="col-12 col-md-8 col-lg-4"
                     nombre='Valor Referencia'
-                    multiLine={true}
+                    multiline={true}
                     rows={5}
                     name='examen_valor_referencia'
                     disabled={disabled}
@@ -70,7 +70,7 @@ class FormExamenEstandar extends Component {
                             className="col-12"
                             nombre='Resultado'
                             name='resultado'
-                            multiLine={true}
+                            multiline={true}
                             rows={2}
                             disabled={disabled}
                         />
@@ -80,7 +80,7 @@ class FormExamenEstandar extends Component {
                     className="col-12 col-lg-4"
                     nombre='Observaciones'
                     name='observaciones'
-                    multiLine={true}
+                    multiline={true}
                     rows={3}
                     disabled={disabled}
                 />

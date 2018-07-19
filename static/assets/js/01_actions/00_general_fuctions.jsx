@@ -181,6 +181,7 @@ export function callApiMethodWithParameters(url, id, method, parameters, dispatc
     const headers = {};
     if (localStorage.token) {
         headers["Authorization"] = `Token ${localStorage.token}`;
+        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
     }
     axios_instance.defaults.headers = headers;
 

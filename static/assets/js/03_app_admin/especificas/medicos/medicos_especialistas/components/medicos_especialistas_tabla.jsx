@@ -1,9 +1,6 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
 import {MyDialogButtonDelete} from '../../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
-import RaisedButton from 'material-ui/RaisedButton';
+import {IconButtonTableEdit} from '../../../../../00_utilities/components/ui/icon/iconos';
 
 import ReactTable from "react-table";
 
@@ -22,6 +19,7 @@ const styles = {
         opacity: 0,
     },
 };
+
 class Tabla extends React.Component {
     render() {
 
@@ -108,19 +106,13 @@ class Tabla extends React.Component {
                                             {row.value && <a href={row.value} target="_blank">
                                                 <img width={100} src={row.value} alt=""/>
                                             </a>}
-                                            <RaisedButton
-                                                label={row.value ? 'Cambiar' : 'Subir'}
-                                                labelPosition="before"
-                                                style={styles.button}
-                                                containerElement="label"
-                                            >
-                                                <input type="file"
-                                                       onChange={(e) => {
-                                                           onChangeFirma(e, row.original)
-                                                       }}
-                                                       style={styles.exampleImageInput}
-                                                       accept=".jpg, .jpeg, .png"/>
-                                            </RaisedButton>
+
+                                            <input type="file"
+                                                   onChange={(e) => {
+                                                       onChangeFirma(e, row.original)
+                                                   }}
+                                                   accept=".jpg, .jpeg, .png"/>
+
                                         </div>
                                     )
                                 }

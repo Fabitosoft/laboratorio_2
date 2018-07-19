@@ -5,8 +5,8 @@ import CargarDatos from "../../../../00_utilities/components/system/cargar_datos
 import {Titulo} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../00_utilities/common";
-import {Tabs, Tab} from 'material-ui/Tabs';
-import SwipeableViews from 'react-swipeable-views';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import {
     ORDENES_EXAMENES as bloque_1_permisos
 } from "../../../../00_utilities/permisos/types";
@@ -40,7 +40,7 @@ class ListadoElementos extends Component {
 
     }
 
-    handleChange = (value) => {
+    handleChange = (event, value) => {
         if (value !== this.state.slideIndex) {
             this.cargarOrdenesExamenes(value);
         }
@@ -114,14 +114,18 @@ class ListadoElementos extends Component {
                     <Tab label="Verificados" value={2}/>
                 </Tabs>
 
-                <SwipeableViews
-                    index={slideIndex}
-                    onChangeIndex={this.handleChange}
-                >
-                    {this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_pendientes})}
-                    {this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_con_resultados})}
-                    {this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_verificados})}
-                </SwipeableViews>
+                {
+                    this.state.slideIndex === 0 &&
+                    this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_pendientes})
+                }
+                {
+                    this.state.slideIndex === 1 &&
+                    this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_con_resultados})
+                }
+                {
+                    this.state.slideIndex === 2 &&
+                    this.renderSlideContent({...permisos_object_1, list: permisos_object_1.list_verificados})
+                }
 
                 <CargarDatos
                     cargarDatos={this.cargarDatos}

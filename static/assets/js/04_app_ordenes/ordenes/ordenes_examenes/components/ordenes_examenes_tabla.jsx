@@ -166,7 +166,7 @@ class Tabla extends React.Component {
                             //     Cell: row => (
                             //         <Checkbox
                             //             checked={row.value}
-                            //             onCheck={() => updateItem({...row.original, is_active: !row.value})}
+                            //             onChange={() => updateItem({...row.original, is_active: !row.value})}
                             //         />
                             //     )
                             // },

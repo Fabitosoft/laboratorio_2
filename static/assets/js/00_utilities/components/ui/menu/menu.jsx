@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import {Link} from 'react-router-dom'
-import FontIcon from 'material-ui/FontIcon';
 
 import * as actions from "../../../../01_actions/01_index";
 import {connect} from "react-redux";
@@ -12,8 +10,14 @@ class MenuBase extends Component {
         this.props.fetchMisPermisos();
     }
 
+    onSalir() {
+        this.props.logout();
+    }
+
     render() {
-        const {mis_permisos, mi_cuenta} = this.props;
+
+        const {mis_permisos} = this.props;
+        const mi_cuenta = JSON.parse(localStorage.getItem("mi_cuenta"));
         return (
             <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-light mt-0 mb-0 pt-0 pb-0">
                 <Link to='/app/'>
@@ -30,8 +34,9 @@ class MenuBase extends Component {
                         {this.props.children(mis_permisos)}
                     </ul>
                     <ul className="navbar-nav">
-                        <span className="navbar-text">{mi_cuenta.username} | <a href="/accounts/logout/?next=/"><small>Salir </small>
-                        </a>
+                        <span className="navbar-text">{mi_cuenta.username} | <span className='puntero'
+                                                                                   onClick={() => this.onSalir()}><small>Salir </small>
+                        </span>
                         </span>
                     </ul>
                 </div>
@@ -42,7 +47,6 @@ class MenuBase extends Component {
 
 function mapPropsToState(state, ownProps) {
     return {
-        mi_cuenta: state.mi_cuenta,
         mis_permisos: state.mis_permisos
     }
 }

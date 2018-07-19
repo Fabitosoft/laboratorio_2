@@ -77,7 +77,7 @@ class LoginAPI(generics.GenericAPIView):
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user),
-            "punto_venta": punto_venta
+            "mi_cuenta": UsuarioSerializer(user, context=self.get_serializer_context()).data,
         })
 
 

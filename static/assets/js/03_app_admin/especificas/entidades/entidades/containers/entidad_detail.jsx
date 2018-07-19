@@ -14,20 +14,8 @@ import {
 import BloqueContactos from '../../contactos/components/contacto_entidad_list';
 import BloqueEntidadExamenes from '../../examenes/components/entidad_examenes_list';
 
-import {Tabs, Tab} from 'material-ui/Tabs';
-import SwipeableViews from 'react-swipeable-views';
-
-const styles = {
-    headline: {
-        fontSize: 24,
-        paddingTop: 16,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
-    slide: {
-        padding: 10,
-    },
-};
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class EntidadDetail extends Component {
     constructor(props) {
@@ -42,7 +30,7 @@ class EntidadDetail extends Component {
     }
 
 
-    handleChange = (value) => {
+    handleChange = (event, value) => {
         this.setState({
             slideIndex: value,
         });
@@ -95,26 +83,24 @@ class EntidadDetail extends Component {
                     <Tab label="Examenes" value={1}/>
                 </Tabs>
 
-                <SwipeableViews
-                    index={this.state.slideIndex}
-                    onChangeIndex={this.handleChange}
-                >
-                    <div style={styles.slide}>
-                        <BloqueContactos
-                            object_list={entidad.mis_contactos}
-                            permisos_object={permisos_bloque_1}
-                            {...this.props}
-                        />
-                    </div>
-                    <div style={styles.slide}>
-                        <BloqueEntidadExamenes
-                            permisos_object={permisos_bloque_2}
-                            object_list={entidad.mis_examenes}
-                            examenes_list={examenes}
-                            {...this.props}
-                        />
-                    </div>
-                </SwipeableViews>
+                {
+                    this.state.slideIndex === 0 &&
+                    <BloqueContactos
+                        object_list={entidad.mis_contactos}
+                        permisos_object={permisos_bloque_1}
+                        {...this.props}
+                    />
+                }
+                {
+                    this.state.slideIndex === 1 &&
+                    <BloqueEntidadExamenes
+                        permisos_object={permisos_bloque_2}
+                        object_list={entidad.mis_examenes}
+                        examenes_list={examenes}
+                        {...this.props}
+                    />
+                }
+
                 <CargarDatos cargarDatos={this.cargarDatos}/>
             </ValidarPermisos>
         )

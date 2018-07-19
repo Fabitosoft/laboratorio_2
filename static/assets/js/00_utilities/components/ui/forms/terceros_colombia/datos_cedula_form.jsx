@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 
-import {MySelectField, MyRadioButtonGroup, MyDateTimePickerField, MyTextFieldSimple} from '../fields';
+import {MyCombobox, MyRadioButtonGroup, MyDateTimePickerField, MyTextFieldSimple} from '../fields';
 
 export default class DatosCedulaForm extends Component {
     render() {
@@ -37,32 +37,41 @@ export default class DatosCedulaForm extends Component {
                     name='apellido_segundo'
                     case='U'
                 />
-                <MySelectField
+                <MyCombobox
                     className="col-12 col-md-6 col-xl-3"
                     name="tipo_documento"
                     nombre='Tipo de documento'
-                    options={[
-                        {value: "CC", primaryText: "Cédula Ciudadania"},
-                        {value: "CE", primaryText: "Cédula Extrangería"},
-                        {value: "PS", primaryText: "Pasaporte"},
-                        {value: "TI", primaryText: "Tarjeta de Identidad"},
+                    data={[
+                        {id: "CC", nombre: "Cédula Ciudadania"},
+                        {id: "CE", nombre: "Cédula Extrangería"},
+                        {id: "PS", nombre: "Pasaporte"},
+                        {id: "TI", nombre: "Tarjeta de Identidad"},
                     ]}
+                    textField='nombre'
+                    valuesField='id'
+                    placeholder='Tipo Documento...'
+
                 />
                 <MyTextFieldSimple
                     className='col-12 col-md-6 col-xl-3'
                     nombre='Nro. Identificación'
                     name='nro_identificacion'
                 />
-                <MySelectField
-                    className="col-12 col-md-6"
+                <MyCombobox
+                    className="col-12 col-md-6 col-xl-3"
                     name="grupo_sanguineo"
                     nombre='Grupo Sanguineo'
-                    options={[
-                        {value: "APOSITIVO", primaryText: "A Positivo"},
-                        {value: "OPOSITIVO", primaryText: "O Positivo"},
-                        {value: "ONEGATIVO", primaryText: "O Negativo"},
-                        {value: "ANEGATIVO", primaryText: "A Negativo"},
+                    data={[
+                        {id: "NI", nombre: "Indefinido"},
+                        {id: "APOSITIVO", nombre: "A Positivo"},
+                        {id: "OPOSITIVO", nombre: "O Positivo"},
+                        {id: "ONEGATIVO", nombre: "O Negativo"},
+                        {id: "ANEGATIVO", nombre: "A Negativo"},
                     ]}
+                    textField='nombre'
+                    valuesField='id'
+                    placeholder='Grupo Sanguineo...'
+
                 />
                 <div className="col-12">
                     <div className="row">

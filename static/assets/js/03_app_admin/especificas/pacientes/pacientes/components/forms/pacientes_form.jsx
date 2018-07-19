@@ -25,6 +25,7 @@ class Form extends Component {
         return (
             <MyFormTagModal
                 onCancel={onCancel}
+                fullScreen={true}
                 onSubmit={handleSubmit(onSubmit)}
                 reset={reset}
                 initialValues={initialValues}

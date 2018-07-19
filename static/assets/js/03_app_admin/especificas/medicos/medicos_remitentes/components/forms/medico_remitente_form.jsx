@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MySelectField} from '../../../../../../00_utilities/components/ui/forms/fields';
+import {MyTextFieldSimple, MyCombobox} from '../../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -46,11 +46,12 @@ class Form extends Component {
                     nombre='Teléfono'
                     name='telefono'
                     case='U'/>
-                <MySelectField
+
+                <MyCombobox
                     className='col-12'
                     nombre='Especialidad'
                     name='especialidad'
-                    options={
+                    data={
                         _.map(especialidades_list, e => {
                             return {
                                 value: e.id,
@@ -58,6 +59,9 @@ class Form extends Component {
                             }
                         })
                     }
+                    textField='primaryText'
+                    valuesField='value'
+                    placeholder='Especialidad...'
                 />
             </MyFormTagModal>
         )

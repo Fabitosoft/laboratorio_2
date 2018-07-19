@@ -1,10 +1,11 @@
 import React, {Fragment} from 'react';
 import MenuBase from '../../00_utilities/components/ui/menu/menu';
-import FontIcon from 'material-ui/FontIcon';
 import {Link} from 'react-router-dom'
+import Icon from '@material-ui/core/Icon';
 
 const iconStyles = {
-    padding: 8,
+    paddingTop: 8,
+    paddingRight: 8
 };
 
 const Menu = () => {
@@ -14,13 +15,19 @@ const Menu = () => {
                 return (
                     <Fragment>
                         <Link to='/app/ordenes/ordenes/list'>
-                            <FontIcon className="fab fa-wpforms" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fab fa-wpforms"/>
+                            </div>
                         </Link>
                         <Link to='/app/ordenes/medicos/dashboard'>
-                            <FontIcon className="fas fa-user-md" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-user-md"/>
+                            </div>
                         </Link>
                         <Link to='/app/ordenes/pacientes/pacientes/list'>
-                            <FontIcon className="fas fa-user" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-user"/>
+                            </div>
                         </Link>
                     </Fragment>
                 )

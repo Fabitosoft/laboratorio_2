@@ -48,6 +48,7 @@ class FormExamenEstandar extends Component {
         } = this.props;
         return (
             <MyFormTagModal
+                fullScreen={true}
                 onCancel={() => {
                     onCancel();
                     cargarOrdenesExamenes();
@@ -469,7 +470,7 @@ class FormExamenEstandar extends Component {
                     nombre='Observaciones'
                     name='observaciones'
                     disabled={disabled}
-                    multiLine={true}
+                    multiline={true}
                     rows={3}
                 />
                 {

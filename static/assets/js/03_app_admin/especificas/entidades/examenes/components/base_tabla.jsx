@@ -1,5 +1,5 @@
 import React from "react";
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import {MyDialogButtonDelete} from '../../../../../00_utilities/components/ui/dialog';
 import {IconButtonTableEdit, IconButtonTableSee} from '../../../../../00_utilities/components/ui/icon/iconos';
 import ReactTable from "react-table";
@@ -69,7 +69,7 @@ class Tabla extends React.Component {
                                 Cell: row => (
                                     <Checkbox
                                         checked={row.value}
-                                        onCheck={() => updateItem({...row.original, activo: !row.value})}
+                                        onChange={() => updateItem({...row.original, activo: !row.value})}
                                     />
                                 )
                             },

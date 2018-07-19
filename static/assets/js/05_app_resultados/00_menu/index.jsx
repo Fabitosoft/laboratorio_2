@@ -1,10 +1,11 @@
 import React, {Fragment} from 'react';
 import MenuBase from '../../00_utilities/components/ui/menu/menu';
-import FontIcon from 'material-ui/FontIcon';
 import {Link} from 'react-router-dom'
+import Icon from '@material-ui/core/Icon';
 
 const iconStyles = {
-    padding: 8,
+    paddingTop: 8,
+    paddingRight: 8
 };
 
 const Menu = () => {
@@ -14,7 +15,9 @@ const Menu = () => {
                 return (
                     <Fragment>
                         <Link to='/app/resultados/examenes/list'>
-                            <FontIcon className="fas fa-vial" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-vial"/>
+                            </div>
                         </Link>
                     </Fragment>
                 )

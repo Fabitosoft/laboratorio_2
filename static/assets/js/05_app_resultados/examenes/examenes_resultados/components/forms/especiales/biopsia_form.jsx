@@ -30,6 +30,7 @@ class FormExamenEstandar extends Component {
         } = this.props;
         return (
             <MyFormTagModal
+                fullScreen={true}
                 onCancel={() => {
                     onCancel();
                     cargarOrdenesExamenes();
@@ -54,7 +55,7 @@ class FormExamenEstandar extends Component {
                             nombre='Descripción Macroscopica'
                             name='descripcion_macroscopica'
                             disabled={disabled}
-                            multiLine={true}
+                            multiline={true}
                             rows={3}
                         />
                         <MyTextFieldSimple
@@ -62,7 +63,7 @@ class FormExamenEstandar extends Component {
                             nombre='Descripción Microscopica'
                             name='descripcion_microscopica'
                             disabled={disabled}
-                            multiLine={true}
+                            multiline={true}
                             rows={3}
                         />
                         <MyTextFieldSimple
@@ -70,7 +71,7 @@ class FormExamenEstandar extends Component {
                             nombre='Diagnostico'
                             name='diagnostico'
                             disabled={disabled}
-                            multiLine={true}
+                            multiline={true}
                             rows={3}
                         />
 
@@ -81,7 +82,7 @@ class FormExamenEstandar extends Component {
                     nombre='Observaciones'
                     name='observaciones'
                     disabled={disabled}
-                    multiLine={true}
+                    multiline={true}
                     rows={3}
                 />
                 <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Biopsia"}}/>

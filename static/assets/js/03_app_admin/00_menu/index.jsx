@@ -1,12 +1,13 @@
 import React, {Fragment} from 'react';
 import MenuBase from '../../00_utilities/components/ui/menu/menu';
+import {Link} from 'react-router-dom'
+import Icon from '@material-ui/core/Icon';
 import MenuTerceros from './terceros';
 import MenuPermisos from './permisos';
-import FontIcon from 'material-ui/FontIcon';
-import {Link} from 'react-router-dom'
 
 const iconStyles = {
-    padding: 8,
+    paddingTop: 8,
+    paddingRight: 8
 };
 
 const Menu = () => {
@@ -18,13 +19,19 @@ const Menu = () => {
                         <MenuPermisos/>
                         <MenuTerceros/>
                         <Link to='/app/admin/examenes/list'>
-                            <FontIcon className="fas fa-syringe" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-syringe"/>
+                            </div>
                         </Link>
                         <Link to='/app/admin/medicos/list'>
-                            <FontIcon className="fas fa-user-md" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-user-md"/>
+                            </div>
                         </Link>
                         <Link to='/app/admin/entidades/entidades/list'>
-                            <FontIcon className="fas fa-hospital" style={iconStyles}/>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-hospital"/>
+                            </div>
                         </Link>
                     </Fragment>
                 )

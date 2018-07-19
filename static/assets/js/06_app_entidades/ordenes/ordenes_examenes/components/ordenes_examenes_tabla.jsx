@@ -166,7 +166,7 @@ class Tabla extends React.Component {
                             //     Cell: row => (
                             //         <Checkbox
                             //             checked={row.value}
-                            //             onCheck={() => updateItem({...row.original, is_active: !row.value})}
+                            //             onChange={() => updateItem({...row.original, is_active: !row.value})}
                             //         />
                             //     )
                             // },
@@ -189,7 +189,7 @@ class Tabla extends React.Component {
                                 show: permisos_object.detail,
                                 maxWidth: 60,
                                 Cell: row =>
-                                    <Link to={`/app/laboratorio/ordenes/detail/${row.original.id}`}>
+                                    <Link to={`/app/ordenes/ordenes/detail/${row.original.id}`}>
                                         <IconButtonTableSee/>
                                     </Link>
 
