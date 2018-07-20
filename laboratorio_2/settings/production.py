@@ -62,10 +62,10 @@ GZIP_CONTENT_TYPES = (
     "text/x-cross-domain-policy",
     "text/xml"
 )
-#
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=604800',
-# }
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=604800',
+}
 
 STATICFILES_LOCATION = 'static'
 STATICFILES_STORAGE = 'laboratorio_2.custom_storages.StaticStorage'
