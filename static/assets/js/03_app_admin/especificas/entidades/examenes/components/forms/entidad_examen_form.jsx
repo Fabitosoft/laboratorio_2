@@ -22,8 +22,11 @@ class Form extends Component {
             handleSubmit,
             modal_open,
             singular_name,
-            examenes_list
+            examenes_list,
+            object_list
         } = this.props;
+        const examenes_existentes = _.map(object_list, e => e.examen);
+        const examenes_para_adicionar = _.pickBy(examenes_list, e => !examenes_existentes.includes(e.id));
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -42,7 +45,7 @@ class Form extends Component {
                     valueField='id'
                     textField='nombre'
                     data={
-                        _.map(examenes_list, e => {
+                        _.map(_.orderBy(examenes_para_adicionar, ['nombre'], ['asc']), e => {
                             return {
                                 id: e.id,
                                 nombre: e.nombre

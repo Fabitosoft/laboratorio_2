@@ -14,11 +14,6 @@ import validate from './validate';
 class Form extends Component {
     constructor(props) {
         super(props);
-        this.state = ({
-            busy_paciente: false,
-            busy_medico_remitente: false,
-            busy_entidad: false
-        });
         this.loadOptionsPacientes = this.loadOptionsPacientes.bind(this);
         this.loadOptionsEntidades = this.loadOptionsEntidades.bind(this);
         this.loadOptionsMedicosRemitentes = this.loadOptionsMedicosRemitentes.bind(this);
@@ -30,7 +25,7 @@ class Form extends Component {
             fetchPacientesParametros,
             pacientes_list
         } = this.props;
-        if (input && input.length > 3) {
+        if (input && input.length > 4) {
             cargando();
             fetchPacientesParametros(input, () => noCargando(), notificarErrorAjaxAction);
         }
@@ -50,7 +45,7 @@ class Form extends Component {
             fetchEntidadesXParametro,
             entidades_list
         } = this.props;
-        if (input && input.length > 3) {
+        if (input && input.length > 4) {
             cargando();
             fetchEntidadesXParametro(input, () => noCargando(), notificarErrorAjaxAction);
         }
@@ -68,7 +63,7 @@ class Form extends Component {
             fetchMedicosRemitentesXNombres,
             medicos_remitentes_list
         } = this.props;
-        if (input && input.length > 3) {
+        if (input && input.length > 4) {
             cargando();
             fetchMedicosRemitentesXNombres(input, () => noCargando(), notificarErrorAjaxAction);
         }
@@ -78,26 +73,6 @@ class Form extends Component {
             complete: esta_cargando,
         };
         callback(null, data);
-    }
-
-    componentWillUnmount() {
-        this.props.clearPacientes();
-        this.props.clearMedicosRemitentes();
-        this.props.clearEntidades();
-    }
-
-    componentDidMount() {
-        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
-        const {initialValues} = this.props;
-        if (initialValues && initialValues.paciente) {
-            this.props.fetchPaciente(initialValues.paciente, null, notificarErrorAjaxAction);
-        }
-        if (initialValues && initialValues.entidad) {
-            this.props.fetchEntidad(initialValues.entidad, null, notificarErrorAjaxAction);
-        }
-        if (initialValues && initialValues.medico_remitente) {
-            this.props.fetchMedicosRemitentes(initialValues.medico_remitente, null, notificarErrorAjaxAction);
-        }
     }
 
     render() {
@@ -110,7 +85,7 @@ class Form extends Component {
             onCancel,
             handleSubmit,
             modal_open,
-            singular_name
+            singular_name,
         } = this.props;
         return (
             <MyFormTagModal

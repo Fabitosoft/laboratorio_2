@@ -12,7 +12,7 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters, fetchListWithParameter
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'examenes';

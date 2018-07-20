@@ -57,14 +57,16 @@ class EntidadDetail extends Component {
         const {id} = this.props.match.params;
         const {noCargando, cargando} = this.props;
         cargando();
-        const cargarExamenes = () => this.props.fetchExamenes(id, () => noCargando(), this.error_callback);
+        const cargarContactos = () => this.props.fetchContactosEntidades_por_entidad(id, () => noCargando(), this.error_callback);
+        const cargarExamenesEntidad = () => this.props.fetchEntidadesExamenes_por_entidad(id, cargarContactos, this.error_callback);
+        const cargarExamenes = () => this.props.fetchExamenes(id, cargarExamenesEntidad, this.error_callback);
         const cargarEntidad = () => this.props.fetchEntidad(id, cargarExamenes, this.error_callback);
         this.props.fetchMisPermisos(cargarEntidad, this.error_callback);
 
     }
 
     render() {
-        const {entidad, mis_permisos, examenes} = this.props;
+        const {entidad, mis_permisos, examenes, contactos_entidades, entidad_examenes} = this.props;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
         const permisos_bloque_1 = permisosAdapter(mis_permisos, bloque_1_permisos);
         const permisos_bloque_2 = permisosAdapter(mis_permisos, bloque_2_permisos);
@@ -86,7 +88,7 @@ class EntidadDetail extends Component {
                 {
                     this.state.slideIndex === 0 &&
                     <BloqueContactos
-                        object_list={entidad.mis_contactos}
+                        object_list={_.map(contactos_entidades, e => e)}
                         permisos_object={permisos_bloque_1}
                         {...this.props}
                     />
@@ -95,7 +97,7 @@ class EntidadDetail extends Component {
                     this.state.slideIndex === 1 &&
                     <BloqueEntidadExamenes
                         permisos_object={permisos_bloque_2}
-                        object_list={entidad.mis_examenes}
+                        object_list={_.map(entidad_examenes, e => e)}
                         examenes_list={examenes}
                         {...this.props}
                     />
@@ -113,7 +115,9 @@ function mapPropsToState(state, ownProps) {
     return {
         entidad: state.entidades[id],
         mis_permisos: state.mis_permisos,
-        examenes: state.examenes
+        examenes: state.examenes,
+        contactos_entidades: state.contactos_entidades,
+        entidad_examenes: state.entidad_examenes,
     }
 }
 

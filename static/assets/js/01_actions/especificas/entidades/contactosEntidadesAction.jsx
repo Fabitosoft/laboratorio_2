@@ -12,10 +12,20 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    fetchListWithParameter
 } from '../../00_general_fuctions'
 
 const current_url_api = 'contacto_entidades';
+
+export const fetchContactosEntidades_por_entidad = (entidad_id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_CONTACTOS_ENTIDADES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/contactos_por_entidad/?id_entidad=${entidad_id}`, dispatches, callback, callback_error);
+    }
+};
+
 export const createContactoEntidad = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

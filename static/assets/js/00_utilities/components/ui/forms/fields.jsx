@@ -234,7 +234,7 @@ MyDateTimePickerField.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderSelect = ({input, options, meta: {touched, error, warning}, nombre}) => {
+const renderSelect = ({input, options, meta: {touched, error, warning}, nombre, valueKey = 'value', labelKey = 'label'}) => {
     return (
         <Fragment>
             <Select
@@ -243,6 +243,8 @@ const renderSelect = ({input, options, meta: {touched, error, warning}, nombre})
                 onBlur={() => input.onBlur(input.value)}
                 options={options}
                 placeholder={nombre}
+                valueKey={valueKey}
+                labelKey={labelKey}
                 simpleValue
             />
             {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&

@@ -11,12 +11,7 @@ from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, Entid
 
 class EntidadViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Entidad.objects.prefetch_related(
-        'usuario',
-        'mis_examenes',
-        'mis_contactos',
-        'mis_examenes__examen'
-    ).all()
+    queryset = Entidad.objects.select_related('usuario').all()
     serializer_class = EntidadSerializer
 
     @list_route(methods=['get'])
@@ -43,6 +38,13 @@ class ContactoEntidadViewSet(viewsets.ModelViewSet):
     queryset = ContactoEntidad.objects.all()
     serializer_class = ContactoEntidadSerializer
 
+    @list_route(methods=['get'])
+    def contactos_por_entidad(self, request):
+        id_entidad = request.GET.get('id_entidad')
+        qs = self.get_queryset().filter(entidad_id=id_entidad)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
 
 class EntidadExamenViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -50,3 +52,10 @@ class EntidadExamenViewSet(viewsets.ModelViewSet):
         'examen'
     ).all()
     serializer_class = EntidadExamenSerializer
+
+    @list_route(methods=['get'])
+    def entidad_examen_por_entidad(self, request):
+        id_entidad = request.GET.get('id_entidad')
+        qs = self.get_queryset().filter(entidad_id=id_entidad)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)

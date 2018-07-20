@@ -3,7 +3,7 @@ import PrinJs from 'print-js';
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
 import CargarDatos from "../../../../00_utilities/components/system/cargar_datos";
-import {Titulo, SinObjeto, AtributoTexto, AtributoBooleano} from "../../../../00_utilities/templates/fragmentos";
+import {Titulo, SinObjeto} from "../../../../00_utilities/templates/fragmentos";
 import ValidarPermisos from "../../../../00_utilities/permisos/validar_permisos";
 import {permisosAdapter} from "../../../../00_utilities/common";
 import CreateForm from '../components/forms/ordenes_form';
@@ -55,13 +55,15 @@ class Detail extends Component {
     componentWillUnmount() {
         this.props.clearPermisos();
         this.props.clearOrdenes();
+        this.props.clearPacientes();
+        this.props.clearMedicosRemitentes();
+        this.props.clearEntidades();
     }
 
     cargarDatos() {
         const {id} = this.props.match.params;
         const {noCargando, cargando, notificarErrorAjaxAction} = this.props;
         cargando();
-
         const cargarPropiedades = (orden) => {
             const cargarPaciente = () => this.props.fetchPaciente(
                 orden.paciente,
@@ -76,8 +78,7 @@ class Detail extends Component {
                     cargarPaciente();
                 }
             };
-            const cargarExamenesEntidad = (entidad) => this.props.fetchExamenes_por_entidad(entidad.id, cargarMedicoRemitente, notificarErrorAjaxAction);
-            this.props.fetchEntidad(orden.entidad, cargarExamenesEntidad, notificarErrorAjaxAction);
+            this.props.fetchEntidad(orden.entidad, cargarMedicoRemitente, notificarErrorAjaxAction);
         };
         const cargarOrden = () => this.props.fetchOrden(id, cargarPropiedades, notificarErrorAjaxAction);
         const cargarExamenes = () => this.props.fetchOrdenesExamenes_por_orden(id, cargarOrden, notificarErrorAjaxAction);
@@ -206,13 +207,11 @@ class Detail extends Component {
             mis_permisos,
             entidades_list,
             ordenes_examenes_list,
-            examenes_entidad_list
         } = this.props;
         const {modal_open, mostrar_enviar_correo} = this.state;
         const permisos = permisosAdapter(mis_permisos, permisos_view);
 
         const examenes_orden_array = _.map(ordenes_examenes_list, e => e);
-        const examenes_entidad_array = _.map(examenes_entidad_list, e => e);
 
         if (!object) {
             return <SinObjeto/>
@@ -248,7 +247,10 @@ class Detail extends Component {
                     {
                         entidad &&
                         object.estado === 0 &&
-                        <AddExamen {...this.props} entidad={entidad} adicionarExamen={this.adicionarExamen}/>
+                        <AddExamen
+                            {...this.props}
+                            adicionarExamen={this.adicionarExamen}
+                        />
                     }
                 </div>
                 <TablaExamenes
@@ -274,10 +276,6 @@ class Detail extends Component {
                 {
                     cant_exam_verificados > 0 &&
                     <Fragment>
-                        {/*<span className='btn btn-primary' onClick={() => {*/}
-                        {/*this.enviarCorreo('Ambos')*/}
-                        {/*}}>Enviar Ambos</span>*/}
-
                         <span className='btn btn-primary m-2' onClick={() => {
                             this.imprimirExamenes()
                         }}>Imprimir Examenes</span>
@@ -326,7 +324,7 @@ function mapPropsToState(state, ownProps) {
         object: state.ordenes[id],
         ordenes_examenes_list: state.ordenes_examenes,
         pacientes_list: state.pacientes,
-        examenes_entidad_list: state.examenes,
+        examenes_entidad_list: state.entidad_examenes,
         medicos_remitentes_list: state.medicos_remitentes,
         entidades_list: state.entidades
     }
