@@ -35,7 +35,7 @@ class Form extends Component {
                 element_type={singular_name}
             >
                 <LectorCedula setSelectItem={setSelectItem}>
-                    <CedulaForm/>
+                    <CedulaForm {...this.props}/>
 
                     <div className="col-12">
                         <h4>Información de Contacto</h4>

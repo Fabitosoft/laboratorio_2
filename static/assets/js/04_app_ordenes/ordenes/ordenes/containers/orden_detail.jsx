@@ -321,6 +321,7 @@ class Detail extends Component {
 function mapPropsToState(state, ownProps) {
     const {id} = ownProps.match.params;
     return {
+        esta_cargando: state.esta_cargando,
         mis_permisos: state.mis_permisos,
         object: state.ordenes[id],
         ordenes_examenes_list: state.ordenes_examenes,

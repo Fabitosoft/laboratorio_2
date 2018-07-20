@@ -4,7 +4,7 @@ const validate = values => {
     const errors = {};
     const requiredFields = [
         'nombre',
-        'apellidos',
+        'apellido',
         'grupo_sanguineo',
         'especialidad',
         'tipo_documento',

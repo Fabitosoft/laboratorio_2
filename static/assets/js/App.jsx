@@ -18,6 +18,7 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'tether/dist/js/tether';
 import 'bootstrap/dist/js/bootstrap';
+import 'react-select/dist/react-select.css';
 import './../../css/custom.css';
 
 

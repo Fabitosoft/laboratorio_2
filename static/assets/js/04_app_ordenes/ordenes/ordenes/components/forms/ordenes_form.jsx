@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
-import {MyTextFieldSimple, MyCombobox, MyDropdownList} from '../../../../../00_utilities/components/ui/forms/fields';
+import {formValueSelector} from 'redux-form';
+import {
+    MyTextFieldSimple,
+    MySelect,
+    MySelectAsync
+} from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
@@ -13,13 +18,86 @@ class Form extends Component {
             busy_paciente: false,
             busy_medico_remitente: false,
             busy_entidad: false
-        })
+        });
+        this.loadOptionsPacientes = this.loadOptionsPacientes.bind(this);
+        this.loadOptionsEntidades = this.loadOptionsEntidades.bind(this);
+        this.loadOptionsMedicosRemitentes = this.loadOptionsMedicosRemitentes.bind(this);
+    }
+
+    loadOptionsPacientes(input, callback) {
+        const {notificarErrorAjaxAction, esta_cargando, cargando, noCargando} = this.props;
+        const {
+            fetchPacientesParametros,
+            pacientes_list
+        } = this.props;
+        if (input && input.length > 3) {
+            cargando();
+            fetchPacientesParametros(input, () => noCargando(), notificarErrorAjaxAction);
+        }
+        const resultado = _.map(_.orderBy(pacientes_list, ['full_name'], ['asc']), e => {
+            return {id: e.id, label: `${e.full_name} - ${e.tipo_documento} ${e.nro_identificacion}`}
+        });
+        const data = {
+            options: resultado ? resultado : [],
+            complete: esta_cargando,
+        };
+        callback(null, data);
+    }
+
+    loadOptionsEntidades(input, callback) {
+        const {notificarErrorAjaxAction, esta_cargando, cargando, noCargando} = this.props;
+        const {
+            fetchEntidadesXParametro,
+            entidades_list
+        } = this.props;
+        if (input && input.length > 3) {
+            cargando();
+            fetchEntidadesXParametro(input, () => noCargando(), notificarErrorAjaxAction);
+        }
+        const resultado = _.map(_.orderBy(entidades_list, ['nombre'], ['asc']), e => e);
+        const data = {
+            options: resultado ? resultado : [],
+            complete: esta_cargando,
+        };
+        callback(null, data);
+    }
+
+    loadOptionsMedicosRemitentes(input, callback) {
+        const {notificarErrorAjaxAction, esta_cargando, cargando, noCargando} = this.props;
+        const {
+            fetchMedicosRemitentesXNombres,
+            medicos_remitentes_list
+        } = this.props;
+        if (input && input.length > 3) {
+            cargando();
+            fetchMedicosRemitentesXNombres(input, () => noCargando(), notificarErrorAjaxAction);
+        }
+        const resultado = _.map(_.orderBy(medicos_remitentes_list, ['full_name'], ['asc']), e => e);
+        const data = {
+            options: resultado ? resultado : [],
+            complete: esta_cargando,
+        };
+        callback(null, data);
+    }
+
+    componentWillUnmount() {
+        this.props.clearPacientes();
+        this.props.clearMedicosRemitentes();
+        this.props.clearEntidades();
     }
 
     componentDidMount() {
-        this.props.fetchEntidades();
-        this.props.fetchPacientes();
-        this.props.fetchMedicosRemitentes();
+        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
+        const {initialValues} = this.props;
+        if (initialValues && initialValues.paciente) {
+            this.props.fetchPaciente(initialValues.paciente, null, notificarErrorAjaxAction);
+        }
+        if (initialValues && initialValues.entidad) {
+            this.props.fetchEntidad(initialValues.entidad, null, notificarErrorAjaxAction);
+        }
+        if (initialValues && initialValues.medico_remitente) {
+            this.props.fetchMedicosRemitentes(initialValues.medico_remitente, null, notificarErrorAjaxAction);
+        }
     }
 
     render() {
@@ -32,17 +110,8 @@ class Form extends Component {
             onCancel,
             handleSubmit,
             modal_open,
-            singular_name,
-            pacientes_list,
-            medicos_remitentes_list,
-            entidades_list,
+            singular_name
         } = this.props;
-
-        const {
-            busy_paciente,
-            busy_medico_remitente,
-            busy_entidad
-        } = this.state;
         return (
             <MyFormTagModal
                 onCancel={onCancel}
@@ -56,80 +125,40 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
-                <MyCombobox
+                <MySelectAsync
+                    className='col-12'
+                    valueKey="id"
+                    labelKey="label"
                     name='paciente'
-                    nombre='Paciente...'
-                    textField='name'
-                    valuesField='id'
-                    // metodoBusqueda={(a, b) => {
-                    //     if (b.length > 3) {
-                    //         this.setState({busy_paciente: true});
-                    //         this.props.fetchPacientesParametros(b, () => {
-                    //             this.setState({busy_paciente: false});
-                    //         })
-                    //     } else {
-                    //         this.props.clearPacientes();
-                    //     }
-                    // }}
-                    data={_.map(_.orderBy(pacientes_list, ['full_name'], ['asc']), p => {
-                        return {id: p.id, name: p.full_name}
-                    })}
-                    autoFocus={true}
-                    busy={busy_paciente}
+                    nombre='Paciente'
+                    loadOptions={this.loadOptionsPacientes}
                 />
-                <MyCombobox
-                    name='medico_remitente'
-                    nombre='Médico Remitente...'
-                    valueField='id'
-                    textField='name'
-                    // metodoBusqueda={(a, b) => {
-                    //     console.log('entro')
-                    //     if (b.length > 3) {
-                    //         this.setState({busy_medico_remitente: true});
-                    //         this.props.fetchMedicosRemitentesXNombres(b, () => {
-                    //             this.setState({busy_medico_remitente: false});
-                    //         })
-                    //     } else {
-                    //         this.props.clearMedicosRemitentes();
-                    //     }
-                    // }}
-                    data={_.map(_.orderBy(medicos_remitentes_list, ['full_name'], ['asc']), p => {
-                        return {id: p.id, name: p.full_name}
-                    })}
-                    busy={busy_medico_remitente}
-                />
-                <MyCombobox
+                <MySelectAsync
+                    className='col-12'
+                    valueKey="id"
+                    labelKey="nombre"
                     name='entidad'
-                    nombre='Entidad...'
-                    valueField='id'
-                    textField='name'
-                    // metodoBusqueda={(a, b) => {
-                    //     if (b.length > 3) {
-                    //         this.setState({busy_entidad: true});
-                    //         this.props.fetchEntidadesXParametro(b, () => {
-                    //             this.setState({busy_entidad: false});
-                    //         })
-                    //     } else {
-                    //         this.props.clearEntidades();
-                    //     }
-                    // }}
-                    data={_.map(_.orderBy(entidades_list, ['nombre'], ['asc']), p => {
-                        return {id: p.id, name: p.nombre}
-                    })}
-                    busy={busy_entidad}
+                    nombre='Entidad'
+                    loadOptions={this.loadOptionsEntidades}
                 />
-                <MyDropdownList
-                    dropUp
+
+                <MySelectAsync
+                    className='col-12'
+                    valueKey="id"
+                    labelKey="full_name"
+                    name='medico_remitente'
+                    nombre='Medico Remitente'
+                    loadOptions={this.loadOptionsMedicosRemitentes}
+                />
+                <MySelect
                     name='tipo_pago'
-                    placeholder='Formas de Pago...'
+                    nombre='Formas de Pago...'
                     data={[
-                        {id: 'EFECTIVO', name: 'Efectivo'},
-                        {id: 'TARJETA', name: 'Tarjeta'},
-                        {id: 'RELACION DE COBRO', name: 'Relación de Cobro'},
-                        {id: 'CORTESIA', name: 'Cortesía'},
+                        {value: 'EFECTIVO', label: 'Efectivo'},
+                        {value: 'TARJETA', label: 'Tarjeta'},
+                        {value: 'RELACION DE COBRO', label: 'Relación de Cobro'},
+                        {value: 'CORTESIA', label: 'Cortesía'},
                     ]}
-                    valueField='id'
-                    textField='name'
                 />
                 <MyTextFieldSimple
                     name='nombre_contacto_alternativo'
@@ -151,9 +180,12 @@ class Form extends Component {
     }
 }
 
+const selector = formValueSelector('ordenenForm');
+
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
+        valores: selector(state, 'first', 'second'),
         initialValues: item_seleccionado
     }
 }

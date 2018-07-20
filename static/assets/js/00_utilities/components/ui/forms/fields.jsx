@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import {upper, lower} from "../../../common";
 import {Field} from 'redux-form';
 import PropTypes from "prop-types";
 import TextField from '@material-ui/core/TextField';
@@ -11,7 +10,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Combobox from 'react-widgets/lib/Combobox';
-import DropdownList from 'react-widgets/lib/DropdownList';
+import Select from 'react-select';
 
 import momentLocaliser from 'react-widgets-moment';
 import moment from 'moment-timezone';
@@ -27,12 +26,12 @@ const renderTextField = ({input, label, meta: {touched, error, warning}, ...cust
     return (
         <Fragment>
             <TextField
+                autoComplete="off"
                 label={label}
                 margin="normal"
                 error={error && touched}
                 {...input}
                 {...new_custom}
-                autoComplete='off'
             />
         </Fragment>
     )
@@ -40,9 +39,9 @@ const renderTextField = ({input, label, meta: {touched, error, warning}, ...cust
 export const MyTextFieldSimple = (props) => {
     let normalize = null;
     if (props.case === 'U') {
-        normalize = upper
+        normalize = (value) => value.toUpperCase()
     } else if (props.case === 'L') {
-        normalize = lower
+        normalize = (value) => value.toLowerCase()
     }
     return (
         <Field
@@ -52,7 +51,6 @@ export const MyTextFieldSimple = (props) => {
             helperText={props.helperText}
             {...props}
             component={renderTextField}
-            autoComplete="off"
             normalize={normalize}
         />
     )
@@ -139,35 +137,6 @@ MyCheckboxSimple.propTypes = {
     nombre: PropTypes.string
 };
 
-const renderDropdownList = ({input, data, valueField, textField, placeholder, onSelect, dropUp}) => {
-    return (
-        <DropdownList {...input}
-                      data={data}
-                      placeholder={placeholder}
-                      valueField={valueField}
-                      textField={textField}
-                      onChange={input.onChange}
-                      onSelect={onSelect}
-                      dropUp
-        />
-    )
-};
-
-
-export const MyDropdownList = (props) => {
-    const {busy = false, textField = 'name', valuesField = 'id', dropUp} = props;
-    return (
-        <Field
-            {...props}
-            component={renderDropdownList}
-            valueField={valuesField}
-            textField={textField}
-            busy={busy}
-            dropUp
-        />
-    )
-};
-
 const renderCombobox = ({input, data, valueField, textField, placeholder, onSelect = null, meta: {touched, error, warning}}) => {
     return (
         <Fragment>
@@ -194,6 +163,7 @@ export const MyCombobox = (props) => {
     return (
         <div className={`${className} mt-4`}>
             <Field
+                autoComplete={props.autoComplete ? props.autoComplete : props.name}
                 {...props}
                 component={renderCombobox}
                 valueField={valuesField}
@@ -263,3 +233,91 @@ MyDateTimePickerField.propTypes = {
     className: PropTypes.string,
     nombre: PropTypes.string
 };
+
+const renderSelect = ({input, options, meta: {touched, error, warning}, nombre}) => {
+    return (
+        <Fragment>
+            <Select
+                value={input.value}
+                onChange={input.onChange}
+                onBlur={() => input.onBlur(input.value)}
+                options={options}
+                placeholder={nombre}
+                simpleValue
+            />
+            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
+                <span>{warning}</span>))}
+        </Fragment>
+    )
+};
+
+export const MySelect = (props) => {
+    const {data, name, nombre, onChangeMethod = null, className = 'col-12'} = props;
+    return (
+        <div className={className}>
+            <Field
+                {...props}
+                autoComplete={props.autoComplete ? props.autoComplete : props.name}
+                onChangeMethod={onChangeMethod}
+                nombre={nombre}
+                name={name}
+                options={data}
+                component={renderSelect}
+            />
+        </div>
+    )
+};
+
+const renderSelectAsync = (
+    {
+        input,
+        options,
+        meta: {
+            touched,
+            error,
+            warning
+        },
+        nombre,
+        valueKey = "id",
+        labelKey = "name",
+        loadOptions
+    }) => {
+    return (
+        <Fragment>
+            <Select.Async
+                value={input.value}
+                onChange={input.onChange}
+                onSelectResetsInput={false}
+                onBlurResetsInput={false}
+                onCloseResetsInput={false}
+
+                valueKey={valueKey}
+                labelKey={labelKey}
+                loadOptions={loadOptions}
+                backspaceRemoves={true}
+
+
+                onBlur={() => input.onBlur(input.value)}
+                placeholder={nombre}
+                simpleValue
+            />
+            {touched && ((error && <span className='form-field-error'>{error}</span>) || (warning &&
+                <span>{warning}</span>))}
+        </Fragment>
+    )
+};
+
+export const MySelectAsync = (props) => {
+    const {name, nombre = null, className = 'col-12'} = props;
+    return (
+        <div className={className}>
+            <Field
+                autoComplete={props.autoComplete ? props.autoComplete : props.name}
+                nombre={nombre}
+                name={name}
+                {...props}
+                component={renderSelectAsync}
+            />
+        </div>
+    )
+}

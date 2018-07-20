@@ -28,31 +28,34 @@ export class MyDialogButtonDelete extends Component {
         } = this.props;
         return (
             <Fragment>
-                <IconButtonTableDelete
-                    onClick={() => this.setState({is_open: true})}
-                />
-                <Dialog
-                    open={this.state.is_open}
-                >
+                {
+                    this.state.is_open ?
+                        <Dialog
+                            open={this.state.is_open}
+                        >
 
-                    <DialogTitle id="responsive-dialog-title">{`Eliminar ${element_type}`}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {` Desea eliminar ${element_type} ${element_name}`}?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <FlatIconModalCancel onClick={() => this.setState({is_open: false})}/>
-                        <FlatIconModalDelete
-                            onClick={() => {
-                                this.setState({
-                                    is_open: false
-                                });
-                                onDelete();
-                            }}
+                            <DialogTitle id="responsive-dialog-title">{`Eliminar ${element_type}`}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    {` Desea eliminar ${element_type} ${element_name}`}?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <FlatIconModalCancel onClick={() => this.setState({is_open: false})}/>
+                                <FlatIconModalDelete
+                                    onClick={() => {
+                                        this.setState({
+                                            is_open: false
+                                        });
+                                        onDelete();
+                                    }}
+                                />
+                            </DialogActions>
+                        </Dialog> :
+                        <IconButtonTableDelete
+                            onClick={() => this.setState({is_open: true})}
                         />
-                    </DialogActions>
-                </Dialog>
+                }
             </Fragment>
         )
     }

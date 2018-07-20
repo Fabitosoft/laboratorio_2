@@ -17,7 +17,7 @@ class PacienteViewSet(viewsets.ModelViewSet):
     def buscar_x_parametro(self, request):
         parametro = request.GET.get('parametro')
         qs = None
-        if len(parametro) > 5:
+        if len(parametro) > 3:
             search_fields = ['=nro_identificacion', 'nombre', 'nombre_segundo', 'apellido', 'apellido_segundo']
             qs = query_varios_campos_or(self.queryset, search_fields, parametro)
         serializer = self.get_serializer(qs, many=True)
