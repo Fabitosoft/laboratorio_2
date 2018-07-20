@@ -34,7 +34,6 @@ class Form extends Component {
         const es_citologia = (item_seleccionado.nro_plantilla === 2 && item_seleccionado.especial);
         const es_biopsia = (item_seleccionado.nro_plantilla === 1 && item_seleccionado.especial);
         const desabilitado = item_seleccionado.examen_estado > 0;
-        //console.log(citologias_list[item_seleccionado.citologia])
         return (
             <div>
                 {es_estandar && <FormExamenEstandar disabled={desabilitado} {...this.props}/>}

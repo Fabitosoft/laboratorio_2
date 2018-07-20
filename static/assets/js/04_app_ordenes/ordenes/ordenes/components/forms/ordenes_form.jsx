@@ -91,7 +91,7 @@ class Form extends Component {
             <MyFormTagModal
                 onCancel={onCancel}
                 onSubmit={handleSubmit((values) => {
-                    onSubmit({...values, tipo_pago: values.tipo_pago.id})
+                    onSubmit({...values, tipo_pago: values.tipo_pago})
                 })}
                 reset={reset}
                 initialValues={initialValues}

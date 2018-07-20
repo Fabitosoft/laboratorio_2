@@ -39,7 +39,9 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
         if tipo_envio == 'Entidad':
             contactos_entidad = orden.entidad.mis_contactos.filter(enviar_correo=True)
             if contactos_entidad.exists():
-                send_to.extend([x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True)])
+                send_to.extend(
+                    [x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True).distinct()])
+                print(send_to)
             else:
                 raise serializers.ValidationError('No tiene correos registrados para envío')
 

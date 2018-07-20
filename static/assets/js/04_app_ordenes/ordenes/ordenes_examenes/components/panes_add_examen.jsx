@@ -8,9 +8,9 @@ class AddExamen extends Component {
     }
 
     componentDidMount() {
-        const {noCargando, cargando, notificarErrorAjaxAction, object} = this.props;
+        const {noCargando, cargando, notificarErrorAjaxAction, entidad} = this.props;
         cargando();
-        this.props.fetchEntidadesExamenes_por_entidad(object.id, () => noCargando(), notificarErrorAjaxAction);
+        this.props.fetchEntidadesExamenes_por_entidad(entidad.id, () => noCargando(), notificarErrorAjaxAction);
     }
 
     render() {
@@ -21,8 +21,7 @@ class AddExamen extends Component {
         const {
             examen_seleccionado
         } = this.state;
-        const mis_examenes = _.map(_.orderBy(examenes_entidad_list, ['nombre'], ['asc']), e => e);
-
+        const mis_examenes = _.map(_.orderBy(examenes_entidad_list, ['examen_nombre'], ['asc']), e => e);
         return (
             <div className="col-12 pt-4">
                 <h5>Examenes Entidad</h5>

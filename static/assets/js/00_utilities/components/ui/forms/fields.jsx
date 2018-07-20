@@ -100,17 +100,20 @@ MyRadioButtonGroup.propTypes = {
     options: PropTypes.any
 };
 
-const renderCheckbox = ({input, label}) => (
-    <FormControlLabel
-        control={
-            <Checkbox
-                checked={input.value}
-                onChange={(event, value) => input.onChange(value)}
-            />
-        }
-        label={label}
-    />
-);
+const renderCheckbox = ({input, label, disabled = true}) => {
+    return (
+        <FormControlLabel
+            control={
+                <Checkbox
+                    disabled={disabled}
+                    checked={input.value}
+                    onChange={(event, value) => input.onChange(value)}
+                />
+            }
+            label={label}
+        />
+    )
+};
 
 export const MyCheckboxSimple = (props) => {
     const {onClick, className} = props;
@@ -282,7 +285,8 @@ const renderSelectAsync = (
         nombre,
         valueKey = "id",
         labelKey = "name",
-        loadOptions
+        loadOptions,
+        filterOptions = null
     }) => {
     return (
         <Fragment>
@@ -297,7 +301,7 @@ const renderSelectAsync = (
                 labelKey={labelKey}
                 loadOptions={loadOptions}
                 backspaceRemoves={true}
-
+                filterOptions={filterOptions}
 
                 onBlur={() => input.onBlur(input.value)}
                 placeholder={nombre}
