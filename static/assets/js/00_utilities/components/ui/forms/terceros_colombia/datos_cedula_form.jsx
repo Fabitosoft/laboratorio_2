@@ -66,10 +66,14 @@ export default class DatosCedulaForm extends Component {
                     nombre='Grupo Sanguineo'
                     data={[
                         {value: "NI", label: "Indefinido"},
-                        {value: "APOSITIVO", label: "A Positivo"},
-                        {value: "OPOSITIVO", label: "O Positivo"},
                         {value: "ONEGATIVO", label: "O Negativo"},
+                        {value: "OPOSITIVO", label: "O Positivo"},
                         {value: "ANEGATIVO", label: "A Negativo"},
+                        {value: "APOSITIVO", label: "A Positivo"},
+                        {value: "BNEGATIVO", label: "B Negativo"},
+                        {value: "BPOSITIVO", label: "B Positivo"},
+                        {value: "ABNEGATIVO", label: "AB Negativo"},
+                        {value: "ABPOSITIVO", label: "AB Positivo"},
                     ]}
                 />
 
