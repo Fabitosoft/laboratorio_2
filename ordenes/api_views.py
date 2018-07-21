@@ -65,7 +65,7 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
             msg = EmailMultiAlternatives(
                 'Resultados de examenes',
                 text_content,
-                bcc=['fabiogarciasanchez@gmail.com'],
+                bcc=['mylabcollazos@hotmail.com'],
                 from_email='Laboratorios Collazos <%s>' % settings.RESULTADOS_FROM_EMAIL,
                 to=send_to
             )
