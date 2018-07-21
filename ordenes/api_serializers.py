@@ -80,6 +80,7 @@ class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
 #
 #
 class OrdenExamenSerializer(serializers.ModelSerializer):
+    nro_orden = serializers.IntegerField(source='orden.nro_orden', read_only=True)
     nro_examen_especial = serializers.SerializerMethodField()
     entidad_nombre = serializers.CharField(source='orden.entidad.nombre', read_only=True)
     examen_estado_nombre = serializers.CharField(source='get_examen_estado_display', read_only=True)
@@ -93,6 +94,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'id',
             'entidad_nombre',
             'nro_examen',
+            'nro_orden',
             'nro_examen_especial',
             'examen_estado',
             'sub_categoria_cup_nombre',
@@ -150,6 +152,7 @@ class OrdenSerializer(serializers.ModelSerializer):
             'medico_remitente_nombre',
             'medico_remitente',
             'tipo_pago',
+            'nro_orden',
             'entidad',
             'estado',
             'estado_nombre',

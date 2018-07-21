@@ -4,6 +4,12 @@ const OrdenInformacion = (props) => {
     const {object} = props;
     return (
         <Fragment>
+            {
+                object.nro_orden &&
+                <div className="col-12">
+                    <h3>Nro. Orden: <small>{object.nro_orden}</small></h3>
+                </div>
+            }
             <div className="col-12 pb-3">
                 <strong>Paciente:</strong> {object.paciente_nombre}<br/>
                 <small>{object.paciente_identificacion}</small>

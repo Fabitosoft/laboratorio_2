@@ -8,7 +8,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = _.orderBy(this.props.data,['id'],['desc']);
+        const data = _.orderBy(this.props.data, ['id'], ['desc']);
         const {
             updateItem,
             singular_name,
@@ -27,9 +27,16 @@ class Tabla extends React.Component {
                         Header: "Caracteristicas",
                         columns: [
                             {
-                                Header: "Nro.",
+                                Header: "Nro. Registro",
                                 accessor: "id",
                                 maxWidth: 100,
+                                filterable: true,
+                            },
+                            {
+                                Header: "Nro. Orden",
+                                accessor: "nro_orden",
+                                maxWidth: 100,
+                                filterable: true,
                             },
                             {
                                 Header: "Paciente",

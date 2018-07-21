@@ -207,7 +207,6 @@ class Detail extends Component {
             mis_permisos,
             entidades_list,
             ordenes_examenes_list,
-            examenes_entidad_list
         } = this.props;
         const {modal_open, mostrar_enviar_correo} = this.state;
         const permisos = permisosAdapter(mis_permisos, permisos_view);

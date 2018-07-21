@@ -130,14 +130,31 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         orden = serializer.save()
         if orden.estado == 1:
+            now = datetime.datetime.now()
+            if not orden.nro_orden:
+                base_nro = (abs(int(now.year)) % 100) * 10000
+                qs = Orden.objects.filter(
+                    nro_orden__isnull=False,
+                    nro_orden__gte=base_nro
+                ).aggregate(
+                    ultimo_indice=Max('nro_orden')
+                )
+                ultimo_indice = qs['ultimo_indice']
+                if ultimo_indice is None:
+                    orden.nro_orden = base_nro
+                else:
+                    orden.nro_orde = int(ultimo_indice) + 1
+                orden.save()
+
             qs = OrdenExamen.objects.filter(
                 nro_examen__isnull=False,
             ).aggregate(
                 ultimo_indice=Max('nro_examen')
             )
+            base_nro_examen = (abs(int(now.year)) % 100) * 100000
             ultimo_indice_examen = qs.get('ultimo_indice')
             if not ultimo_indice_examen:
-                ultimo_indice_examen = 200000
+                ultimo_indice_examen = base_nro_examen
 
             mis_examenes = orden.mis_examenes
 

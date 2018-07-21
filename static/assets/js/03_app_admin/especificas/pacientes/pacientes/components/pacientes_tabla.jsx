@@ -29,14 +29,14 @@ class Tabla extends React.Component {
                         columns: [
                             {
                                 Header: "Nombre",
-                                accessor: "nombre",
+                                accessor: "full_name",
                                 maxWidth: 300,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    const nombre = `${row._original.nombre} ${row._original.nombre_segundo} ${row._original.apellido} ${row._original.apellido_segundo}`;
-                                    return nombre.includes(filter.value.toUpperCase())
+                                    return (
+                                        row.full_name.includes(filter.value.toUpperCase())
+                                    )
                                 },
-                                Cell: row => `${row.original.nombre} ${row.original.nombre_segundo} ${row.original.apellido} ${row.original.apellido_segundo}`.trim()
                             },
                             {
                                 Header: "Tipo Doc.",

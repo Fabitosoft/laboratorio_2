@@ -13,7 +13,7 @@ const App = (props) => {
                 <Menu/>
                 <div className="p-3">
                     <Switch>
-                        <Route exact path='/app/resultados/' component={AppIndex}/>
+                        <Route exact path='/app/resultados/' component={OrdenesExamenesList}/>
                         <Route exact path='/app/resultados/examenes/list' component={OrdenesExamenesList}/>
                     </Switch>
                 </div>

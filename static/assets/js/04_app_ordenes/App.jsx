@@ -18,7 +18,7 @@ const App = (props) => {
                 <Menu/>
                 <div className="p-3">
                     <Switch>
-                        <Route exact path='/app/ordenes/' component={AppIndex}/>
+                        <Route exact path='/app/ordenes/' component={OrdenesList}/>
                         <Route exact path='/app/ordenes/ordenes/list' component={OrdenesList}/>
                         <Route exact path='/app/ordenes/ordenes/detail/:id' component={OrdenDetail}/>
                         <Route exact path='/app/ordenes/pacientes/pacientes/list' component={PacientesList}/>

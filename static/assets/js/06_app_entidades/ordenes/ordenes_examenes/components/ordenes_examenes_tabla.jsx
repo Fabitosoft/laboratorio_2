@@ -78,9 +78,6 @@ class Tabla extends React.Component {
                                 maxWidth: 100,
                                 show: orden.estado === 1,
                                 filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
-                                }
                             },
                             {
                                 Header: "Nro. Examen Especial",
