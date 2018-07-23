@@ -149,10 +149,10 @@
 
 </style>
 <div class="resultado-examenes">
-    {% if una_firma %}
-        {% include 'email/ordenes/resultados/resultados_una_firma.html' %}
+    {% if examen.examen.nro_plantilla == 1 %}
+        {% include 'email/ordenes/resultados/especiales/1_plantilla_biopsia/1_platinlla_biopsia.html' with biopsia=examen.biopsia examen=examen %}
     {% endif %}
-    {% if multifirma %}
-        {% include 'email/ordenes/resultados/resultados_multifirma.html' %}
+    {% if examen.examen.nro_plantilla == 2 %}
+        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/2_platinlla_citologia.html' with citologia=examen.citologia examen=examen %}
     {% endif %}
 </div>

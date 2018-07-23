@@ -37,7 +37,7 @@ class Login extends Component {
         const error_login = auth && auth.errors ? auth.errors : null;
         const mensaje_error = error_login && error_login.error ? error_login.error[0] : null;
         return (
-            <div className="container form-signin pt-3 text-center" style={{width: '400px'}}>
+            <div className="container form-signin pt-3 text-center" style={{width: '300px'}}>
                 <div className='text-center'>
                     <img style={{width: '300px'}} className='img-fluid' src={`${img_static_url}/logo.png`} alt="logo"/>
                 </div>

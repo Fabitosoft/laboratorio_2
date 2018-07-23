@@ -103,6 +103,7 @@ class OrdenExamen(TimeStampedModel):
     valor_final = models.DecimalField(max_digits=10, decimal_places=1, default=0,
                                       verbose_name='Valor Final')
     observaciones = models.TextField(null=True, blank=True)
+    pdf_examen = models.FileField(null=True, blank=True)
 
     class Meta:
         permissions = [

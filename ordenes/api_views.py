@@ -10,15 +10,16 @@ from django.template.loader import render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import viewsets, serializers, permissions
+from PyPDF2 import PdfFileMerger
 
-from ordenes.mixins import OrdenesPDFMixin
+from ordenes.mixins import OrdenesPDFViewMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
 from .models import Orden, OrdenExamen
 from medicos.models import Especialista
 from examenes_especiales.models import Biopsia, Citologia
 
 
-class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
+class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
     queryset = Orden.objects.select_related(
         'medico_remitente',
         'paciente',
@@ -41,51 +42,58 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
             if contactos_entidad.exists():
                 send_to.extend(
                     [x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True).distinct()])
-                print(send_to)
             else:
                 raise serializers.ValidationError('No tiene correos registrados para envío')
 
         main_doc = self.generar_resultados_pdf(request, orden, es_email=True)
 
-        es_prueba = False
-
         text_content = render_to_string('email/ordenes/resultados/cuerpo_correo.html', {})
 
-        if es_prueba:
-            main_doc.write_pdf(
-                target='correo-prueba.pdf',
-                zoom=1,
-            )
-        else:
-            output = BytesIO()
+        output = BytesIO()
+        pdf_merger = PdfFileMerger()
+        if main_doc:
             main_doc.write_pdf(
                 target=output
             )
+            pdf_merger.append(output)
 
-            msg = EmailMultiAlternatives(
-                'Resultados de examenes',
-                text_content,
-                bcc=['mylabcollazos@hotmail.com'],
-                from_email='Laboratorios Collazos <%s>' % settings.RESULTADOS_FROM_EMAIL,
-                to=send_to
-            )
-            msg.attach_alternative(text_content, "text/html")
-            msg.attach('Resultados Orden de Laboratorio %s' % orden.id, output.getvalue(), 'application/pdf')
-            try:
-                msg.send()
-            except Exception as e:
-                raise serializers.ValidationError(
-                    'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e)
+        msg = EmailMultiAlternatives(
+            'Resultados de examenes',
+            text_content,
+            # bcc=['mylabcollazos@hotmail.com'],
+            from_email='Laboratorios Collazos <%s>' % settings.RESULTADOS_FROM_EMAIL,
+            to=send_to
+        )
+        msg.attach_alternative(text_content, "text/html")
+        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
+        for exa in especiales.all():
+            pdf_merger.append(exa.pdf_examen.path)
+            pdf_merger.write(output)
+        msg.attach('Resultados %s' % orden.id, output.getvalue(), 'application/pdf')
+        try:
+            pass
+            msg.send()
+        except Exception as e:
+            raise serializers.ValidationError(
+                'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e)
         return Response({'resultado': 'ok'})
 
     @detail_route(methods=['post'])
     def print_resultados(self, request, pk=None):
         orden = self.get_object()
         main_doc = self.generar_resultados_pdf(request, orden)
+
         output = BytesIO()
-        main_doc.write_pdf(
-            target=output
-        )
+        pdf_merger = PdfFileMerger()
+        if main_doc:
+            main_doc.write_pdf(
+                target=output
+            )
+            pdf_merger.append(output)
+        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
+        for exa in especiales.all():
+            pdf_merger.append(exa.pdf_examen.path)
+            pdf_merger.write(output)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
@@ -143,9 +151,8 @@ class OrdenViewSet(OrdenesPDFMixin, viewsets.ModelViewSet):
                 if ultimo_indice is None:
                     orden.nro_orden = base_nro
                 else:
-                    orden.nro_orde = int(ultimo_indice) + 1
-                orden.save()
-
+                    orden.nro_orden = int(ultimo_indice) + 1
+            orden.save()
             qs = OrdenExamen.objects.filter(
                 nro_examen__isnull=False,
             ).aggregate(

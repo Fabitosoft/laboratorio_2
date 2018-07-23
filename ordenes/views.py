@@ -4,11 +4,11 @@ from django.template.loader import get_template
 
 from django.views.generic import DetailView
 
-from ordenes.mixins import OrdenesPDFMixin
+from ordenes.mixins import OrdenesPDFViewMixin
 from .models import Orden, OrdenExamen, OrdenExamenFirmas
 
 
-class ImpresionExamenesView(OrdenesPDFMixin, DetailView):
+class ImpresionExamenesView(OrdenesPDFViewMixin, DetailView):
     model = Orden
     template_name = 'email/ordenes/resultados/resultados.html'
 

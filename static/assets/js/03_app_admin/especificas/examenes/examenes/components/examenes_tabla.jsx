@@ -38,10 +38,18 @@ class Tabla extends React.Component {
                             {
                                 Header: "Nombre",
                                 accessor: "nombre",
-                                maxWidth: 400,
+                                minWidth: 300,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
                                 }
                             },
                             {
@@ -56,19 +64,35 @@ class Tabla extends React.Component {
                             {
                                 Header: "Grupo Cups",
                                 accessor: "grupo_cups_nombre",
-                                maxWidth: 200,
+                                minWidth: 100,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
                                 }
                             },
                             {
                                 Header: "Subgrupo Cups",
                                 accessor: "subgrupo_cups_nombre",
-                                maxWidth: 200,
+                                minWidth: 200,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
+                                },
+                                Cell: row => {
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            whiteSpace: 'normal'
+                                        }}>{row.value}</div>
+                                    )
                                 }
                             },
                             {

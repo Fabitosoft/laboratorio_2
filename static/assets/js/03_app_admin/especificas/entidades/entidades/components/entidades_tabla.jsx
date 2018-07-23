@@ -43,7 +43,7 @@ class Tabla extends React.Component {
                                 maxWidth: 100,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                    return row.nit && row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
                             {

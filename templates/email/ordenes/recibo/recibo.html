@@ -62,7 +62,11 @@
             <td style="text-align: justify; width: 10cm" class="datos">
                 <table>
                     <tr>
-                        <td class="td1"><strong>Registro: </strong>{{ orden.id }}</td>
+                        <td class="td1"><strong>Nro. Registro: </strong>{{ orden.id }}</td>
+                        <td class="td2"></td>
+                    </tr>
+                    <tr>
+                        <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}</td>
                         <td class="td2"><strong>Paciente: </strong>{{ orden.paciente.full_name|title }}</td>
                     </tr>
                     <tr>

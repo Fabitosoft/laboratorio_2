@@ -100,7 +100,7 @@ MyRadioButtonGroup.propTypes = {
     options: PropTypes.any
 };
 
-const renderCheckbox = ({input, label, disabled = true}) => {
+const renderCheckbox = ({input, label, disabled = false}) => {
     return (
         <FormControlLabel
             control={

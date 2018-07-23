@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 
+from examenes_especiales.mixins import ExamenesEspecialesViewMixin
 from .api_serializers import CitologiaSerializer, BiopsiaSerializer
 from .models import Citologia, Biopsia
 
@@ -22,9 +23,10 @@ class BiopsiaViewSet(viewsets.ModelViewSet):
         else:
             orden_examen.resultado = None
         orden_examen.save()
+        self.generar_pdf(self.request, orden_examen, biopsia.get_numero_examen())
 
 
-class CitologiaViewSet(viewsets.ModelViewSet):
+class CitologiaViewSet(ExamenesEspecialesViewMixin, viewsets.ModelViewSet):
     queryset = Citologia.objects.select_related(
         'orden_examen',
         'orden_examen__examen',
@@ -128,3 +130,4 @@ class CitologiaViewSet(viewsets.ModelViewSet):
                     if valor:
                         respondidas_booleanas += 1
         examen.save()
+        self.generar_pdf(self.request, examen, citologia.get_numero_examen())
