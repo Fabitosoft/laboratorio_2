@@ -1,6 +1,7 @@
 import datetime
 from io import BytesIO
 
+from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Max
 from django.conf import settings
@@ -10,9 +11,9 @@ from django.template.loader import render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import viewsets, serializers, permissions
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfFileMerger, PdfFileWriter
 
-from ordenes.mixins import OrdenesPDFViewMixin
+from ordenes.mixins import OrdenesPDFViewMixin, OrdenesExamenesPDFViewMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
 from .models import Orden, OrdenExamen
 from medicos.models import Especialista
@@ -34,7 +35,9 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         orden = self.get_object()
         tipo_envio = request.POST.get('tipo_envio')
         send_to = []
+        # con_contrasena = False
         if tipo_envio == 'Cliente':
+            # con_contrasena = True
             send_to.append(orden.paciente.email)
 
         if tipo_envio == 'Entidad':
@@ -51,6 +54,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
 
         output = BytesIO()
         pdf_merger = PdfFileMerger()
+        pdf_writer = PdfFileWriter()
         if main_doc:
             main_doc.write_pdf(
                 target=output
@@ -58,9 +62,9 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_merger.append(output)
 
         msg = EmailMultiAlternatives(
-            'Resultados de examenes',
+            'Resultados orden %s - %s' % (orden.nro_orden, orden.paciente.full_name),
             text_content,
-            # bcc=['mylabcollazos@hotmail.com'],
+            bcc=['copias.laboratorio.collazos@gmail.com'],
             from_email='Laboratorios Collazos <%s>' % settings.RESULTADOS_FROM_EMAIL,
             to=send_to
         )
@@ -68,8 +72,15 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
         for exa in especiales.all():
             pdf_merger.append(exa.pdf_examen.path)
-            pdf_merger.write(output)
-        msg.attach('Resultados %s' % orden.id, output.getvalue(), 'application/pdf')
+        pdf_merger.write(output)
+        # if con_contrasena:
+        #     pdf_writer.encrypt(
+        #         orden.paciente.nro_identificacion,
+        #         orden.paciente.nro_identificacion,
+        #         use_128bit=True
+        #     )
+        #     pdf_writer.write(output)
+        msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, output.getvalue(), 'application/pdf')
         try:
             pass
             msg.send()
@@ -93,7 +104,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
         for exa in especiales.all():
             pdf_merger.append(exa.pdf_examen.path)
-            pdf_merger.write(output)
+        pdf_merger.write(output)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
@@ -173,7 +184,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                     examen.generar_nro_examen_especial()
 
 
-class OrdenExamenViewSet(viewsets.ModelViewSet):
+class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
     queryset = OrdenExamen.objects.select_related(
         'orden',
         'orden__paciente',
@@ -188,6 +199,28 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
     ).all().order_by('pk')
     serializer_class = OrdenExamenSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @detail_route(methods=['post'])
+    def upload_pdf_examen(self, request, pk=None):
+        orden_examen = self.get_object()
+        pdf_examen = self.request.FILES['pdf_examen']
+        orden_examen.pdf_examen.delete()
+        nombre_pdf = '%s.pdf' % orden_examen.nro_examen
+        orden_examen.pdf_examen.save(nombre_pdf, File(pdf_examen))
+        if orden_examen.pdf_examen:
+            orden_examen.examen_estado = 2
+            orden_examen.save()
+        serializer = self.get_serializer(orden_examen)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def eliminar_pdf_examen(self, request, pk=None):
+        orden_examen = self.get_object()
+        orden_examen.pdf_examen.delete()
+        orden_examen.examen_estado = 0
+        orden_examen.save()
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
 
     @list_route(methods=['get'])
     def pendientes(self, request):
@@ -247,3 +280,15 @@ class OrdenExamenViewSet(viewsets.ModelViewSet):
                 Biopsia.objects.create(orden_examen=orden_examen)
             if orden_examen.nro_plantilla == 2:
                 Citologia.objects.create(orden_examen=orden_examen)
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        orden_examen = self.get_object()
+        if not orden_examen.especial and orden_examen.examen_estado == 2:
+            self.generar_pdf(self.request, orden_examen)
+        if orden_examen.especial and orden_examen.examen_estado == 2:
+            self.generar_pdf_especiales(self.request, orden_examen, orden_examen.get_numero_examen_especial())
+        if not orden_examen.especial and orden_examen.examen_estado != 2:
+            orden_examen.pdf_examen.delete()
+        if orden_examen.especial and orden_examen.nro_plantilla and orden_examen.examen_estado != 2:
+            orden_examen.pdf_examen.delete()

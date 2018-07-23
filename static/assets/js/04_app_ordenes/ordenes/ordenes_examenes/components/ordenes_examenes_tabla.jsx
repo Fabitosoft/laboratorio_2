@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import {pesosColombianos, REGEX_SOLO_NUMEROS_DINERO} from "../../../../00_utilities/common";
 
 import ReactTable from "react-table";
+import PrinJs from "print-js";
 
 class EditableCell extends React.Component {
     constructor(props) {
@@ -198,13 +199,23 @@ class Tabla extends React.Component {
 
                             },
                             {
-                                Header: "Ver",
-                                show: permisos_object.detail,
+                                Header: "Imprimir",
+                                accessor: "pdf_examen",
                                 maxWidth: 60,
-                                Cell: row =>
-                                    <Link to={`/app/ordenes/ordenes/detail/${row.original.id}`}>
-                                        <IconButtonTableSee/>
-                                    </Link>
+                                Cell: row => {
+                                    if (row.original.examen_estado === 2) {
+                                        return (
+                                            <i className='far fa-print puntero'
+                                               onClick={() => PrinJs(row.value)}
+                                            >
+                                            </i>
+                                        )
+                                    } else {
+                                        <div>
+
+                                        </div>
+                                    }
+                                }
 
                             }
                         ]

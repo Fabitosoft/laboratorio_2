@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import FormExamenUpload from './examen_upload_form';
 import FormExamenEstandar from './examen_estandar_form';
 import FormCitologia from './especiales/citologia_form';
 import FormBiopsia from './especiales/biopsia_form';
@@ -29,15 +30,16 @@ class Form extends Component {
             item_seleccionado,
             citologias_list,
             biopsias_list,
+            onUploadPdf,
         } = this.props;
-        const en_migracion = item_seleccionado.especial && !item_seleccionado.nro_plantilla;
+        const subir = item_seleccionado.especial && !item_seleccionado.nro_plantilla;
         const es_estandar = !item_seleccionado.especial;
         const es_citologia = (item_seleccionado.nro_plantilla === 2 && item_seleccionado.especial);
         const es_biopsia = (item_seleccionado.nro_plantilla === 1 && item_seleccionado.especial);
         const desabilitado = item_seleccionado.examen_estado > 0;
         return (
             <div>
-                {en_migracion && <FormExamenEstandar disabled={desabilitado} {...this.props}/>}
+                {subir && <FormExamenUpload onUploadPdf={onUploadPdf} disabled={desabilitado} {...this.props}/>}
                 {es_estandar && <FormExamenEstandar disabled={desabilitado} {...this.props}/>}
                 {
                     es_citologia && citologias_list[item_seleccionado.citologia] &&

@@ -14,7 +14,8 @@ import {
     createObject,
     callApiMethod,
     callApiMethodWithParameters,
-    fetchListWithParameter
+    fetchListWithParameter,
+    callApiMethodWithParametersPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'ordenes_examenes';
@@ -78,6 +79,24 @@ export const updateOrdenExamen = (id, values, callback = null, callback_error = 
             dispatch({type: UPDATE_ORDEN_EXAMEN, payload: response})
         };
         updateObject(current_url_api, id, values, dispatches, callback, callback_error)
+    }
+};
+
+export const uploadPDFExamenOrdenExamen = (id, values, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: UPDATE_ORDEN_EXAMEN, payload: response})
+        };
+        callApiMethodWithParametersPDF(current_url_api, id, 'upload_pdf_examen', values, dispatches, callback, callback_error)
+    }
+};
+
+export const eliminarPDFExamenOrdenExamen = (id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: UPDATE_ORDEN_EXAMEN, payload: response})
+        };
+        callApiMethod(current_url_api, id, 'eliminar_pdf_examen', dispatches, callback, callback_error)
     }
 };
 

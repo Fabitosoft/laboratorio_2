@@ -67,6 +67,17 @@ class Orden(TimeStampedModel):
 
 
 class OrdenExamen(TimeStampedModel):
+    def examen_upload_to(instance, filename):
+        paciente_cedula = instance.orden.paciente.nro_identificacion
+        tipo_documento = instance.orden.paciente.tipo_documento
+        nro_orden = instance.orden.nro_orden
+        if instance.especial and instance.nro_plantilla:
+            return "ordenes/pdf/%s-%s%s/plantilla_especial/%s" % (nro_orden, tipo_documento, paciente_cedula, filename)
+        if instance.especial and not instance.nro_plantilla:
+            return "ordenes/pdf/%s-%s%s/cargados/%s" % (nro_orden, tipo_documento, paciente_cedula, filename)
+        else:
+            return "ordenes/pdf/%s-%s%s/tres_columnas/%s" % (nro_orden, tipo_documento, paciente_cedula, filename)
+
     EXAMEN_ESTADO_CHOICES = (
         (0, 'En Proceso'),
         (1, 'Con Resultados'),
@@ -103,7 +114,7 @@ class OrdenExamen(TimeStampedModel):
     valor_final = models.DecimalField(max_digits=10, decimal_places=1, default=0,
                                       verbose_name='Valor Final')
     observaciones = models.TextField(null=True, blank=True)
-    pdf_examen = models.FileField(null=True, blank=True)
+    pdf_examen = models.FileField(null=True, blank=True, upload_to=examen_upload_to)
 
     class Meta:
         permissions = [

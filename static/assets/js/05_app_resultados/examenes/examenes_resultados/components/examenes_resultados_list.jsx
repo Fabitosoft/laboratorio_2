@@ -15,8 +15,34 @@ class List extends Component {
             createObjectMethod: this.createObjectMethod.bind(this),
             updateObjectMethod: this.updateObjectMethod.bind(this),
         };
+        this.onUploadPdf = this.onUploadPdf.bind(this);
         this.plural_name = 'Examenes';
         this.singular_name = 'Examen';
+    }
+
+    onUploadPdf(e, item, callback = null) {
+        const {notificarAction, notificarErrorAjaxAction} = this.props;
+        const file = e.target.files[0];
+        if (file) {
+            let formData = new FormData();
+            formData.append('pdf_examen', file);
+            this.props.uploadPDFExamenOrdenExamen(
+                item.id,
+                formData,
+                () => {
+                    this.props.fetchOrdenExamen(
+                        item.id,
+                        res => {
+                            if (callback) {
+                                callback(res);
+                            }
+                            notificarAction(`La ha subido el pdf para el examen ${orden_examene.nro_examen}`);
+                        }
+                    )
+                },
+                notificarErrorAjaxAction
+            )
+        }
     }
 
     successSubmitCallback(item) {
@@ -78,6 +104,7 @@ class List extends Component {
         const {object_list, permisos_object} = this.props;
         return (
             <CRUD
+                onUploadPdf={this.onUploadPdf}
                 method_pool={this.method_pool}
                 list={object_list}
                 permisos_object={permisos_object}

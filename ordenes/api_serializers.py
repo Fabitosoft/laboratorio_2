@@ -115,6 +115,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'valor_final',
             'multifirma',
             'especial',
+            'pdf_examen',
             'nro_plantilla',
             'observaciones',
             'citologia',
@@ -123,6 +124,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'citologia': {'required': False, 'allow_null': True},
             'biopsia': {'required': False, 'allow_null': True},
+            'pdf_examen': {'read_only': True},
         }
 
     def get_nro_examen_especial(self, obj):
