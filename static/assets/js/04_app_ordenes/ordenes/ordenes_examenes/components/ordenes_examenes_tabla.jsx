@@ -206,7 +206,7 @@ class Tabla extends React.Component {
                                     if (row.original.examen_estado === 2) {
                                         return (
                                             <i className='far fa-print puntero'
-                                               onClick={() => PrinJs(row.value)}
+                                               onClick={() => window.open(row.value, "_blank")}
                                             >
                                             </i>
                                         )
