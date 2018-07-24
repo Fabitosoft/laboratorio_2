@@ -217,6 +217,8 @@ class Detail extends Component {
             return <SinObjeto/>
         }
 
+        const cantidad_encriptados = _.size(_.pickBy(ordenes_examenes_list, e => e.pdf_examen_encriptado));
+
         const entidad = entidades_list[object.entidad];
 
         const cant_exam_verificados = examenes_orden_array.filter(e => e.examen_estado > 1).length;
@@ -279,7 +281,8 @@ class Detail extends Component {
                     <Fragment>
                         <span className='btn btn-primary m-2' onClick={() => {
                             this.imprimirExamenes()
-                        }}>Imprimir Examenes</span>
+                        }}>Imprimir Examenes {cantidad_encriptados > 0 &&
+                        <Fragment>({cantidad_encriptados} Conflictos)</Fragment>}</span>
                         {
                             !mostrar_enviar_correo &&
                             <i className="far fa-plus-circle puntero"

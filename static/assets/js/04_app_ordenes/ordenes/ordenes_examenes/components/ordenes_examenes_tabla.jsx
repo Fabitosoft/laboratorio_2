@@ -1,11 +1,8 @@
 import React, {Fragment} from "react";
 import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
-import {pesosColombianos, REGEX_SOLO_NUMEROS_DINERO} from "../../../../00_utilities/common";
+import {pesosColombianos} from "../../../../00_utilities/common";
 
 import ReactTable from "react-table";
-import PrinJs from "print-js";
 
 class EditableCell extends React.Component {
     constructor(props) {
@@ -222,13 +219,13 @@ class Tabla extends React.Component {
                             {
                                 Header: "Imp. Obv",
                                 accessor: "pdf_examen_encriptado",
-                                maxWidth: 60,
+                                maxWidth: 90,
                                 Cell: row => {
                                     return (
                                         <Fragment>
                                             {
                                                 row.value &&
-                                                <i style={{color:'red'}} className='far fa-exclamation-circle'>
+                                                <i style={{color: 'red'}} className='far fa-exclamation-circle'>
                                                 </i>
                                             }
                                         </Fragment>

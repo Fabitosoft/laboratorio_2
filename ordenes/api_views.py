@@ -36,12 +36,21 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         orden = self.get_object()
         tipo_envio = request.POST.get('tipo_envio')
         send_to = []
-        # con_contrasena = False
+        con_contrasena = False
+        no_enviados_email = orden.mis_examenes.filter(examen_estado=2, examen__no_email=True)
+        text_content = render_to_string(
+            'email/ordenes/resultados/cuerpo_correo_paciente.html',
+            {'no_enviados_email': no_enviados_email}
+        )
         if tipo_envio == 'Cliente':
-            # con_contrasena = True
+            con_contrasena = True
             send_to.append(orden.paciente.email)
 
         if tipo_envio == 'Entidad':
+            text_content = render_to_string(
+                'email/ordenes/resultados/cuerpo_correo_entidad.html',
+                {'no_enviados_email': no_enviados_email}
+            )
             contactos_entidad = orden.entidad.mis_contactos.filter(enviar_correo=True)
             if contactos_entidad.exists():
                 send_to.extend(
@@ -50,8 +59,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                 raise serializers.ValidationError('No tiene correos registrados para envío')
 
         main_doc = self.generar_resultados_pdf(request, orden, es_email=True)
-
-        text_content = render_to_string('email/ordenes/resultados/cuerpo_correo.html', {})
 
         output = BytesIO()
         pdf_merger = PdfFileMerger()
@@ -78,15 +85,17 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             else:
                 msg.attach_file(exa.pdf_examen.path)
         pdf_merger.write(output)
-        pdf_leido = PdfFileReader(output)
-        pdf_writer.appendPagesFromReader(pdf_leido)
-        nro_identificacion_paciente = orden.paciente.nro_identificacion
-        pdf_writer.encrypt(
-            user_pwd=nro_identificacion_paciente,
-            owner_pwd='Cc%s' % nro_identificacion_paciente,
-            use_128bit=True
-        )
-        pdf_writer.write(output)
+
+        if con_contrasena:
+            pdf_leido = PdfFileReader(output)
+            pdf_writer.appendPagesFromReader(pdf_leido)
+            nro_identificacion_paciente = orden.paciente.nro_identificacion
+            pdf_writer.encrypt(
+                user_pwd=nro_identificacion_paciente,
+                owner_pwd='Cc%s' % nro_identificacion_paciente,
+                use_128bit=True
+            )
+            pdf_writer.write(output)
         msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, output.getvalue(), 'application/pdf')
         try:
             pass
@@ -113,8 +122,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_leido = PdfFileReader(exa.pdf_examen.path)
             if not pdf_leido.isEncrypted:
                 pdf_merger.append(pdf_leido)
-            # else:
-            #     pdf_leido.decrypt("")
         pdf_merger.write(output)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'

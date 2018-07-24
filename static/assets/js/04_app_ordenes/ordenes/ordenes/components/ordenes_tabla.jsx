@@ -4,6 +4,7 @@ import {IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/ic
 import {Link} from 'react-router-dom'
 
 import ReactTable from "react-table";
+import {fechaFormatoUno} from "../../../../00_utilities/common";
 
 class Tabla extends React.Component {
     render() {
@@ -46,6 +47,12 @@ class Tabla extends React.Component {
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
+                            },
+                            {
+                                Header: "Fecha",
+                                accessor: "created",
+                                maxWidth: 150,
+                                Cell: row => <div>{fechaFormatoUno(row.value)}</div>
                             },
                             {
                                 Header: "Médico Remitente",

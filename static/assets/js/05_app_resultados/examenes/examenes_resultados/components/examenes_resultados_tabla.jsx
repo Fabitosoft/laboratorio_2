@@ -9,7 +9,7 @@ import ReactTable from "react-table";
 class Tabla extends React.Component {
     render() {
 
-        const data = this.props.data;
+        const data = _.orderBy(this.props.data,['nro_examen'],['desc']);
         const {
             updateItem,
             singular_name,
