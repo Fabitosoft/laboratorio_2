@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = False
+DEBUG = str_to_bool(os.environ["DEBUG"])
 ########## MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
