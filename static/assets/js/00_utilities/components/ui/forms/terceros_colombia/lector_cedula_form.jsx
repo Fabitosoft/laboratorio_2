@@ -42,29 +42,30 @@ class LectorCedulaForm extends Component {
         const {con_codigo_barras} = this.state;
         return (
             <Fragment>
-                    <div className="col-12 mt-2">
-                        <i className="fa fa-barcode fa-2x" onClick={() => {
-                            this.setState(prevState => ({
-                                con_codigo_barras: !prevState.con_codigo_barras
-                            }));
-                        }}>
-                        </i>
+                <div className="col-12 mt-2">
+                    <i className="fa fa-barcode fa-2x puntero" onClick={() => {
+                        this.setState(prevState => ({
+                            con_codigo_barras: !prevState.con_codigo_barras
+                        }));
+                    }}>
+                    </i>
                 </div>
                 {
-                    con_codigo_barras ?
-                        <MyTextFieldSimple
-                            className='col-12'
-                            name="lector_barras"
-                            nombre='Lector Cédula'
-                            floatingLabelText="Escaner aquí"
-                            onBlur={(e) => {
-                                this.validarLector(e);
-                                this.setState({
-                                    con_codigo_barras: false
-                                });
-                            }}
-                        /> : <Fragment>{this.props.children}</Fragment>
+                    con_codigo_barras &&
+                    <MyTextFieldSimple
+                        className='col-12'
+                        name="lector_barras"
+                        nombre='Lector Cédula'
+                        placeholder="Escaner aquí"
+                        onBlur={(e) => {
+                            this.validarLector(e);
+                            this.setState({
+                                con_codigo_barras: false
+                            });
+                        }}
+                    />
                 }
+                <Fragment>{this.props.children}</Fragment>
             </Fragment>
         )
     }

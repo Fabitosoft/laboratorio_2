@@ -94,6 +94,7 @@ class Tabla extends React.Component {
                                 Header: "Nombre",
                                 accessor: "examen_nombre",
                                 minWidth: 250,
+                                maxWidth: 400,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
@@ -111,6 +112,7 @@ class Tabla extends React.Component {
                                 Header: "Paciente",
                                 accessor: "paciente_nombre",
                                 minWidth: 100,
+                                maxWidth: 250,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].includes(filter.value.toUpperCase())
@@ -203,21 +205,37 @@ class Tabla extends React.Component {
                                 accessor: "pdf_examen",
                                 maxWidth: 60,
                                 Cell: row => {
-                                    if (row.original.examen_estado === 2) {
-                                        return (
-                                            <i className='far fa-print puntero'
-                                               onClick={() => window.open(row.value, "_blank")}
-                                            >
-                                            </i>
-                                        )
-                                    } else {
-                                        <div>
-
-                                        </div>
-                                    }
+                                    return (
+                                        <Fragment>
+                                            {
+                                                row.original.examen_estado === 2 &&
+                                                <i className='far fa-print puntero'
+                                                   onClick={() => window.open(row.value, "_blank")}
+                                                >
+                                                </i>
+                                            }
+                                        </Fragment>
+                                    )
                                 }
 
-                            }
+                            },
+                            {
+                                Header: "Imp. Obv",
+                                accessor: "pdf_examen_encriptado",
+                                maxWidth: 60,
+                                Cell: row => {
+                                    return (
+                                        <Fragment>
+                                            {
+                                                row.value &&
+                                                <i style={{color:'red'}} className='far fa-exclamation-circle'>
+                                                </i>
+                                            }
+                                        </Fragment>
+                                    )
+                                }
+
+                            },
                         ]
                     }
                 ]}

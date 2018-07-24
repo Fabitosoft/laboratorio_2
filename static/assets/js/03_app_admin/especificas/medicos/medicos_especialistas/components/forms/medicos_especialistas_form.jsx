@@ -105,9 +105,9 @@ function mapPropsToState(state, ownProps) {
 }
 
 Form = reduxForm({
-    form: "algoForm",
+    form: "especialistasForm",
     validate,
-    enableReinitialize: true
+    enableReinitialize: true,
 })(Form);
 
 Form = (connect(mapPropsToState, null)(Form));

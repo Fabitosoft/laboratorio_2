@@ -45,13 +45,16 @@ class List extends Component {
     }
 
     createObjectMethod(item, successCallback) {
-        const {cargando, notificarErrorAjaxAction} = this.props;
+        const {cargando, noCargando, notificarErrorAjaxAction} = this.props;
         const success_method = () => {
             this.successSubmitCallback(item);
             successCallback();
         };
         cargando();
-        this.props.createPaciente(item, success_method, notificarErrorAjaxAction);
+        this.props.createPaciente(item, success_method, (res) => {
+            notificarErrorAjaxAction(res);
+            noCargando();
+        });
     }
 
     updateObjectMethod(item, successCallback) {

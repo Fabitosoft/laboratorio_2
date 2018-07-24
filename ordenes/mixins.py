@@ -1,4 +1,5 @@
 from io import BytesIO
+import random
 
 from django.core.files import File
 from django.db.models import Count, F
@@ -213,9 +214,10 @@ class OrdenesExamenesPDFViewMixin(object):
             target=output
         )
         orden_examen.pdf_examen.delete()
-        filename = "%s_%s.pdf" % (
+        filename = "%s_%s_ALE%s.pdf" % (
             nro_examen_especial,
-            orden_examen.nro_examen
+            orden_examen.nro_examen,
+            random.randint(1000, 9999)
         )
         orden_examen.pdf_examen.save(filename, File(output))
 
@@ -318,7 +320,8 @@ class OrdenesExamenesPDFViewMixin(object):
                 target=output
             )
             orden_examen.pdf_examen.delete()
-            filename = "%s.pdf" % (
-                orden_examen.nro_examen
+            filename = "%s_ALE%s.pdf" % (
+                orden_examen.nro_examen,
+                random.randint(1000, 9999)
             )
             orden_examen.pdf_examen.save(filename, File(output))

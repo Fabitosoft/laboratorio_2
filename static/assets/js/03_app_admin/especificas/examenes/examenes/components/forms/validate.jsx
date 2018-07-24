@@ -7,10 +7,8 @@ const validate = values => {
         'nombre',
         'subgrupo_cups',
         'costo_referencia',
-        'unidad_medida',
         'codigo_cups',
         'grupo_cups',
-        'nro_plantilla',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

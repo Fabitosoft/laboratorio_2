@@ -1,4 +1,5 @@
 import datetime
+import random
 from io import BytesIO
 
 from django.core.files import File
@@ -11,7 +12,7 @@ from django.template.loader import render_to_string
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework import viewsets, serializers, permissions
-from PyPDF2 import PdfFileMerger, PdfFileWriter
+from PyPDF2 import PdfFileMerger, PdfFileWriter, PdfFileReader
 
 from ordenes.mixins import OrdenesPDFViewMixin, OrdenesExamenesPDFViewMixin
 from .api_serializers import OrdenSerializer, OrdenExamenSerializer
@@ -71,15 +72,21 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         msg.attach_alternative(text_content, "text/html")
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
         for exa in especiales.all():
-            pdf_merger.append(exa.pdf_examen.path)
+            pdf_leido = PdfFileReader(exa.pdf_examen.path)
+            if not pdf_leido.isEncrypted:
+                pdf_merger.append(pdf_leido)
+            else:
+                msg.attach_file(exa.pdf_examen.path)
         pdf_merger.write(output)
-        # if con_contrasena:
-        #     pdf_writer.encrypt(
-        #         orden.paciente.nro_identificacion,
-        #         orden.paciente.nro_identificacion,
-        #         use_128bit=True
-        #     )
-        #     pdf_writer.write(output)
+        pdf_leido = PdfFileReader(output)
+        pdf_writer.appendPagesFromReader(pdf_leido)
+        nro_identificacion_paciente = orden.paciente.nro_identificacion
+        pdf_writer.encrypt(
+            user_pwd=nro_identificacion_paciente,
+            owner_pwd='Cc%s' % nro_identificacion_paciente,
+            use_128bit=True
+        )
+        pdf_writer.write(output)
         msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, output.getvalue(), 'application/pdf')
         try:
             pass
@@ -103,7 +110,11 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_merger.append(output)
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
         for exa in especiales.all():
-            pdf_merger.append(exa.pdf_examen.path)
+            pdf_leido = PdfFileReader(exa.pdf_examen.path)
+            if not pdf_leido.isEncrypted:
+                pdf_merger.append(pdf_leido)
+            # else:
+            #     pdf_leido.decrypt("")
         pdf_merger.write(output)
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
@@ -205,8 +216,11 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         orden_examen = self.get_object()
         pdf_examen = self.request.FILES['pdf_examen']
         orden_examen.pdf_examen.delete()
-        nombre_pdf = '%s.pdf' % orden_examen.nro_examen
+        nombre_pdf = '%s_ALE%s.pdf' % (orden_examen.nro_examen, random.randint(1000, 9999))
         orden_examen.pdf_examen.save(nombre_pdf, File(pdf_examen))
+        pdf_leido = PdfFileReader(orden_examen.pdf_examen.path)
+        orden_examen.pdf_examen_encriptado = pdf_leido.isEncrypted
+        orden_examen.save()
         if orden_examen.pdf_examen:
             orden_examen.examen_estado = 2
             orden_examen.save()
@@ -218,6 +232,7 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         orden_examen = self.get_object()
         orden_examen.pdf_examen.delete()
         orden_examen.examen_estado = 0
+        orden_examen.pdf_examen_encriptado = False
         orden_examen.save()
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)

@@ -81,6 +81,17 @@ class FormExamenEstandar extends Component {
                                    }}>
                                 </i>
                                 {this.renderEliminar()}
+                                {
+                                    item_seleccionado.pdf_examen_encriptado?
+                                    <Fragment>
+                                        <h3 style={{color:'red'}}><i className='fas fa-exclamation'></i> Tendras problemas con este PDF</h3>
+                                        Este PDF tiene problemas de encriptación y no permitirá hacer impresiones unidas en las ordenes.<br/>
+                                        Trata de "Guardar como..." con un visor de PDF para hacer una copia sin este inconveniente.
+                                    </Fragment>:
+                                        <p>
+                                            Cargue exitoso del archivo.
+                                        </p>
+                                }
                             </div>
                             :
                             <input type="file"

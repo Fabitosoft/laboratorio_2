@@ -1,6 +1,6 @@
 import asyncValidateFunction from '../../../../../../00_utilities/components/ui/forms/asyncValidateFunction';
 
-const URL = '/api/usuarios/validar_nuevo_algos';
+const URL = '/api/pacientes/validar_nuevo_paciente';
 const asyncValidate = (values, dispatch, props, blurredField) => {
     return asyncValidateFunction(values, dispatch, props, blurredField, URL)
 };

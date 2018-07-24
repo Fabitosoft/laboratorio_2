@@ -28,7 +28,6 @@ class PacienteViewSet(viewsets.ModelViewSet):
         validacion_reponse = {}
         nro_identificacion = self.request.GET.get('nro_identificacion', None)
         tipo_documento = self.request.GET.get('tipo_documento', None)
-
         if nro_identificacion and tipo_documento and Paciente.existe_documento(tipo_documento, nro_identificacion):
             validacion_reponse.update({'nro_identificacion': 'Ya exite'})
 

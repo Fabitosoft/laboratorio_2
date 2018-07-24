@@ -4,6 +4,7 @@ import {MyTextFieldSimple} from '../../../../../../00_utilities/components/ui/fo
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../../00_utilities/components/ui/forms/MyFormTagModal';
 import validate from './validate';
+import asyncValidate from './asyncValidate';
 import CedulaForm from '../../../../../../00_utilities/components/ui/forms/terceros_colombia/datos_cedula_form';
 import LectorCedula from '../../../../../../00_utilities/components/ui/forms/terceros_colombia/lector_cedula_form';
 
@@ -71,8 +72,10 @@ function mapPropsToState(state, ownProps) {
 
 Form = reduxForm({
     form: "pacientesForm",
+    asyncValidate,
     validate,
-    enableReinitialize: true
+    asyncBlurFields: ['nro_identificacion','tipo_documento'],
+    enableReinitialize: true,
 })(Form);
 
 Form = (connect(mapPropsToState, null)(Form));

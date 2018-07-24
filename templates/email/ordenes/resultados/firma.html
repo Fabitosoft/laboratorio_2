@@ -4,6 +4,8 @@
     {% endif %}
     <div>
         <span class="especialista-nombre">{{ especialista.grouper.full_name }}</span><br/>
-        <span class="especialista-especialidad"><small>{{ especialista.grouper.especialidad.nombre }}</small></span>
+        <span class="especialista-especialidad"><small>{{ especialista.grouper.especialidad.nombre }}
+            {% if especialista.grouper.registro_profesional %}(TP:
+                {{ especialista.grouper.registro_profesional }}){% endif %}</small></span>
     </div>
 </div>

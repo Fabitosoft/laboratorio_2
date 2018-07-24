@@ -116,6 +116,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'multifirma',
             'especial',
             'pdf_examen',
+            'pdf_examen_encriptado',
             'nro_plantilla',
             'observaciones',
             'citologia',
