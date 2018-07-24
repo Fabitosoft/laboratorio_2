@@ -79,7 +79,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         msg.attach_alternative(text_content, "text/html")
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
         for exa in especiales.all():
-            pdf_leido = PdfFileReader(exa.pdf_examen.path)
+            pdf_leido = PdfFileReader(exa.pdf_examen)
             if not pdf_leido.isEncrypted:
                 pdf_merger.append(pdf_leido)
             else:
@@ -119,7 +119,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_merger.append(output)
         especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
         for exa in especiales.all():
-            pdf_leido = PdfFileReader(exa.pdf_examen.path)
+            pdf_leido = PdfFileReader(exa.pdf_examen)
             if not pdf_leido.isEncrypted:
                 pdf_merger.append(pdf_leido)
         pdf_merger.write(output)
@@ -225,7 +225,7 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         orden_examen.pdf_examen.delete()
         nombre_pdf = '%s_ALE%s.pdf' % (orden_examen.nro_examen, random.randint(1000, 9999))
         orden_examen.pdf_examen.save(nombre_pdf, File(pdf_examen))
-        pdf_leido = PdfFileReader(orden_examen.pdf_examen.path)
+        pdf_leido = PdfFileReader(orden_examen.pdf_examen)
         orden_examen.pdf_examen_encriptado = pdf_leido.isEncrypted
         orden_examen.save()
         if orden_examen.pdf_examen:
