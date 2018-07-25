@@ -1,6 +1,7 @@
 {% load static %}
 <style>
     div {
+        font-family: 'Arial';
         font-size: 10px;
     }
 
@@ -39,7 +40,7 @@
     .recibo td {
         font-size: 9px;
         text-align: left;
-        padding: 8px;
+        padding: 1px;
         border-bottom: 1px solid #ddd;
     }
 
@@ -54,6 +55,11 @@
     .recibo td, .recibo th {
         border-bottom: 1px solid lightgray;
         border-top: 1px solid lightgray;
+    }
+
+    .info-consulta-web {
+        font-size: 10px;
+        margin-top: 0.5rem;
     }
 </style>
 <div>
@@ -94,7 +100,8 @@
             <td style="width: 7cm; text-align: right">
                 Cra 42 Nro 5B53 (2do PISO)<br/>
                 B. Tequendama - Cali<br/>
-                Tel: 403 11 98 - PBX: 553 27 37 - Cel: 3182032203<br/>
+                Cel: 3182032203<br/>
+                Tel: 403 11 98<br/>
                 mylabcollazos@hotmail.com <br/>
                 NIT: 800.200.522-3
             </td>
@@ -141,5 +148,10 @@
             </tfoot>
         </table>
         <span>Valor a pagar el paciente: <strong> $ {{ orden.valor_final }}</strong></span>
+        <div class="info-consulta-web">
+            Si desea consultar por internet sus exámenes:<br/>
+            Diríjase a <strong>COLLAZOSLABORATORIO.COM</strong> y en <strong>RESULTADOS</strong>, digíte su número de documento y utilice su código de
+            consulta de la orden <strong>{{ orden.codigo_consulta_web }}</strong>
+        </div>
     </div>
 </div>

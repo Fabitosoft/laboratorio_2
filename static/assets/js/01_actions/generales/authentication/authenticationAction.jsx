@@ -40,10 +40,11 @@ export const clear_authentication_errors = () => {
     }
 };
 
-export const login = (username, password, punto_venta = null, callback = null) => {
+export const login = (username, password, punto_venta = null, callback = null, error_callback = null) => {
     return (dispatch) => {
         let headers = {"Content-Type": "application/json"};
         let body = JSON.stringify({username, password, punto_venta});
+
         return fetch("/api/auth/login/", {headers, body, method: "POST"})
             .then(res => {
                 if (res.status < 500) {
@@ -52,19 +53,27 @@ export const login = (username, password, punto_venta = null, callback = null) =
                     })
                 } else {
                     console.log("Server Error!");
-                    //throw res;
+                    if (error_callback) {
+                        error_callback(res);
+                    }
                 }
             })
             .then(res => {
                 if (res.status === 200) {
                     dispatch({type: 'LOGIN_SUCCESSFUL', data: res.data});
-                    //return res.data;
+                    if (callback) {
+                        callback(res);
+                    }
                 } else if (res.status === 403 || res.status === 401) {
                     dispatch({type: "AUTHENTICATION_ERROR", data: res.data});
-                    //throw res.data;
+                    if (error_callback) {
+                        error_callback(res);
+                    }
                 } else {
                     dispatch({type: "LOGIN_FAILED", data: res.data});
-                    //throw res.data;
+                    if (error_callback) {
+                        error_callback(res);
+                    }
                 }
             })
     }

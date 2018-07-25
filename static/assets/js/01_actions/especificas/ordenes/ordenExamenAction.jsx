@@ -51,6 +51,15 @@ export const fetchOrdenesExamenes_por_entidad = (entidad_id, callback = null, ca
         fetchListWithParameter(`${current_url_api}/por_entidad/?entidad_id=${entidad_id}`, dispatches, callback, callback_error);
     }
 };
+export const fetchOrdenesExamenes_por_nro_identidad_codigo_consulta_web = (nro_identificacion, codigo_consulta_web, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const url_consulta = `/por_nro_orden_y_codigo_consulta_web/?nro_identificacion=${nro_identificacion}&codigo_consulta_web=${codigo_consulta_web}`;
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDENES_EXAMENES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}${url_consulta}`, dispatches, callback, callback_error);
+    }
+};
 export const fetchOrdenesExamenes_por_orden = (orden_id, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

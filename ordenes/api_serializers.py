@@ -81,6 +81,7 @@ class OrdenExamenFirmasSerializer(serializers.ModelSerializer):
 #
 class OrdenExamenSerializer(serializers.ModelSerializer):
     nro_orden = serializers.IntegerField(source='orden.nro_orden', read_only=True)
+    no_email = serializers.BooleanField(source='examen.no_email', read_only=True)
     nro_examen_especial = serializers.SerializerMethodField()
     entidad_nombre = serializers.CharField(source='orden.entidad.nombre', read_only=True)
     examen_estado_nombre = serializers.CharField(source='get_examen_estado_display', read_only=True)
@@ -94,6 +95,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'created',
+            'no_email',
             'fecha_verificado',
             'entidad_nombre',
             'nro_examen',

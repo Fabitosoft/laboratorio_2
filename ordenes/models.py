@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -47,6 +50,7 @@ class Orden(TimeStampedModel):
 
     estado = models.PositiveIntegerField(default=0, choices=ORDEN_ESTADO_CHOICES)
     nro_orden = models.PositiveIntegerField(null=True, blank=True)
+    codigo_consulta_web = models.CharField(max_length=8, null=True)
 
     class Meta:
         permissions = [
@@ -64,6 +68,9 @@ class Orden(TimeStampedModel):
         self.valor_total = totales['valor_total']
         self.valor_final = totales['valor_final']
         self.save()
+
+    def generar_codigo_consulta_web(self):
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
 
 class OrdenExamen(TimeStampedModel):

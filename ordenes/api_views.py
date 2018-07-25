@@ -183,6 +183,8 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                     orden.nro_orden = base_nro
                 else:
                     orden.nro_orden = int(ultimo_indice) + 1
+            if not orden.codigo_consulta_web:
+                orden.codigo_consulta_web = orden.generar_codigo_consulta_web()
             orden.save()
             qs = OrdenExamen.objects.filter(
                 nro_examen__isnull=False,
@@ -211,7 +213,8 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         'examen__subgrupo_cups',
         'orden__entidad',
         'biopsia',
-        'citologia'
+        'citologia',
+        'examen'
     ).prefetch_related(
         # 'mis_bitacoras__generado_por',
         'mis_firmas__especialista',
@@ -264,6 +267,23 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         qs = self.get_queryset().filter(orden__estado=1, examen_estado=1)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
+
+    @list_route(methods=['get'], permission_classes=[permissions.AllowAny])
+    def por_nro_orden_y_codigo_consulta_web(self, request):
+        nro_identificacion = self.request.GET.get('nro_identificacion')
+        codigo_consulta_web = self.request.GET.get('codigo_consulta_web')
+        qs = self.get_queryset().filter(
+            orden__estado=1,
+            examen_estado=2,
+            orden__paciente__nro_identificacion=nro_identificacion,
+            orden__codigo_consulta_web=codigo_consulta_web,
+            #examen__no_email=False
+        )
+        if qs.exists():
+            serializer = self.get_serializer(qs, many=True)
+            return Response(serializer.data)
+        else:
+            raise serializers.ValidationError({'error':'No se encontró coincidencia entre cédula y número de consulta de orden'})
 
     @list_route(methods=['get'])
     def verificados(self, request):
