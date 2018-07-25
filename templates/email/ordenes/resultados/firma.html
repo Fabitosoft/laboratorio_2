@@ -2,9 +2,9 @@
     {% if especialista.grouper.firma %}
         <img class="firma-imagen" src="{{ especialista.grouper.firma.url }}" alt="">
     {% endif %}
-    <div>
+    <div class="especialista-informacion">
         <span class="especialista-nombre">{{ especialista.grouper.full_name }}</span><br/>
-        <span class="especialista-especialidad"><small>{{ especialista.grouper.especialidad.nombre }}
+        <span class="especialista-especialidad"><small>{{ especialista.grouper.especialidad.nombre|title }}
             {% if especialista.grouper.registro_profesional %}(TP:
                 {{ especialista.grouper.registro_profesional }}){% endif %}</small></span>
     </div>

@@ -38,18 +38,23 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         send_to = []
         con_contrasena = False
         no_enviados_email = orden.mis_examenes.filter(examen_estado=2, examen__no_email=True)
+        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
         text_content = render_to_string(
             'email/ordenes/resultados/cuerpo_correo_paciente.html',
             {'no_enviados_email': no_enviados_email}
         )
+
+        main_doc = self.generar_resultados_pdf(request, orden, es_email=True, es_entidad=False)
+
         if tipo_envio == 'Cliente':
             con_contrasena = True
             send_to.append(orden.paciente.email)
 
         if tipo_envio == 'Entidad':
+            especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
+            main_doc = self.generar_resultados_pdf(request, orden, es_email=True, es_entidad=True)
             text_content = render_to_string(
-                'email/ordenes/resultados/cuerpo_correo_entidad.html',
-                {'no_enviados_email': no_enviados_email}
+                'email/ordenes/resultados/cuerpo_correo_entidad.html', {'orden': orden}
             )
             contactos_entidad = orden.entidad.mis_contactos.filter(enviar_correo=True)
             if contactos_entidad.exists():
@@ -57,8 +62,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                     [x.correo_electronico for x in orden.entidad.mis_contactos.filter(enviar_correo=True).distinct()])
             else:
                 raise serializers.ValidationError('No tiene correos registrados para envío')
-
-        main_doc = self.generar_resultados_pdf(request, orden, es_email=True)
 
         output = BytesIO()
         pdf_merger = PdfFileMerger()
@@ -77,7 +80,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             to=send_to
         )
         msg.attach_alternative(text_content, "text/html")
-        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
         for exa in especiales.all():
             pdf_leido = PdfFileReader(exa.pdf_examen)
             if not pdf_leido.isEncrypted:
@@ -251,6 +253,13 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @list_route(methods=['get'])
+    def por_entidad(self, request):
+        entidad_id = self.request.GET.get('entidad_id')
+        qs = self.get_queryset().filter(orden__estado=1, orden__entidad_id=entidad_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
     def con_resultados(self, request):
         qs = self.get_queryset().filter(orden__estado=1, examen_estado=1)
         serializer = self.get_serializer(qs, many=True)
@@ -306,6 +315,12 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         super().perform_update(serializer)
         orden_examen = self.get_object()
+        if orden_examen.examen_estado == 2:
+            if not orden_examen.fecha_verificado:
+                orden_examen.fecha_verificado = datetime.datetime.now()
+        else:
+            orden_examen.fecha_verificado = None
+
         if not orden_examen.especial and orden_examen.examen_estado == 2:
             self.generar_pdf(self.request, orden_examen)
         if orden_examen.especial and orden_examen.examen_estado == 2:

@@ -1,6 +1,7 @@
 {% load l10n %}
 <style>
     .datos-resultados {
+        font-family: 'Arial';
         font-size: 0.7rem;
         margin-left: -1.2cm;
         margin-top: -0.4cm;
@@ -14,29 +15,39 @@
         padding-left: 2rem;
     }
 </style>
-<div style="text-align: justify; width: 15cm" class="datos-resultados">
+<div class="datos-resultados">
     <table>
+        <tr style="height: 1cm">
+            <td></td>
+            <td></td>
+        </tr>
         {% localize off %}
             <tr>
-                <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}</td>
-                <td class="td2">{% if examen %}<strong>Nro. Examen: </strong>
-                    {{ examen.nro_examen }}{% if nro_examen_especial %} (
-                        {{ nro_examen_especial }}){% endif %}{% endif %}</td>
+                <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}{% if nro_examen_especial %}-{{ nro_examen_especial }}{% endif %}</td>
+                <td class="td2"></td>
             </tr>
         {% endlocalize %}
         <tr>
-            <td class="td1" colspan="2"><strong>Paciente: </strong>{{ paciente.full_name|title }}</td>
+            <td class="td1"><strong>Paciente: </strong>{{ paciente.full_name|title }}</td>
+            <td class="td2"></td>
         </tr>
         <tr>
-            <td class="td1"><strong>Edad: </strong>{{ paciente.fecha_nacimiento|timesince:orden.created }}</td>
-            <td class="td2"><strong>Id: </strong>{{ paciente.identificacion|title }}</td>
+            <td class="td1">
+                <strong>Identificación: </strong>{{ paciente.tipo_documento|title }}. {{ paciente.nro_identificacion }}
+            </td>
+            <td class="td2"><strong>Fecha Ingreso: </strong>{{ orden.created }}</td>
+
         </tr>
         <tr>
             <td class="td1"><strong>Genero: </strong>{{ paciente.get_genero_display }}</td>
+            <td class="td2"><strong>Fecha Reporte: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}</td>
+        </tr>
+        <tr>
+            <td class="td1"><strong>Edad: </strong>{{ paciente.fecha_nacimiento|timesince:orden.created }}</td>
             <td class="td2"><strong>Entidad: </strong>{{ entidad.nombre|title }}</td>
         </tr>
         <tr>
-            <td class="td1"><strong>Generado: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}</td>
+            <td class="td1"><strong>Teléfono: </strong>{{ paciente.telefono }}</td>
             <td class="td2">{% if medico_remitente %}<strong>Médico Remitente: </strong>
                 {{ medico_remitente.full_name|title }}{% endif %}</td>
         </tr>

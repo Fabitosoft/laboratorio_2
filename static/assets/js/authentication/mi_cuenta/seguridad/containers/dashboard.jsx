@@ -66,7 +66,6 @@ class ResponsiveDrawer extends React.Component {
     render() {
         const {classes, theme} = this.props;
         const mi_cuenta = JSON.parse(localStorage.getItem("mi_cuenta"));
-
         const drawer = (
             <div>
                 <div className={classes.toolbar}/>

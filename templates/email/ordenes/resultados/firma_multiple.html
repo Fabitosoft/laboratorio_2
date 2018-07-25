@@ -4,7 +4,7 @@
     {% endif %}
     <div>
         <span class="especialista-nombre">{{ firma.especialista.full_name }}</span><br/>
-        <span class="especialista-especialidad"><small>{{ firma.especialista.especialidad.nombre }}
+        <span class="especialista-especialidad"><small>{{ firma.especialista.especialidad.nombre|title }}
             {% if firma.especialista.registro_profesional %}(TP:{{ firma.especialista.registro_profesional }}
                 ){% endif %}</small></span>
     </div>

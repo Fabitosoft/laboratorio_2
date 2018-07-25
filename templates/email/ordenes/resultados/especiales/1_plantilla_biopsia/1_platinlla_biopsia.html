@@ -1,4 +1,8 @@
-{#style="page-break-after: always;#}
+<style>
+    .texto-diagnostico {
+        font-size: 0.85rem;
+    }
+</style>
 
 {% load verbose_names static %}
 <div style="clear: both; page-break-after: always; page-break-before: always" class="grupo-examenes">
@@ -7,20 +11,24 @@
     </div>
     <div class="resultado-examenes">
         <div>
-            <h1 style="text-align: center">{% get_verbose_field_name biopsia "descripcion_macroscopica" %}</h1>
-            <div class="multilinea" style="padding-left: 10px">
+            <h3>DESCRIPCIÓN MACROSCÓPICA</h3>
+            <div class="multilinea texto-diagnostico" style="padding-left: 8px">
                 {{ biopsia.descripcion_macroscopica }}
             </div>
         </div>
         <div>
-            <h1 style="text-align: center">{% get_verbose_field_name biopsia "descripcion_microscopica" %}</h1>
-            <div class="multilinea" style="padding-left: 10px">
-                {{ biopsia.descripcion_microscopica }}
+            <h3>DESCRIPCIÓN MICROSCÓPICA (Opcional)</h3>
+            <div class="multilinea texto-diagnostico" style="padding-left: 10px">
+                {% if biopsia.descripcion_microscopica %}
+                    {{ biopsia.descripcion_microscopica }}
+                {% else %}
+                    N/A
+                {% endif %}
             </div>
         </div>
         <div>
-            <h1 style="text-align: center">{% get_verbose_field_name biopsia "diagnostico" %}</h1>
-            <div class="multilinea" style="padding-left: 10px">
+            <h3>DIAGNÓSTICO</h3>
+            <div class="multilinea texto-di agnostico" style="padding-left: 10px">
                 {{ biopsia.diagnostico }}
             </div>
         </div>
@@ -30,5 +38,10 @@
         {% for firma in examen.mis_firmas.all %}
             {% include 'email/ordenes/resultados/firma_multiple.html' with firma=firma %}
         {% endfor %}
+    </div>
+    <div style="text-align: center;clear: left">
+        Este resultado debe ser interpretado por un profesional de la salud. La sigla N/A en un campo [no aplicable]
+        significa que no ha sido necesrio incluir información para ese campo en el reporte porque los otros campos
+        contienen toda la información relevante.
     </div>
 </div>

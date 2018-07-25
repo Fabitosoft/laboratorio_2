@@ -43,6 +43,14 @@ export const fetchOrdenesExamenes = (callback = null, callback_error = null) => 
         fetchList(current_url_api, dispatches, callback, callback_error);
     }
 };
+export const fetchOrdenesExamenes_por_entidad = (entidad_id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDENES_EXAMENES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/por_entidad/?entidad_id=${entidad_id}`, dispatches, callback, callback_error);
+    }
+};
 export const fetchOrdenesExamenes_por_orden = (orden_id, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

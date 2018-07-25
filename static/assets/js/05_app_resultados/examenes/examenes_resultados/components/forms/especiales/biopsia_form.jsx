@@ -56,7 +56,7 @@ class FormExamenEstandar extends Component {
                             name='descripcion_macroscopica'
                             disabled={disabled}
                             multiline={true}
-                            rows={3}
+                            rowsMax={8}
                         />
                         <MyTextFieldSimple
                             className="col-12"
@@ -64,7 +64,7 @@ class FormExamenEstandar extends Component {
                             name='descripcion_microscopica'
                             disabled={disabled}
                             multiline={true}
-                            rows={3}
+                            rowsMax={8}
                         />
                         <MyTextFieldSimple
                             className="col-12"
@@ -72,7 +72,7 @@ class FormExamenEstandar extends Component {
                             name='diagnostico'
                             disabled={disabled}
                             multiline={true}
-                            rows={3}
+                            rowsMax={8}
                         />
 
                     </div>
@@ -83,7 +83,7 @@ class FormExamenEstandar extends Component {
                     name='observaciones'
                     disabled={disabled}
                     multiline={true}
-                    rows={3}
+                    rowsMax={3}
                 />
                 <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Biopsia"}}/>
             </MyFormTagModal>

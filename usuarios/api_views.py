@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Permission, Group
 from knox.models import AuthToken
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics, serializers
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
@@ -62,6 +62,23 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         if username and qs.filter(username=username).exists():
             validacion_reponse.update({'username': 'Ya exite'})
         return Response(validacion_reponse)
+
+    @detail_route(methods=['post'])
+    def cambiar_contrasena(self, request, pk=None):
+        usuario = self.get_object()
+        password_old = request.POST.get('password_old')
+        password = request.POST.get('password')
+        password_2 = request.POST.get('password_2')
+        if usuario.check_password(password_old):
+            if password == password_2:
+                usuario.set_password(password)
+                usuario.save()
+                return Response({'result': 'La contraseña se ha cambiado correctamente'})
+            else:
+                raise serializers.ValidationError({'error': 'La contraseña nueva con su confirmación no coincide'})
+        else:
+            raise serializers.ValidationError(
+                {'error': 'La contraseña ANTERIOR suministrada no coincide con el usuario'})
 
 
 class LoginAPI(generics.GenericAPIView):

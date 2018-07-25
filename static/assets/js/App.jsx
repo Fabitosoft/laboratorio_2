@@ -23,6 +23,7 @@ import './../../css/custom.css';
 
 
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+
 const theme = createMuiTheme();
 
 
@@ -46,6 +47,7 @@ import AppAdmin from './03_app_admin/App';
 import AppOrdenes from './04_app_ordenes/App';
 import AppResultados from './05_app_resultados/App';
 import AppEntidades from './06_app_entidades/App';
+import MiCuenta from './authentication/mi_cuenta/seguridad/containers/dashboard';
 import Login from './authentication/login/containers/login';
 
 class RootContainerComponent extends Component {
@@ -76,11 +78,12 @@ class RootContainerComponent extends Component {
                         <PrivateRoute exact path="/" component={AppIndex}/>
                         <PrivateRoute exact path='/app' component={AppIndex}/>
                         <Route path='/app/login' component={Login}/>
-                        <Route path='/app/admin' component={AppAdmin}/>
-                        <Route path='/app/ordenes' component={AppOrdenes}/>
-                        <Route path='/app/resultados' component={AppResultados}/>
-                        <Route path='/app/entidades' component={AppEntidades}/>
-                        <Route component={NotFound}/>
+                        <PrivateRoute path='/app/admin' component={AppAdmin}/>
+                        <PrivateRoute path='/app/ordenes' component={AppOrdenes}/>
+                        <PrivateRoute path='/app/resultados' component={AppResultados}/>
+                        <PrivateRoute path='/app/entidades' component={AppEntidades}/>
+                        <PrivateRoute path='/app/mi_cuenta' component={MiCuenta}/>
+                        <PrivateRoute component={NotFound}/>
                     </Switch>
                     <div style={{position: 'fixed', left: 10, bottom: 10}}>
                         {

@@ -22,7 +22,7 @@
                             <span class="nombre-examen">{{ orden_examen.examen.nombre }}</span><br/>
                             {% if orden_examen.tecnica %}
                                 <div class="tecnica">
-                                    <strong>Técnica: </strong>{{ orden_examen.tecnica }}
+                                    <strong>Técnica: </strong>{{ orden_examen.tecnica|title }}
                                 </div>
                             {% endif %}
                             {% if orden_examen.observaciones %}

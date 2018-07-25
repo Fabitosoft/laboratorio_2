@@ -23,6 +23,22 @@ const validate = values => {
         errors.password = 'No coinciden';
     }
 
+    if (values.password && values.password.length < 8) {
+        errors.password = 'Debe tener al menos 8 dígitos';
+    }
+
+    if (values.password && !/[a-z]/.test(values.password)) {
+        errors.password = 'Debe tener al menos una letra minuscula';
+    }
+
+    if (values.password && !/[A-Z]/.test(values.password)) {
+        errors.password = 'Debe tener al menos una letra mayuscula';
+    }
+
+    if (values.password && !/[0-9]/.test(values.password)) {
+        errors.password = 'Debe tener al menos un número';
+    }
+
     return errors;
 };
 

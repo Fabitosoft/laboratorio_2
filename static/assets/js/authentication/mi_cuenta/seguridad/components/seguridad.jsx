@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import CambiarPinForm from './forms/cambiar_pin_form'
 import CambiarContrasenaForm from './forms/cambiar_contrasena_form'
 import {connect} from "react-redux";
 import * as actions from "../../../../01_actions/01_index";
@@ -69,16 +68,8 @@ class Seguridad extends Component {
     }
 
     render() {
-        const mi_cuenta = JSON.parse(localStorage.getItem("mi_cuenta"));
         return (
             <div className="row">
-                {
-                    mi_cuenta.tercero &&
-                    <div className="col-12">
-                        <h4>Cambiar Pin</h4>
-                        <CambiarPinForm onSubmit={this.onCambiarPin}/>
-                    </div>
-                }
                 <div className="col-12 mt-3">
                     <h4>Cambiar Contraseña</h4>
                     <CambiarContrasenaForm onSubmit={this.onCambiarPassword}/>

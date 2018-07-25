@@ -116,6 +116,7 @@ class OrdenExamen(TimeStampedModel):
     observaciones = models.TextField(null=True, blank=True)
     pdf_examen = models.FileField(null=True, blank=True, upload_to=examen_upload_to)
     pdf_examen_encriptado = models.BooleanField(default=False)
+    fecha_verificado = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         permissions = [

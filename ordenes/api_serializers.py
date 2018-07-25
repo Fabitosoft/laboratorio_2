@@ -87,11 +87,14 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
     sub_categoria_cup_nombre = serializers.CharField(source='examen.subgrupo_cups.nombre', read_only=True)
     mis_firmas = OrdenExamenFirmasSerializer(many=True, read_only=True)
     multifirma = serializers.BooleanField(source='examen.multifirma', read_only=True)
+    paciente_identificacion = serializers.CharField(source='orden.paciente.nro_identificacion', read_only=True)
 
     class Meta:
         model = OrdenExamen
         fields = [
             'id',
+            'created',
+            'fecha_verificado',
             'entidad_nombre',
             'nro_examen',
             'nro_orden',
@@ -105,6 +108,7 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'examen_estado_nombre',
             'examen',
             'paciente_nombre',
+            'paciente_identificacion',
             'orden',
             'tecnica',
             'examen_codigo_cups',
@@ -126,6 +130,8 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'citologia': {'required': False, 'allow_null': True},
             'biopsia': {'required': False, 'allow_null': True},
             'pdf_examen': {'read_only': True},
+            'fecha_verificado': {'read_only': True},
+            'created': {'read_only': True},
         }
 
     def get_nro_examen_especial(self, obj):
@@ -166,3 +172,6 @@ class OrdenSerializer(serializers.ModelSerializer):
             'valor_descuento',
             'valor_final',
         ]
+        extra_kwargs = {
+            'created': {'read_only': True},
+        }

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Link} from 'react-router-dom'
 
 import * as actions from "../../../../01_actions/01_index";
@@ -6,12 +6,12 @@ import {connect} from "react-redux";
 
 class MenuBase extends Component {
     componentDidMount() {
-        this.props.fetchMiCuenta();
         this.props.fetchMisPermisos();
     }
 
     onSalir() {
         this.props.logout();
+        //this.props.history.push('/')
     }
 
     render() {
@@ -29,6 +29,10 @@ class MenuBase extends Component {
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
+                {
+                    mi_cuenta.es_entidad &&
+                    <Fragment>Bienvenido {mi_cuenta.first_name}</Fragment>
+                }
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         {this.props.children(mis_permisos)}

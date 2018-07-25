@@ -18,7 +18,7 @@ def get_page_body(boxes):
 
 
 class OrdenesPDFViewMixin(object):
-    def generar_resultados(self, orden, es_email=False):
+    def generar_resultados(self, orden, es_email=False, es_entidad=False):
         context = {}
         multifirma = OrdenExamen.objects.select_related(
             'examen',
@@ -52,7 +52,7 @@ class OrdenesPDFViewMixin(object):
             orden_examen__examen_estado__gte=2,
         )
 
-        if es_email:
+        if es_email and not es_entidad:
             multifirma = multifirma.filter(examen__no_email=False)
             una_firma = una_firma.filter(orden_examen__examen__no_email=False)
 
@@ -63,8 +63,8 @@ class OrdenesPDFViewMixin(object):
         context['una_firma'] = una_firma
         return context
 
-    def generar_resultados_pdf(self, request, orden, es_email=False):
-        context = self.generar_resultados(orden, es_email)
+    def generar_resultados_pdf(self, request, orden, es_email=False, es_entidad=False):
+        context = self.generar_resultados(orden, es_email, es_entidad)
         if not context:
             return None
         ctx = {

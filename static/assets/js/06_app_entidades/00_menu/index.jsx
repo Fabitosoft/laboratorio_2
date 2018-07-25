@@ -13,7 +13,16 @@ const Menu = () => {
             {mis_permisos => {
                 return (
                     <Fragment>
-
+                        <Link to='/app/entidades'>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-vial"/>
+                            </div>
+                        </Link>
+                        <Link to='/app/mi_cuenta'>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-lock"/>
+                            </div>
+                        </Link>
                     </Fragment>
                 )
             }}

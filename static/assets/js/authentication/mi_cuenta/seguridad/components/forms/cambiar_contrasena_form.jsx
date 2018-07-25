@@ -42,6 +42,15 @@ class Form extends Component {
                     name='password_2'
                     type='password'
                 />
+                <div className="col-12">
+                    La nueva contraseña debe:
+                    <ul>
+                        <li>Tener al menos 8 dígitos</li>
+                        <li>Tener al menos 1 número</li>
+                        <li>Tener al menos 1 letra MAYUSCULA</li>
+                        <li>Tener al menos 1 letra minuscula</li>
+                    </ul>
+                </div>
 
                 <div className="col-12">
                     <FlatIconModal

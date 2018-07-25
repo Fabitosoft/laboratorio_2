@@ -1,5 +1,6 @@
 <style>
     .resultado-examenes {
+        font-family: 'Arial';
         color: #000;
         font-size: 12px;
     }
@@ -51,6 +52,7 @@
 
     .resultado-examenes .valor-referencia {
         text-align: justify;
+        white-space: pre-line;
         font-size: 0.7rem;
     }
 
@@ -58,9 +60,12 @@
         color: #87cefa;
     }
 
+    .resultado-examenes .especialista-informacion {
+        margin-top: -25px;
+    }
+
     .resultado-examenes .grupo-subcups-titulo {
-        font-size: 1.4rem;
-        color: #00bfff;
+        font-size: 1.1rem;
     }
 
     .resultado-examenes .especialista-especialidad {
@@ -68,13 +73,13 @@
     }
 
     .resultado-examenes .especialista-nombre {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
     }
 
     .resultado-examenes .firma {
         width: 5cm;
         padding: 10px;
-        text-align: center;
+        text-align: left;
     }
 
     .resultado-examenes .firma-imagen {
@@ -110,21 +115,21 @@
     }
 
     .resultado-examenes .box-uno {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .resultado-examenes .box-dos {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         padding-left: 15px;
     }
 
     .resultado-examenes .box-tres {
-        font-size: 1rem;
+        font-size: 0.9rem;
         padding-left: 15px;
     }
 
     .resultado-examenes .box-cuatro {
-        font-size: 0.9rem;
+        font-size: 0.7rem;
         padding-left: 20px;
     }
 
@@ -139,6 +144,10 @@
         font-size: 1rem;
     }
 
+    .resultado-examenes h3 {
+        font-size: 0.9rem;
+    }
+
     .resultado-examenes .observaciones .texto {
         padding-left: 10px;
         margin: 0;
@@ -146,7 +155,6 @@
         white-space: pre-line;
         text-align: justify;
     }
-
 </style>
 <div class="resultado-examenes">
     {% if examen.examen.nro_plantilla == 1 %}

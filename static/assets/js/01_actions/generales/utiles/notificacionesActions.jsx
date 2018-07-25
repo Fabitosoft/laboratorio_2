@@ -40,37 +40,37 @@ export function notificarErrorAjaxAction(error, tiempo = 7000) {
         if (type_error) {
             switch (type_error) {
                 case 'no_connection':
-                    mensaje = 'Se han presentado problemas de conexión';
+                    mensaje = 'Se han presentado problemas de conexión'.toUpperCase();
                     break;
                 case 404:
-                    mensaje = `El servicio de consulta se encuentra caido:`;
+                    mensaje = `El servicio de consulta se encuentra caido:`.toUpperCase();
                     break;
                 case 400:
-                    mensaje = `Problema en la consulta:`;
+                    mensaje = `Problema en la consulta:`.toUpperCase();
                     break;
                 case 403:
-                    mensaje = `Problema en autenticación:`;
+                    mensaje = `Problema en autenticación:`.toUpperCase();
                     break;
                 case 401:
-                    mensaje = `Problema en autenticación:`;
+                    mensaje = `Problema en autenticación:`.toUpperCase();
                     break;
                 case 500:
-                    mensaje = `Error grave en el servidor, avisar al administrador:`;
+                    mensaje = `Error grave en el servidor, avisar al administrador:`.toUpperCase();
                     break;
                 default:
-                    mensaje += `Otro mensaje no especificado:`;
+                    mensaje += `Otro mensaje no especificado:`.toUpperCase();
             }
         }
 
         if (error.response && error.response.data) {
             _.map(error.response.data, item => {
-                mensaje += `(${item})`
+                mensaje += ` ${item}`
             })
         }
         if (error.config && error.config.baseURL) {
             mensaje += `(${error.config.baseURL})`
         }
-        mensaje += ` ${mensaje_final}.`
+        mensaje += ` ${mensaje_final}.`;
 
         const mySuccessNotification = {
             message: mensaje,

@@ -4,6 +4,8 @@ from rest_framework import serializers
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    es_entidad = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
@@ -20,12 +22,16 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'is_superuser',
             'groups',
             'especialista',
-            'mi_entidad'
+            'mi_entidad',
+            'es_entidad'
         ]
         extra_kwargs = {
             'especialista': {'read_only': True},
             'mi_entidad': {'read_only': True},
         }
+
+    def get_es_entidad(self, obj):
+        return hasattr(obj, 'mi_entidad')
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
