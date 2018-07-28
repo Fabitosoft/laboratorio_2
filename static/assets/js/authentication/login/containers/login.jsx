@@ -93,8 +93,11 @@ class Login extends Component {
         }
 
         if (acceso_a_consulta_resultados && _.size(ordenes_examenes) > 0) {
-            return <TablaResultadoConsultaWeb {...this.props} ordenes_examenes={ordenes_examenes}
-                                              onCerrarConsulta={this.onCerrarConsulta}/>
+            return <TablaResultadoConsultaWeb
+                {...this.props}
+                ordenes_examenes={ordenes_examenes}
+                onCerrarConsulta={this.onCerrarConsulta}
+            />
         }
         const error_login = auth && auth.errors ? auth.errors : null;
         const mensaje_error = error_login && error_login.error ? error_login.error[0] : null;

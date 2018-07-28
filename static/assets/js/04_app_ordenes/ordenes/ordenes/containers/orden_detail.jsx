@@ -29,6 +29,7 @@ class Detail extends Component {
         this.cambiarDescuentoExamen = this.cambiarDescuentoExamen.bind(this);
         this.imprimirExamenes = this.imprimirExamenes.bind(this);
         this.imprimirRecibo = this.imprimirRecibo.bind(this);
+        this.imprimirExamen = this.imprimirExamen.bind(this);
     }
 
     componentDidMount() {
@@ -172,29 +173,77 @@ class Detail extends Component {
         })
     }
 
-    imprimirExamenes() {
-        const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+    imprimirExamenes(con_logo = true) {
+        const {
+            object,
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction,
+            printOrdenesExamenes_en_orden,
+            printOrdenesExamenes_sin_logo_en_orden
+        } = this.props;
         cargando();
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
             PrinJs(url);
             noCargando();
         };
-        this.props.printOrdenExamenes(object.id, success_callback, (r) => {
-            notificarErrorAjaxAction(r, 60000);
+        if (con_logo) {
+            printOrdenesExamenes_en_orden(object.id, success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
+        } else {
+            printOrdenesExamenes_sin_logo_en_orden(object.id, success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
+        }
+    }
+
+    imprimirExamen(examen_id, con_logo = true) {
+        const {
+            object,
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction,
+            printOrdenExamen,
+            printOrdenExamen_sin_logo
+        } = this.props;
+        cargando();
+        const success_callback = (response) => {
+            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
+            PrinJs(url);
             noCargando();
-        })
+        };
+        if (con_logo) {
+            printOrdenExamen(examen_id, success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
+        } else {
+            printOrdenExamen_sin_logo(examen_id, success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
+        }
     }
 
     imprimirRecibo() {
-        const {object, cargando, noCargando, notificarAction, notificarErrorAjaxAction} = this.props;
+        const {
+            object,
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction,
+            printOrdenRecibo,
+        } = this.props;
         cargando();
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
             PrinJs(url);
             noCargando();
         };
-        this.props.printOrdenRecibo(object.id, success_callback, (r) => {
+        printOrdenRecibo(object.id, success_callback, (r) => {
             notificarErrorAjaxAction(r, 60000);
             noCargando();
         })
@@ -218,11 +267,8 @@ class Detail extends Component {
         }
 
         const cantidad_encriptados = _.size(_.pickBy(ordenes_examenes_list, e => e.pdf_examen_encriptado));
-
         const entidad = entidades_list[object.entidad];
-
         const cant_exam_verificados = examenes_orden_array.filter(e => e.examen_estado > 1).length;
-
         return (
             <ValidarPermisos can_see={permisos.detail} nombre='detalles de orden'>
                 <Titulo>Orden de laboratorio
@@ -257,6 +303,7 @@ class Detail extends Component {
                     }
                 </div>
                 <TablaExamenes
+                    imprimirExamen={this.imprimirExamen}
                     singular_name='examen de orden'
                     permisos_object={permisos}
                     data={examenes_orden_array}
@@ -274,15 +321,21 @@ class Detail extends Component {
                     object.estado === 1 &&
                     <span className='btn btn-primary m-2' onClick={() => {
                         this.imprimirRecibo()
-                    }}>Imprimir Recibo</span>
+                    }}><i className='far fa-print'></i> Recibo</span>
                 }
                 {
                     cant_exam_verificados > 0 &&
                     <Fragment>
                         <span className='btn btn-primary m-2' onClick={() => {
                             this.imprimirExamenes()
-                        }}>Imprimir Examenes {cantidad_encriptados > 0 &&
+                        }}><i className='far fa-print'></i> Examenes {cantidad_encriptados > 0 &&
                         <Fragment>({cantidad_encriptados} Conflictos)</Fragment>}</span>
+
+                        <span className='btn btn-primary m-2' onClick={() => {
+                            this.imprimirExamenes(false)
+                        }}><i className='far fa-print'></i> Examenes {cantidad_encriptados > 0 &&
+                        <Fragment>({cantidad_encriptados} Conflictos)</Fragment>} (Sin Logo)</span>
+
                         {
                             !mostrar_enviar_correo &&
                             <i className="far fa-plus-circle puntero"

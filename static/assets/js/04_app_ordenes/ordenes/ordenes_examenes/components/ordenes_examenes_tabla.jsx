@@ -50,7 +50,8 @@ class Tabla extends React.Component {
             onSelectItemEdit,
             permisos_object,
             orden,
-            cambiarDescuentoExamen
+            cambiarDescuentoExamen,
+            imprimirExamen
         } = this.props;
 
 
@@ -171,18 +172,6 @@ class Tabla extends React.Component {
                     {
                         Header: "Opciones",
                         columns: [
-                            // {
-                            //     Header: "Activo",
-                            //     accessor: "is_active",
-                            //     show: permisos_object.make_user_active,
-                            //     maxWidth: 60,
-                            //     Cell: row => (
-                            //         <Checkbox
-                            //             checked={row.value}
-                            //             onChange={() => updateItem({...row.original, is_active: !row.value})}
-                            //         />
-                            //     )
-                            // },
                             {
                                 Header: "Elimi.",
                                 show: (permisos_object.delete && orden.estado === 0),
@@ -198,18 +187,23 @@ class Tabla extends React.Component {
 
                             },
                             {
-                                Header: "Imprimir",
-                                accessor: "pdf_examen",
+                                Header: "Impr.",
                                 maxWidth: 60,
                                 Cell: row => {
                                     return (
                                         <Fragment>
                                             {
                                                 row.original.examen_estado === 2 &&
-                                                <i className='far fa-print puntero'
-                                                   onClick={() => window.open(row.value, "_blank")}
-                                                >
-                                                </i>
+                                                <Fragment>
+                                                    <i className='far fa-print puntero pr-3'
+                                                       onClick={() => imprimirExamen(row.original.id)}
+                                                    >
+                                                    </i>
+                                                    <i className='far fa-print puntero'
+                                                       onClick={() => imprimirExamen(row.original.id, false)}
+                                                    >
+                                                    </i>
+                                                </Fragment>
                                             }
                                         </Fragment>
                                     )

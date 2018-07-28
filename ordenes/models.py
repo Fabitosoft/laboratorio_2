@@ -124,6 +124,7 @@ class OrdenExamen(TimeStampedModel):
     pdf_examen = models.FileField(null=True, blank=True, upload_to=examen_upload_to)
     pdf_examen_encriptado = models.BooleanField(default=False)
     fecha_verificado = models.DateTimeField(null=True, blank=True)
+    cargue_sin_logo = models.BooleanField(default=False)
 
     class Meta:
         permissions = [
@@ -132,6 +133,7 @@ class OrdenExamen(TimeStampedModel):
             ('list_verificados_ordenexamen', 'Can list orden examen verificados'),
             ('firmar_como_ordenexamen', 'Can firmar como orden examen'),
             ('verificar_ordenexamen', 'Can verificar orden examen'),
+            ('imprimir_sin_logo_ordenexamen', 'Can print sin logo orden examen'),
         ]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

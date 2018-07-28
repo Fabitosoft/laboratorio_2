@@ -2,6 +2,7 @@ import datetime
 import random
 from io import BytesIO
 
+from PyPDF2.pdf import PageObject
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Max
@@ -30,6 +31,13 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
     ).all()
     serializer_class = OrdenSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @list_route(methods=['get'])
+    def por_entidad(self, request):
+        entidad_id = self.request.GET.get('entidad_id')
+        qs = self.get_queryset().filter(estado=1, entidad_id=entidad_id)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data)
 
     @detail_route(methods=['post'])
     def enviar_email(self, request, pk=None):
@@ -107,29 +115,75 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                 'Se há presentado un error al intentar enviar el correo, envío fallido: %s' % e)
         return Response({'resultado': 'ok'})
 
-    @detail_route(methods=['post'])
+    @detail_route(methods=['post'], permission_classes=[permissions.AllowAny])
     def print_resultados(self, request, pk=None):
-        orden = self.get_object()
-        main_doc = self.generar_resultados_pdf(request, orden)
+        return self.generar_pdf(request, True)
 
-        output = BytesIO()
-        pdf_merger = PdfFileMerger()
-        if main_doc:
-            main_doc.write_pdf(
-                target=output
+    @detail_route(methods=['post'])
+    def print_resultados_sin_logo(self, request, pk=None):
+        return self.generar_pdf(request)
+
+    def generar_pdf(self, request, con_logo=False):
+        orden = self.get_object()
+        base = self.generar_base_pdf(request)
+        output_base = BytesIO()
+        # output_final = BytesIO()
+        base.write_pdf(
+            target=output_base
+        )
+
+        output_documento_estandares = BytesIO()
+        output_documento_estandares_especiales = BytesIO()
+        output_documento_con_fondo = BytesIO()
+        output_final = BytesIO()
+
+        resultados_estandar = self.generar_resultados_pdf(request, orden)
+        if resultados_estandar:
+            resultados_estandar.write_pdf(
+                target=output_documento_estandares
             )
-            pdf_merger.append(output)
-        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
-        for exa in especiales.all():
-            pdf_leido = PdfFileReader(exa.pdf_examen)
-            if not pdf_leido.isEncrypted:
-                pdf_merger.append(pdf_leido)
-        pdf_merger.write(output)
+
+        pdf_merger = PdfFileMerger()
+        pdf_estandares_reader = PdfFileReader(output_documento_estandares)
+        pdf_merger.append(pdf_estandares_reader)
+
+        # plantillas_especiales = orden.mis_examenes.filter(especial=True, nro_plantilla__isnull=False, examen_estado=2)
+        plantillas_especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
+        for exa in plantillas_especiales.all():
+            pdf_examen = PdfFileReader(exa.pdf_examen)
+            if not pdf_examen.isEncrypted:
+                pdf_merger.append(pdf_examen)
+        pdf_merger.write(output_documento_estandares_especiales)
+
+        pdf_base_reader = PdfFileReader(output_base)  # La base de fondo
+        pdf_documento_reader = PdfFileReader(output_documento_estandares_especiales)  # El pdf para poner fondo
+        writer_con_fondo = PdfFileWriter()
+        cantidad_hojas = pdf_documento_reader.getNumPages()
+
+        # Aqui coloca encabezado y pie de página
+        if con_logo:
+            for nro_hora in range(cantidad_hojas):
+                page_object_base = pdf_base_reader.getPage(0)
+                page_object_documento = pdf_documento_reader.getPage(nro_hora)
+                page_object_documento.mergePage(page_object_base)
+                writer_con_fondo.addPage(page_object_documento)
+            writer_con_fondo.write(output_documento_con_fondo)
+        else:
+            output_documento_con_fondo = output_documento_estandares_especiales
+
+        # pdf_merger_final = PdfFileMerger()
+        # pdf_merger_final.append(output_documento_con_fondo)
+        # cargados = orden.mis_examenes.filter(especial=True, nro_plantilla__isnull=True, examen_estado=2)
+        # for exa in cargados.all():
+        #     pdf_examen = PdfFileReader(exa.pdf_examen)
+        #     if not pdf_examen.isEncrypted:
+        #         pdf_merger_final.append(pdf_examen)
+        # pdf_merger_final.write(output_final)
+
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
-        response.write(output.getvalue())
-        output.close()
+        response.write(output_documento_con_fondo.getvalue())
         return response
 
     @detail_route(methods=['post'])
@@ -274,16 +328,16 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         codigo_consulta_web = self.request.GET.get('codigo_consulta_web')
         qs = self.get_queryset().filter(
             orden__estado=1,
-            examen_estado=2,
             orden__paciente__nro_identificacion=nro_identificacion,
             orden__codigo_consulta_web=codigo_consulta_web,
-            #examen__no_email=False
+            # examen__no_email=False
         )
         if qs.exists():
             serializer = self.get_serializer(qs, many=True)
             return Response(serializer.data)
         else:
-            raise serializers.ValidationError({'error':'No se encontró coincidencia entre cédula y número de consulta de orden'})
+            raise serializers.ValidationError(
+                {'error': 'No se encontró coincidencia entre cédula y número de consulta de orden'})
 
     @list_route(methods=['get'])
     def verificados(self, request):
@@ -349,3 +403,49 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
             orden_examen.pdf_examen.delete()
         if orden_examen.especial and orden_examen.nro_plantilla and orden_examen.examen_estado != 2:
             orden_examen.pdf_examen.delete()
+
+    @detail_route(methods=['post'], permission_classes=[permissions.AllowAny, ])
+    def print_resultados(self, request, pk=None):
+        return self.generar_print_pdf(request, True)
+
+    @detail_route(methods=['post'])
+    def print_resultados_sin_logo(self, request, pk=None):
+        return self.generar_print_pdf(request)
+
+    def generar_print_pdf(self, request, con_logo=False):
+        orden_examen = self.get_object()
+        pdf_examen_reader = PdfFileReader(orden_examen.pdf_examen)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+
+        if not con_logo:
+            pdf_examen_writer = PdfFileWriter()
+            pdf_examen_writer.appendPagesFromReader(pdf_examen_reader)
+
+            output_examen_sin_logo = BytesIO()
+            pdf_examen_writer.write(output_examen_sin_logo)
+            response.write(output_examen_sin_logo.getvalue())
+            return response
+        else:
+            base = self.generar_base_pdf(request)
+            output_base = BytesIO()
+            output_final = BytesIO()
+            base.write_pdf(
+                target=output_base
+            )
+
+            cantidad_hojas = pdf_examen_reader.getNumPages()
+
+            pdf_base_reader = PdfFileReader(output_base)  # La base de fondo
+            writer_con_fondo = PdfFileWriter()
+
+            for nro_hora in range(cantidad_hojas):
+                page_object_base = pdf_base_reader.getPage(0)
+                page_object_documento = pdf_examen_reader.getPage(nro_hora)
+                page_object_documento.mergePage(page_object_base)
+                writer_con_fondo.addPage(page_object_documento)
+            writer_con_fondo.write(output_final)
+
+            response.write(output_final.getvalue())
+            return response

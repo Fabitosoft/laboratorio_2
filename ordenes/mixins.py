@@ -17,6 +17,45 @@ def get_page_body(boxes):
         return get_page_body(box.all_children())
 
 
+def generar_base_pdf(request):
+    html_get_template = get_template('email/ordenes/base_pagina_carta.html').render()
+    html = HTML(
+        string=html_get_template,
+        base_url=request.build_absolute_uri()
+    )
+
+    main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.min.css')])
+
+    html_get_template = get_template('email/ordenes/resultados/cabecera.html').render()
+    html = HTML(
+        string=html_get_template,
+        base_url=request.build_absolute_uri()
+    )
+    header_logo = html.render(stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
+
+    header_logo_page = header_logo.pages[0]
+    header_logo_body = get_page_body(header_logo_page._page_box.all_children())
+    header_logo_body = header_logo_body.copy_with_children(header_logo_body.all_children())
+
+    html_get_template = get_template('email/ordenes/resultados/pie_pagina.html').render()
+    html = HTML(
+        string=html_get_template,
+        base_url=request.build_absolute_uri()
+    )
+    footer = html.render(stylesheets=[CSS(string='div {position: fixed; bottom: 0.7cm}')])
+
+    footer_page = footer.pages[0]
+    footer_body = get_page_body(footer_page._page_box.all_children())
+    footer_body = footer_body.copy_with_children(footer_body.all_children())
+
+    for i, page in enumerate(main_doc.pages):
+        page_body = get_page_body(page._page_box.all_children())
+
+        page_body.children += header_logo_body.all_children()
+        page_body.children += footer_body.all_children()
+    return main_doc
+
+
 class OrdenesPDFViewMixin(object):
     def generar_resultados(self, orden, es_email=False, es_entidad=False):
         context = {}
@@ -63,6 +102,9 @@ class OrdenesPDFViewMixin(object):
         context['una_firma'] = una_firma
         return context
 
+    def generar_base_pdf(self, request):
+        return generar_base_pdf(request)
+
     def generar_resultados_pdf(self, request, orden, es_email=False, es_entidad=False):
         context = self.generar_resultados(orden, es_email, es_entidad)
         if not context:
@@ -98,39 +140,9 @@ class OrdenesPDFViewMixin(object):
         )
 
         main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.min.css')])
-
-        ctx = {
-            'titulo': 'titulo de prueba ctx',
-        }
-        html_get_template = get_template('email/ordenes/resultados/cabecera.html').render(ctx)
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        header_logo = html.render(
-            stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
-
-        header_logo_page = header_logo.pages[0]
-        header_logo_body = get_page_body(header_logo_page._page_box.all_children())
-        header_logo_body = header_logo_body.copy_with_children(header_logo_body.all_children())
-
-        html_get_template = get_template('email/ordenes/resultados/pie_pagina.html').render(ctx)
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        footer = html.render(stylesheets=[CSS(string='div {position: fixed; bottom: 0.7cm}')])
-
-        footer_page = footer.pages[0]
-        footer_body = get_page_body(footer_page._page_box.all_children())
-        footer_body = footer_body.copy_with_children(footer_body.all_children())
-
         for i, page in enumerate(main_doc.pages):
             page_body = get_page_body(page._page_box.all_children())
-
-            page_body.children += header_logo_body.all_children()
             page_body.children += header_datos_body.all_children()
-            page_body.children += footer_body.all_children()
         return main_doc
 
     def generar_recibo_pdf(self, request, orden):
@@ -149,6 +161,9 @@ class OrdenesPDFViewMixin(object):
 
 
 class OrdenesExamenesPDFViewMixin(object):
+    def generar_base_pdf(self, request):
+        return generar_base_pdf(request)
+
     def generar_pdf_especiales(self, request, orden_examen, nro_examen_especial):
         ctx = {
             'paciente': orden_examen.orden.paciente,
@@ -179,35 +194,9 @@ class OrdenesExamenesPDFViewMixin(object):
 
         main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.min.css')])
 
-        html_get_template = get_template('email/ordenes/resultados/cabecera.html').render()
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        header_logo = html.render(
-            stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
-
-        header_logo_page = header_logo.pages[0]
-        header_logo_body = get_page_body(header_logo_page._page_box.all_children())
-        header_logo_body = header_logo_body.copy_with_children(header_logo_body.all_children())
-
-        html_get_template = get_template('email/ordenes/resultados/pie_pagina.html').render(ctx)
-        html = HTML(
-            string=html_get_template,
-            base_url=request.build_absolute_uri()
-        )
-        footer = html.render(stylesheets=[CSS(string='div {position: fixed; bottom: 0.7cm}')])
-
-        footer_page = footer.pages[0]
-        footer_body = get_page_body(footer_page._page_box.all_children())
-        footer_body = footer_body.copy_with_children(footer_body.all_children())
-
         for i, page in enumerate(main_doc.pages):
             page_body = get_page_body(page._page_box.all_children())
-
-            page_body.children += header_logo_body.all_children()
             page_body.children += header_datos_body.all_children()
-            page_body.children += footer_body.all_children()
 
         output = BytesIO()
         main_doc.write_pdf(
@@ -284,36 +273,9 @@ class OrdenesExamenesPDFViewMixin(object):
             )
 
             main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_resultado.min.css')])
-
-            html_get_template = get_template('email/ordenes/resultados/cabecera.html').render()
-            html = HTML(
-                string=html_get_template,
-                base_url=request.build_absolute_uri()
-            )
-            header_logo = html.render(
-                stylesheets=[CSS(string='div {position: fixed; top: 0, margin:0, padding:0}')])
-
-            header_logo_page = header_logo.pages[0]
-            header_logo_body = get_page_body(header_logo_page._page_box.all_children())
-            header_logo_body = header_logo_body.copy_with_children(header_logo_body.all_children())
-
-            html_get_template = get_template('email/ordenes/resultados/pie_pagina.html').render(ctx)
-            html = HTML(
-                string=html_get_template,
-                base_url=request.build_absolute_uri()
-            )
-            footer = html.render(stylesheets=[CSS(string='div {position: fixed; bottom: 0.7cm}')])
-
-            footer_page = footer.pages[0]
-            footer_body = get_page_body(footer_page._page_box.all_children())
-            footer_body = footer_body.copy_with_children(footer_body.all_children())
-
             for i, page in enumerate(main_doc.pages):
                 page_body = get_page_body(page._page_box.all_children())
-
-                page_body.children += header_logo_body.all_children()
                 page_body.children += header_datos_body.all_children()
-                page_body.children += footer_body.all_children()
 
             output = BytesIO()
             main_doc.write_pdf(

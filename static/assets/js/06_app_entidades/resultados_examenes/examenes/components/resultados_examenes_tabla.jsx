@@ -4,6 +4,10 @@ import {fechaFormatoUno} from "../../../../00_utilities/common";
 
 class Tabla extends React.Component {
     render() {
+        const {
+            verExamen,
+            permisos
+        } = this.props;
         const data = _.orderBy(this.props.data, ['created'], ['desc']);
         return (
             <ReactTable
@@ -26,9 +30,9 @@ class Tabla extends React.Component {
                                 filterable: true
                             },
                             {
-                                Header: "Nro. Examen Especial",
+                                Header: "Nro. Exa. Especial",
                                 accessor: "nro_examen_especial",
-                                maxWidth: 150,
+                                maxWidth: 100,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row._original.nro_examen_especial ? row[filter.id].includes(filter.value.toUpperCase()) : false
@@ -55,7 +59,7 @@ class Tabla extends React.Component {
                             {
                                 Header: "Fecha Ingreso",
                                 accessor: "created",
-                                maxWidth: 150,
+                                maxWidth: 120,
                                 Cell: row => fechaFormatoUno(row.value)
                             },
                             {
@@ -87,11 +91,32 @@ class Tabla extends React.Component {
                             },
                             {
                                 Header: "Estado",
-                                accessor: "examen_estado_nombre",
-                                maxWidth: 100,
+                                accessor: "examen_estado",
+                                maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+                                },
+                                Cell: row => {
+                                    const estado = (estado_examen) => {
+                                        switch (estado_examen) {
+                                            case 0:
+                                                return 'En Proceso (1 de 3)';
+                                            case 1:
+                                                return 'En Verificación (2 de 3)';
+                                            case 2:
+                                                return 'Disponible (3 de 3)';
+                                        }
+                                    };
+                                    return (
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            whiteSpace: 'normal'
+                                        }}>
+                                            {estado(row.value)}
+                                        </div>
+                                    )
+
                                 }
                             },
                         ]
@@ -100,18 +125,30 @@ class Tabla extends React.Component {
                         Header: "Opciones",
                         columns: [
                             {
-                                Header: "Ver",
-                                accessor: "pdf_examen",
+                                Header: "Examen",
                                 maxWidth: 60,
                                 Cell: row => {
                                     return (
                                         <Fragment>
                                             {
                                                 row.original.examen_estado === 2 &&
-                                                <i className='far fa-file-pdf puntero'
-                                                   onClick={() => window.open(row.value, "_blank")}
-                                                >
-                                                </i>
+                                                <Fragment>
+                                                    <i
+                                                        className='far fa-file-pdf puntero pr-3'
+                                                        style={{color: 'blue'}}
+                                                        onClick={() => verExamen(row.original.id)}
+                                                    >
+                                                    </i>
+                                                    {
+                                                        permisos.imprimir_sin_logo &&
+                                                        <i
+                                                            className='far fa-file-pdf puntero'
+                                                            style={{color: 'green'}}
+                                                            onClick={() => verExamen(row.original.id, false)}
+                                                        >
+                                                        </i>
+                                                    }
+                                                </Fragment>
                                             }
                                         </Fragment>
                                     )
@@ -119,7 +156,7 @@ class Tabla extends React.Component {
 
                             },
                         ]
-                    }
+                    },
                 ]}
                 defaultPageSize={100}
                 className="-striped -highlight tabla-maestra"

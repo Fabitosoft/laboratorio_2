@@ -1,11 +1,34 @@
 {% load verbose_names static %}
+<style>
+    .resultado-examenes .box-uno {
+        font-size: 1.2rem;
+    }
+
+    .resultado-examenes .box-dos {
+        font-size: 0.9rem;
+        padding-left: 15px;
+    }
+
+    .resultado-examenes .box-tres {
+        font-size: 0.8rem;
+        padding-left: 15px;
+    }
+
+    .resultado-examenes .box-cuatro {
+        font-size: 0.7rem;
+        padding-left: 20px;
+    }
+</style>
 <div style="clear: both; page-break-after: always; page-break-before: always" class="grupo-examenes">
     <div style="text-align: center">
-        <span class="grupo-subcups-titulo">{{ examen.examen.nombre }}</span>
+        <span class="grupo-subcups-titulo">{{ examen.examen.nombre }}</span><br/>
+        DETECCIÓN Y CONTROL DE CÁNCER DE CUELLO UTERINO<br/>
+        <strong>Sistema Bethesda 2014</strong>
     </div>
+    <br/>
     {% if citologia.A1_1 or citologia.A1_2 or citologia.A3 %}
-        <div class="box-uno">
-            Calidad de la Muestra
+        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+            CALIDAD DE LA MUESTRA
 
             <div class="box-dos">
                 {% if citologia.A1_1 %}
@@ -44,8 +67,8 @@
     {% endif %}
 
     {% if not citologia.A3 %}
-        <div class="box-uno">
-            Interpretación
+        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+            INTERPRETACIÓN
 
             {% if citologia.B1 %}
                 <div class="box-dos">
@@ -115,22 +138,19 @@
             </div>
         </div>
     {% endif %}
-
-    {% if citologia.C1 %}
-        <div class="box-uno">
-            <br/>
-            Conclusiones
-            <div class="box-dos">
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C1 nombre_campo='C1' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C2 nombre_campo='C2' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C3 nombre_campo='C3' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C4 nombre_campo='C4' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C5 nombre_campo='C5' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C6 nombre_campo='C6' %}
-                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C7 nombre_campo='C7' %}
-            </div>
+    <br/>
+    <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+        MICROORGANISMOS
+        <div class="box-dos">
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C1 nombre_campo='C1' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C2 nombre_campo='C2' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C3 nombre_campo='C3' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C4 nombre_campo='C4' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C5 nombre_campo='C5' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C6 nombre_campo='C6' %}
+            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C7 nombre_campo='C7' %}
         </div>
-    {% endif %}
+    </div>
 
     {% include 'email/ordenes/resultados/especiales/observaciones.html' with observaciones=citologia.observaciones %}
     <div>

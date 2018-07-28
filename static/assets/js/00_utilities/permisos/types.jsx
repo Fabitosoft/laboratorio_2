@@ -122,6 +122,7 @@ export const ORDENES_EXAMENES = {
     list_verificados: 'list_verificados_ordenexamen',
     firmar_como: 'firmar_como_ordenexamen',
     verificar: 'verificar_ordenexamen',
+    imprimir_sin_logo: 'imprimir_sin_logo_ordenexamen',
 };
 
 export const CITOLOGIAS = {

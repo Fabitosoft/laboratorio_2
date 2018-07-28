@@ -78,7 +78,7 @@ class FormExamenEstandar extends Component {
                         <div className="col-12">
                             <div className="row">
                                 <div className="col-12">
-                                    <h4>Las A</h4>
+                                    <h4>Calidad de la Muestra</h4>
                                 </div>
                                 <MyCheckboxSimple
                                     name='A1_1'
@@ -192,7 +192,7 @@ class FormExamenEstandar extends Component {
                                 <div className="col-12">
                                     <div className="row">
                                         <div className="col-12">
-                                            <h4>Las B</h4>
+                                            <h4>Interpretación</h4>
                                         </div>
 
                                         <MyCheckboxSimple
@@ -415,7 +415,7 @@ class FormExamenEstandar extends Component {
                                 <div className="col-12">
                                     <div className="row">
                                         <div className="col-12">
-                                            <h4>Las C</h4>
+                                            <h4>Microorganismos</h4>
                                         </div>
                                         <MyCheckboxSimple
                                             name='C1'

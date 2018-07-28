@@ -14,7 +14,7 @@ import {
     deleteObject,
     createObject,
     callApiMethodWithParameters,
-    callApiMethodWithParametersPDF
+    callApiMethodWithParametersPDF, fetchListWithParameter
 }
     from
         '../../00_general_fuctions'
@@ -30,12 +30,18 @@ export function enviarOrdenExamenesEmail(id, tipo_envio, callback = null, callba
 }
 
 
-export function printOrdenExamenes(id, callback = null, callback_error = null) {
+export function printOrdenesExamenes_en_orden(id, callback = null, callback_error = null) {
     return function (dispatch) {
         callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados', null, null, callback, callback_error)
     }
 }
 
+
+export function printOrdenesExamenes_sin_logo_en_orden(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados_sin_logo', null, null, callback, callback_error)
+    }
+}
 
 
 export function printOrdenRecibo(id, callback = null, callback_error = null) {
@@ -62,6 +68,16 @@ export const deleteOrden = (id, callback = null, callback_error = null) => {
         }
     }
 ;
+
+export const fetchOrdenes_por_entidad = (entidad_id, callback = null, callback_error = null) => {
+    return (dispatch) => {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDENES, payload: response})
+        };
+        fetchListWithParameter(`${current_url_api}/por_entidad/?entidad_id=${entidad_id}`, dispatches, callback, callback_error);
+    }
+};
+
 export const fetchOrdenes = (callback = null, callback_error = null) => {
         return (dispatch) => {
             const dispatches = (response) => {

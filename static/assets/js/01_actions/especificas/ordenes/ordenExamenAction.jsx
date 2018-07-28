@@ -19,6 +19,20 @@ import {
 } from '../../00_general_fuctions'
 
 const current_url_api = 'ordenes_examenes';
+
+export function printOrdenExamen(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados', null, null, callback, callback_error)
+    }
+}
+
+export function printOrdenExamen_sin_logo(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados_sin_logo', null, null, callback, callback_error)
+    }
+}
+
+
 export const createOrdenExamen = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {
