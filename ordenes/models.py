@@ -183,8 +183,8 @@ class OrdenExamen(TimeStampedModel):
 class OrdenExamenFirmas(TimeStampedModel):
     orden_examen = models.ForeignKey(OrdenExamen, related_name='mis_firmas', on_delete=models.CASCADE)
     especialista = models.ForeignKey(Especialista, related_name='mis_examenes_firmados', on_delete=models.PROTECT)
-#
-#
+
+
 # class HistorialOrdenExamen(TimeStampedModel):
 #     tipo_bitacora = models.CharField(max_length=100)
 #     generado_por = models.ForeignKey(User, related_name='mis_bitacoras_orden_examen')

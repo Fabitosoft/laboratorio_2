@@ -2,13 +2,35 @@ import React, {Component} from 'react';
 import {FlatIconModal} from '../../../00_utilities/components/ui/icon/iconos_base';
 import {fechaFormatoUno} from "../../../00_utilities/common";
 
+const style = {
+    table: {
+        fontSize: '0.8rem',
+        tr: {
+            td: {
+                paddingTop: 0,
+                paddingBottom: 0,
+                margin: 0,
+                nombre: {
+                    whiteSpace: 'normal',
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    margin: 0,
+                    maxWidth: '450px'
+                }
+            }
+        }
+    }
+};
+
 class TablaResultadoConsultaWeb extends Component {
     verOrden(orden_id) {
         const {
             cargando,
             noCargando,
             notificarErrorAjaxAction,
-            printOrdenesExamenes_en_orden,
+            printOrdenesExamenes_en_orden_cliente,
+            identificacion,
+            codigo_consulta,
         } = this.props;
         cargando();
         const success_callback = (response) => {
@@ -17,10 +39,14 @@ class TablaResultadoConsultaWeb extends Component {
             noCargando();
         };
 
-        printOrdenesExamenes_en_orden(orden_id, success_callback, (r) => {
-            notificarErrorAjaxAction(r, 60000);
-            noCargando();
-        })
+        printOrdenesExamenes_en_orden_cliente(
+            orden_id,
+            identificacion,
+            codigo_consulta,
+            success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
     }
 
     AbrirExamen(examen_id) {
@@ -28,7 +54,9 @@ class TablaResultadoConsultaWeb extends Component {
             cargando,
             noCargando,
             notificarErrorAjaxAction,
-            printOrdenExamen,
+            printOrdenExamen_cliente,
+            identificacion,
+            codigo_consulta,
         } = this.props;
         cargando();
         const success_callback = (response) => {
@@ -36,10 +64,14 @@ class TablaResultadoConsultaWeb extends Component {
             window.open(url, "_blank");
             noCargando();
         };
-        printOrdenExamen(examen_id, success_callback, (r) => {
-            notificarErrorAjaxAction(r, 60000);
-            noCargando();
-        })
+        printOrdenExamen_cliente(
+            examen_id,
+            identificacion,
+            codigo_consulta,
+            success_callback, (r) => {
+                notificarErrorAjaxAction(r, 60000);
+                noCargando();
+            })
     }
 
     render() {
@@ -94,7 +126,7 @@ class TablaResultadoConsultaWeb extends Component {
                     </div>
                 </div>
 
-                <table className='table table-striped table-responsive text-justify'>
+                <table className='table table-striped table-responsive text-justify' style={style.table}>
                     <thead>
                     <tr>
                         <th>Código Cups</th>
@@ -108,14 +140,14 @@ class TablaResultadoConsultaWeb extends Component {
 
                     {ordenes_examenes_array.map(e => {
                         return (
-                            <tr key={e.id}>
-                                <td>{e.examen_codigo_cups}</td>
-                                <td>{e.nro_examen}</td>
-                                <td>{e.examen_nombre}</td>
-                                <td>{getEstadoExamen(e.examen_estado)}</td>
+                            <tr key={e.id} style={style.table.tr}>
+                                <td style={style.table.tr.td}>{e.examen_codigo_cups}</td>
+                                <td style={style.table.tr.td}>{e.nro_examen}</td>
+                                <td style={style.table.tr.td.nombre}>{e.examen_nombre}</td>
+                                <td style={style.table.tr.td}>{getEstadoExamen(e.examen_estado)}</td>
                                 {
                                     e.examen_estado === 2 ?
-                                        <td>
+                                        <td style={style.table.tr.td}>
                                             {
                                                 e.no_email ?
                                                     <span>Reclamar Personalmente</span> :

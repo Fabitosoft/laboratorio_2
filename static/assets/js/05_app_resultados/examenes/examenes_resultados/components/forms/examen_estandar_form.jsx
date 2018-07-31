@@ -97,7 +97,8 @@ class FormExamenEstandar extends Component {
 function mapPropsToState(state, ownProps) {
     const {item_seleccionado} = ownProps;
     return {
-        initialValues: item_seleccionado
+        initialValues: item_seleccionado,
+        esta_cargando: state.esta_cargando,
     }
 }
 

@@ -83,12 +83,18 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
     nro_orden = serializers.IntegerField(source='orden.nro_orden', read_only=True)
     no_email = serializers.BooleanField(source='examen.no_email', read_only=True)
     nro_examen_especial = serializers.SerializerMethodField()
+    pdf_examen_url = serializers.SerializerMethodField()
     entidad_nombre = serializers.CharField(source='orden.entidad.nombre', read_only=True)
     examen_estado_nombre = serializers.CharField(source='get_examen_estado_display', read_only=True)
     sub_categoria_cup_nombre = serializers.CharField(source='examen.subgrupo_cups.nombre', read_only=True)
     mis_firmas = OrdenExamenFirmasSerializer(many=True, read_only=True)
     multifirma = serializers.BooleanField(source='examen.multifirma', read_only=True)
     paciente_identificacion = serializers.CharField(source='orden.paciente.nro_identificacion', read_only=True)
+
+    def get_pdf_examen_url(self, obj):
+        if obj.pdf_examen:
+            return obj.pdf_examen.url
+        return None
 
     class Meta:
         model = OrdenExamen
@@ -121,17 +127,17 @@ class OrdenExamenSerializer(serializers.ModelSerializer):
             'valor_final',
             'multifirma',
             'especial',
-            'pdf_examen',
+            'pdf_examen_url',
             'pdf_examen_encriptado',
             'nro_plantilla',
             'observaciones',
+            'cargue_sin_logo',
             'citologia',
             'biopsia',
         ]
         extra_kwargs = {
             'citologia': {'required': False, 'allow_null': True},
             'biopsia': {'required': False, 'allow_null': True},
-            'pdf_examen': {'read_only': True},
             'fecha_verificado': {'read_only': True},
             'created': {'read_only': True},
         }
@@ -146,7 +152,6 @@ class OrdenSerializer(serializers.ModelSerializer):
     paciente_identificacion = serializers.CharField(source='paciente.identificacion', read_only=True)
     entidad_nombre = serializers.CharField(source='entidad.nombre', read_only=True)
     medico_remitente_nombre = serializers.CharField(source='medico_remitente.full_name', read_only=True)
-    cajero = serializers.CharField(source='elaborado_por.get_full_name', read_only=True)
     estado_nombre = serializers.CharField(source='get_estado_display', read_only=True)
 
     class Meta:
@@ -154,8 +159,8 @@ class OrdenSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'created',
+            'elaborado_por',
             'paciente',
-            'cajero',
             'paciente_nombre',
             'paciente_email',
             'paciente_identificacion',

@@ -139,18 +139,21 @@
         </div>
     {% endif %}
     <br/>
-    <div class="box-uno" style="border: 1px black solid; padding: 1rem">
-        MICROORGANISMOS
-        <div class="box-dos">
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C1 nombre_campo='C1' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C2 nombre_campo='C2' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C3 nombre_campo='C3' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C4 nombre_campo='C4' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C5 nombre_campo='C5' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C6 nombre_campo='C6' %}
-            {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C7 nombre_campo='C7' %}
+
+    {% if citologia.C1 or citologia.C2 or citologia.C3 or citologia.C4 or citologia.C5 or citologia.C6 or citologia.C7 %}
+        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+            MICROORGANISMOS
+            <div class="box-dos">
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C1 nombre_campo='C1' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C2 nombre_campo='C2' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C3 nombre_campo='C3' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C4 nombre_campo='C4' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C5 nombre_campo='C5' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C6 nombre_campo='C6' %}
+                {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C7 nombre_campo='C7' %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {% include 'email/ordenes/resultados/especiales/observaciones.html' with observaciones=citologia.observaciones %}
     <div>

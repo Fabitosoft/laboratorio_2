@@ -72,35 +72,37 @@ class Tabla extends React.Component {
                                     return row[filter.id].includes(filter.value.toUpperCase())
                                 }
                             },
+                            {
+                                Header: "Estado",
+                                accessor: "estado_nombre",
+                                maxWidth: 150,
+                                filterable: true,
+                                filterMethod: (filter, row) => {
+                                    return row[filter.id].includes(filter.value.toUpperCase())
+                                }
+                            },
                         ]
                     },
                     {
                         Header: "Opciones",
                         columns: [
-                            // {
-                            //     Header: "Activo",
-                            //     accessor: "is_active",
-                            //     show: permisos_object.make_user_active,
-                            //     maxWidth: 60,
-                            //     Cell: row => (
-                            //         <Checkbox
-                            //             checked={row.value}
-                            //             onChange={() => updateItem({...row.original, is_active: !row.value})}
-                            //         />
-                            //     )
-                            // },
                             {
                                 Header: "Elimi.",
+                                accessor: 'estado',
                                 show: permisos_object.delete,
                                 maxWidth: 60,
-                                Cell: row =>
-                                    <MyDialogButtonDelete
-                                        onDelete={() => {
-                                            onDelete(row.original)
-                                        }}
-                                        element_name={row.original.username}
-                                        element_type={singular_name}
-                                    />
+                                Cell: row => <div>
+                                    {
+                                        row.value === 0 &&
+                                        <MyDialogButtonDelete
+                                            onDelete={() => {
+                                                onDelete(row.original)
+                                            }}
+                                            element_name={row.original.id}
+                                            element_type={singular_name}
+                                        />
+                                    }
+                                </div>
 
                             },
                             {

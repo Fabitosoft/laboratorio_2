@@ -20,16 +20,15 @@ class List extends Component {
     }
 
     successSubmitCallback(item) {
-        const nombre = item.nombre;
         const {noCargando, notificarAction} = this.props;
-        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
-        noCargando()
+        notificarAction(`Se ha ${item.id ? 'actualizado' : 'creado'} con éxito ${this.singular_name.toLowerCase()}`);
+        noCargando();
         this.props.history.push(`/app/ordenes/ordenes/detail/${item.id}`)
     }
 
 
     successDeleteCallback(item) {
-        const nombre = item.nombre;
+        const nombre = item.nro_orden ? item.nro_orden : '';
         const {noCargando, notificarAction} = this.props;
         notificarAction(`Se ha eliminado con éxito ${this.singular_name.toLowerCase()} ${nombre}`);
         noCargando()

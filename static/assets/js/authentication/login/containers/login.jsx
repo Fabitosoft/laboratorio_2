@@ -17,7 +17,9 @@ class Login extends Component {
         this.state = {
             slideIndex: 0,
             acceso_a_consulta_resultados: false,
-            errores_consulta: null
+            errores_consulta: null,
+            identificacion: null,
+            codigo_consulta: null,
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onCerrarConsulta = this.onCerrarConsulta.bind(this);
@@ -47,12 +49,22 @@ class Login extends Component {
             e.nro_identificacion,
             e.codigo_consulta_web,
             () => {
-                this.setState({errores_consulta: null, acceso_a_consulta_resultados: true})
+                this.setState({
+                    errores_consulta: null,
+                    acceso_a_consulta_resultados: true,
+                    identificacion: e.nro_identificacion,
+                    codigo_consulta: e.codigo_consulta_web,
+                });
                 noCargando();
             },
             e => {
                 if (e.response && e.response.data) {
-                    this.setState({errores_consulta: e.response.data.error, acceso_a_consulta_resultados: false})
+                    this.setState({
+                        errores_consulta: e.response.data.error,
+                        acceso_a_consulta_resultados: false,
+                        identificacion: null,
+                        codigo_consulta: null,
+                    });
                     noCargando();
                 }
             }
@@ -85,7 +97,9 @@ class Login extends Component {
         const {
             slideIndex,
             acceso_a_consulta_resultados,
-            errores_consulta
+            errores_consulta,
+            identificacion,
+            codigo_consulta,
         } = this.state;
 
         if (auth.isAuthenticated) {
@@ -97,6 +111,8 @@ class Login extends Component {
                 {...this.props}
                 ordenes_examenes={ordenes_examenes}
                 onCerrarConsulta={this.onCerrarConsulta}
+                identificacion={identificacion}
+                codigo_consulta={codigo_consulta}
             />
         }
         const error_login = auth && auth.errors ? auth.errors : null;
@@ -124,7 +140,7 @@ class Login extends Component {
                             href="#"
                             onClick={() => this.setState({slideIndex: 1})}
                         >
-                            Entidades
+                            Acceso
                         </a>
                     </li>
                 </ul>

@@ -9,6 +9,10 @@ export default class FirmarComo extends Component {
 
     render() {
         const {abierto} = this.state;
+        const {
+            examen,
+            especialistas_list
+        } = this.props;
         const setAbierto = () => {
             this.setState((p) => {
                 if (!p.abierto) {
@@ -17,11 +21,13 @@ export default class FirmarComo extends Component {
                 return {abierto: !p.abierto}
             })
         };
+        const especialistas_firmas_actuales = examen.mis_firmas.map(e => e.especialista);
+        const especialistas_disponibles_firma = _.pickBy(especialistas_list, e => !especialistas_firmas_actuales.includes(e.id));
         return (
             <div className='col-12'>
                 <div className="row">
                     {abierto &&
-                    _.map(this.props.especialistas_list, e => {
+                    _.map(especialistas_disponibles_firma, e => {
                         return <Firma
                             firmar_como={true}
                             key={e.id}

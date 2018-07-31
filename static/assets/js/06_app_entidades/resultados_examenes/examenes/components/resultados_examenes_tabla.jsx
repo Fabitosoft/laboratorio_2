@@ -95,7 +95,19 @@ class Tabla extends React.Component {
                                 maxWidth: 150,
                                 filterable: true,
                                 filterMethod: (filter, row) => {
-                                    return row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+                                    let estado = '';
+                                    switch (row[filter.id]) {
+                                        case 0:
+                                            estado = 'En Proceso (1 de 3)';
+                                            break;
+                                        case 1:
+                                            estado = 'En Verificación (2 de 3)';
+                                            break;
+                                        case 2:
+                                            estado = 'Disponible (3 de 3)';
+                                            break;
+                                    }
+                                    return estado.toUpperCase().includes(filter.value.toUpperCase())
                                 },
                                 Cell: row => {
                                     const estado = (estado_examen) => {

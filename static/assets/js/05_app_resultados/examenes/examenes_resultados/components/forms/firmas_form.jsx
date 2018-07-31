@@ -6,16 +6,24 @@ class FirmaForm extends Component {
     renderVerificar() {
         const {
             examen,
-            updateOrdenExamen,
             setSelectItem,
-            notificarErrorAjaxAction
+            cargando,
+            noCargando,
+            notificarErrorAjaxAction,
+            verificarOrdenExamen,
+            quitarVerificarOrdenExamen,
         } = this.props;
-        const nuevo_estado = examen.examen_estado === 1 ? 2 : 1;
 
         const onClick = () => {
-            updateOrdenExamen(examen.id, {...examen, examen_estado: nuevo_estado},
+            cargando();
+            let metodo = verificarOrdenExamen;
+            if (examen.examen_estado === 2) {
+                metodo = quitarVerificarOrdenExamen
+            }
+            metodo(examen.id,
                 response => {
-                    setSelectItem(response)
+                    setSelectItem(response);
+                    noCargando();
                 },
                 notificarErrorAjaxAction
             )
@@ -32,14 +40,17 @@ class FirmaForm extends Component {
             examen,
             updateOrdenExamen,
             setSelectItem,
-            notificarErrorAjaxAction
+            notificarErrorAjaxAction,
+            cargando,
+            noCargando,
         } = this.props;
         const nuevo_estado = examen.examen_estado === 0 ? 1 : 0;
-
         const onClick = () => {
+            cargando();
             updateOrdenExamen(examen.id, {...examen, examen_estado: nuevo_estado},
                 response => {
-                    setSelectItem(response)
+                    setSelectItem(response);
+                    noCargando();
                 },
                 notificarErrorAjaxAction
             )
@@ -58,6 +69,8 @@ class FirmaForm extends Component {
     renderFirmar() {
         const {
             examen,
+            cargando,
+            noCargando,
             notificarErrorAjaxAction,
             setSelectItem,
             firmarOrdenExamen,
@@ -69,7 +82,15 @@ class FirmaForm extends Component {
             ) &&
             examen.examen_estado < 2;
         const onClick = () => {
-            firmarOrdenExamen(examen.id, (r) => setSelectItem(r), notificarErrorAjaxAction)
+            cargando();
+            firmarOrdenExamen(
+                examen.id,
+                (r) => {
+                    setSelectItem(r);
+                    noCargando();
+                },
+                notificarErrorAjaxAction
+            )
         };
 
         return (
@@ -101,7 +122,7 @@ class FirmaForm extends Component {
                     </div>
                 </div>
                 {
-                    examen.examen_estado === 1 &&
+                    examen.examen_estado === 0 &&
                     es_especialista &&
                     this.renderFirmar()
                 }

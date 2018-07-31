@@ -201,6 +201,15 @@ export function callApiMethodWithParametersPDF(url, id, method, parameters, disp
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
     const FULL_URL = `${url}/${id}/${method}/`;
+
+    const headers = {};
+    if (localStorage.token) {
+        headers["Authorization"] = `Token ${localStorage.token}`;
+        headers["Content-Type"] = 'application/x-www-form-urlencoded;charset=UTF-8';
+    }
+    axios_instance.defaults.headers = headers;
+
+
     const request = axios_instance.post(FULL_URL, parameters, {responseType: 'arraybuffer'});
     createRequest(
         request,

@@ -2,7 +2,6 @@ import datetime
 import random
 from io import BytesIO
 
-from PyPDF2.pdf import PageObject
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Max
@@ -27,10 +26,17 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         'medico_remitente',
         'paciente',
         'entidad',
-        'elaborado_por'
     ).all()
     serializer_class = OrdenSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def perform_destroy(self, instance):
+        if instance.estado != 1:
+            instance.mis_examenes.all().delete()
+            super().perform_destroy(instance)
+        else:
+            raise serializers.ValidationError(
+                {'error': 'Esta orden no se puede eliminar, ya se encuentra pagada.'})
 
     @list_route(methods=['get'])
     def por_entidad(self, request):
@@ -46,21 +52,23 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         send_to = []
         con_contrasena = False
         no_enviados_email = orden.mis_examenes.filter(examen_estado=2, examen__no_email=True)
-        especiales = orden.mis_examenes.filter(especial=True, examen_estado=2, examen__no_email=False)
+        encriptados = orden.mis_examenes.filter(
+            especial=True,
+            pdf_examen_encriptado=True,
+            nro_plantilla__isnull=True,
+        )
         text_content = render_to_string(
             'email/ordenes/resultados/cuerpo_correo_paciente.html',
             {'no_enviados_email': no_enviados_email}
         )
 
-        main_doc = self.generar_resultados_pdf(request, orden, es_email=True, es_entidad=False)
-
         if tipo_envio == 'Cliente':
+            resultados = self.resultados_pdf(request, True, True, False)
             con_contrasena = True
             send_to.append(orden.paciente.email)
-
-        if tipo_envio == 'Entidad':
-            especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
-            main_doc = self.generar_resultados_pdf(request, orden, es_email=True, es_entidad=True)
+            encriptados = encriptados.filter(examen__no_email=False)
+        else:
+            resultados = self.resultados_pdf(request, True, True, True)
             text_content = render_to_string(
                 'email/ordenes/resultados/cuerpo_correo_entidad.html', {'orden': orden}
             )
@@ -71,15 +79,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             else:
                 raise serializers.ValidationError('No tiene correos registrados para envío')
 
-        output = BytesIO()
-        pdf_merger = PdfFileMerger()
-        pdf_writer = PdfFileWriter()
-        if main_doc:
-            main_doc.write_pdf(
-                target=output
-            )
-            pdf_merger.append(output)
-
         msg = EmailMultiAlternatives(
             'Resultados orden %s - %s' % (orden.nro_orden, orden.paciente.full_name),
             text_content,
@@ -88,16 +87,13 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             to=send_to
         )
         msg.attach_alternative(text_content, "text/html")
-        for exa in especiales.all():
-            pdf_leido = PdfFileReader(exa.pdf_examen)
-            if not pdf_leido.isEncrypted:
-                pdf_merger.append(pdf_leido)
-            else:
-                msg.attach_file(exa.pdf_examen.path)
-        pdf_merger.write(output)
+
+        if encriptados.exists():
+            [msg.attach_file(exa.pdf_examen.path) for exa in encriptados.all()]
 
         if con_contrasena:
-            pdf_leido = PdfFileReader(output)
+            pdf_writer = PdfFileWriter()
+            pdf_leido = PdfFileReader(resultados)
             pdf_writer.appendPagesFromReader(pdf_leido)
             nro_identificacion_paciente = orden.paciente.nro_identificacion
             pdf_writer.encrypt(
@@ -105,8 +101,8 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                 owner_pwd='Cc%s' % nro_identificacion_paciente,
                 use_128bit=True
             )
-            pdf_writer.write(output)
-        msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, output.getvalue(), 'application/pdf')
+            pdf_writer.write(resultados)
+        msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, resultados.getvalue(), 'application/pdf')
         try:
             pass
             msg.send()
@@ -116,14 +112,38 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         return Response({'resultado': 'ok'})
 
     @detail_route(methods=['post'], permission_classes=[permissions.AllowAny])
+    def print_resultados_cliente(self, request, pk=None):
+        orden = self.get_object()
+        identificacion = self.request.POST.get('identificacion')
+        codigo_consulta = self.request.POST.get('codigo_consulta')
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        validado = orden.codigo_consulta_web == codigo_consulta and orden.paciente.nro_identificacion == identificacion
+        if validado:
+            resultados = self.resultados_pdf(request, True, True, False)
+            response.write(resultados.getvalue())
+        return response
+
+    @detail_route(methods=['post'])
     def print_resultados(self, request, pk=None):
-        return self.generar_pdf(request, True)
+        resultados = self.resultados_pdf(request, True, False, True)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(resultados.getvalue())
+        return response
 
     @detail_route(methods=['post'])
     def print_resultados_sin_logo(self, request, pk=None):
-        return self.generar_pdf(request)
+        resultados = self.resultados_pdf(request, False, False, True)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(resultados.getvalue())
+        return response
 
-    def generar_pdf(self, request, con_logo=False):
+    def resultados_pdf(self, request, con_logo=False, es_email=False, es_entidad=False):
         orden = self.get_object()
         base = self.generar_base_pdf(request)
         output_base = BytesIO()
@@ -134,10 +154,10 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
 
         output_documento_estandares = BytesIO()
         output_documento_estandares_especiales = BytesIO()
-        output_documento_con_fondo = BytesIO()
+        output_documento_con_logo = BytesIO()
         output_final = BytesIO()
 
-        resultados_estandar = self.generar_resultados_pdf(request, orden)
+        resultados_estandar = self.generar_resultados_pdf(request, orden, es_email, es_entidad)
         if resultados_estandar:
             resultados_estandar.write_pdf(
                 target=output_documento_estandares
@@ -147,9 +167,29 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         pdf_estandares_reader = PdfFileReader(output_documento_estandares)
         pdf_merger.append(pdf_estandares_reader)
 
-        # plantillas_especiales = orden.mis_examenes.filter(especial=True, nro_plantilla__isnull=False, examen_estado=2)
-        plantillas_especiales = orden.mis_examenes.filter(especial=True, examen_estado=2)
-        for exa in plantillas_especiales.all():
+        plantillas_especiales_sin_logo = orden.mis_examenes.filter(
+            Q(especial=True) &
+            Q(examen_estado=2) & (
+                    (
+                            Q(nro_plantilla__isnull=True) &
+                            Q(cargue_sin_logo=True)
+                    ) |
+                    Q(nro_plantilla__isnull=False)
+            )
+        )
+
+        plantillas_especiales_con_logo = orden.mis_examenes.filter(
+            Q(especial=True) &
+            Q(examen_estado=2) &
+            Q(nro_plantilla__isnull=True) &
+            Q(cargue_sin_logo=False)
+        )
+
+        if es_email and not es_entidad:
+            plantillas_especiales_sin_logo = plantillas_especiales_sin_logo.filter(examen__no_email=False)
+            plantillas_especiales_con_logo = plantillas_especiales_con_logo.filter(examen__no_email=False)
+
+        for exa in plantillas_especiales_sin_logo.all():
             pdf_examen = PdfFileReader(exa.pdf_examen)
             if not pdf_examen.isEncrypted:
                 pdf_merger.append(pdf_examen)
@@ -157,34 +197,31 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
 
         pdf_base_reader = PdfFileReader(output_base)  # La base de fondo
         pdf_documento_reader = PdfFileReader(output_documento_estandares_especiales)  # El pdf para poner fondo
-        writer_con_fondo = PdfFileWriter()
+        writer_con_logo = PdfFileWriter()
         cantidad_hojas = pdf_documento_reader.getNumPages()
 
-        # Aqui coloca encabezado y pie de página
         if con_logo:
             for nro_hora in range(cantidad_hojas):
                 page_object_base = pdf_base_reader.getPage(0)
                 page_object_documento = pdf_documento_reader.getPage(nro_hora)
                 page_object_documento.mergePage(page_object_base)
-                writer_con_fondo.addPage(page_object_documento)
-            writer_con_fondo.write(output_documento_con_fondo)
+                writer_con_logo.addPage(page_object_documento)
+            writer_con_logo.write(output_documento_con_logo)
         else:
-            output_documento_con_fondo = output_documento_estandares_especiales
+            output_documento_con_logo = output_documento_estandares_especiales
 
-        # pdf_merger_final = PdfFileMerger()
-        # pdf_merger_final.append(output_documento_con_fondo)
-        # cargados = orden.mis_examenes.filter(especial=True, nro_plantilla__isnull=True, examen_estado=2)
-        # for exa in cargados.all():
-        #     pdf_examen = PdfFileReader(exa.pdf_examen)
-        #     if not pdf_examen.isEncrypted:
-        #         pdf_merger_final.append(pdf_examen)
-        # pdf_merger_final.write(output_final)
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-        response['Content-Transfer-Encoding'] = 'binary'
-        response.write(output_documento_con_fondo.getvalue())
-        return response
+        if plantillas_especiales_con_logo.exists():
+            pdf_merger = PdfFileMerger()
+            pdf_examen = PdfFileReader(output_documento_con_logo)
+            pdf_merger.append(pdf_examen)
+            for exa in plantillas_especiales_con_logo.all():
+                pdf_examen = PdfFileReader(exa.pdf_examen)
+                if not pdf_examen.isEncrypted:
+                    pdf_merger.append(pdf_examen)
+            pdf_merger.write(output_final)
+        else:
+            output_final = output_documento_con_logo
+        return output_final
 
     @detail_route(methods=['post'])
     def print_recibo(self, request, pk=None):
@@ -299,6 +336,7 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         orden_examen.pdf_examen.delete()
         orden_examen.examen_estado = 0
         orden_examen.pdf_examen_encriptado = False
+        orden_examen.cargue_sin_logo = False
         orden_examen.save()
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
@@ -386,25 +424,46 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
             if orden_examen.nro_plantilla == 2:
                 Citologia.objects.create(orden_examen=orden_examen)
 
-    def perform_update(self, serializer):
-        super().perform_update(serializer)
+    @detail_route(methods=['post'])
+    def verificar_examen(self, request, pk=None):
         orden_examen = self.get_object()
-        if orden_examen.examen_estado == 2:
-            if not orden_examen.fecha_verificado:
-                orden_examen.fecha_verificado = datetime.datetime.now()
+        if orden_examen.examen_estado != 2:
+            orden_examen.examen_estado = 2
+            orden_examen.fecha_verificado = datetime.datetime.now()
+            orden_examen.save()
+            if not orden_examen.especial:
+                self.generar_pdf(self.request, orden_examen)
+            else:
+                self.generar_pdf_especiales(self.request, orden_examen, orden_examen.get_numero_examen_especial())
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def quitar_verificar_examen(self, request, pk=None):
+        orden_examen = self.get_object()
+        orden_examen.examen_estado = 1
+        orden_examen.fecha_verificado = None
+        orden_examen.save()
+        orden_examen.pdf_examen.delete()
+        serializer = self.get_serializer(self.get_object())
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'], permission_classes=[permissions.AllowAny])
+    def print_resultados_cliente(self, request, pk=None):
+        examen = self.get_object()
+        orden = examen.orden
+        identificacion = self.request.POST.get('identificacion')
+        codigo_consulta = self.request.POST.get('codigo_consulta')
+        validado = orden.codigo_consulta_web == codigo_consulta and orden.paciente.nro_identificacion == identificacion
+        if validado:
+            return self.generar_print_pdf(request, True)
         else:
-            orden_examen.fecha_verificado = None
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+            response['Content-Transfer-Encoding'] = 'binary'
+        return response
 
-        if not orden_examen.especial and orden_examen.examen_estado == 2:
-            self.generar_pdf(self.request, orden_examen)
-        if orden_examen.especial and orden_examen.examen_estado == 2:
-            self.generar_pdf_especiales(self.request, orden_examen, orden_examen.get_numero_examen_especial())
-        if not orden_examen.especial and orden_examen.examen_estado != 2:
-            orden_examen.pdf_examen.delete()
-        if orden_examen.especial and orden_examen.nro_plantilla and orden_examen.examen_estado != 2:
-            orden_examen.pdf_examen.delete()
-
-    @detail_route(methods=['post'], permission_classes=[permissions.AllowAny, ])
+    @detail_route(methods=['post'])
     def print_resultados(self, request, pk=None):
         return self.generar_print_pdf(request, True)
 
@@ -419,7 +478,17 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
 
-        if not con_logo:
+        colocar_logo = con_logo and (
+                not orden_examen.especial
+                or (orden_examen.especial and orden_examen.nro_plantilla)
+                or (
+                        orden_examen.especial
+                        and not orden_examen.nro_plantilla
+                        and orden_examen.cargue_sin_logo
+                )
+        )
+
+        if not colocar_logo:
             pdf_examen_writer = PdfFileWriter()
             pdf_examen_writer.appendPagesFromReader(pdf_examen_reader)
 

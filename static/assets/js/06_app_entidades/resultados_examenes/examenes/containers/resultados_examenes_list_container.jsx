@@ -145,6 +145,7 @@ class List extends Component {
                     this.state.slideIndex === 1 &&
                     <TablaResultadosOrdenes
                         data={ordenes}
+                        ordenes_examenes={ordenes_examenes}
                         permisos={permisos_object_1}
                         verOrden={this.verOrden}
                     />

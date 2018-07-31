@@ -7,12 +7,23 @@ class Tabla extends React.Component {
         const {
             verOrden,
             permisos,
+            ordenes_examenes,
         } = this.props;
         const data = _.orderBy(this.props.data, ['created'], ['desc']);
+        const cantidad_examenes_verificados_por_orden = _.countBy(_.pickBy(ordenes_examenes, exa => exa.examen_estado === 2), e => e.orden);
+        const cantidad_examenes_por_orden = _.countBy(ordenes_examenes, e => e.orden);
+        const ordenes = _.map(data, o => {
+            return {
+                ...o,
+                examenes_verificados: cantidad_examenes_verificados_por_orden[o.id],
+                examenes_totales: cantidad_examenes_por_orden[o.id],
+                porcentaje_completado: (parseInt(cantidad_examenes_verificados_por_orden[o.id]) / parseInt(cantidad_examenes_por_orden[o.id]) * 100),
+            }
+        });
 
         return (
             <ReactTable
-                data={_.map(data, e => e)}
+                data={_.map(ordenes, e => e)}
                 noDataText={`No hay ordenes para mostrar`}
                 columns={[
                     {
@@ -57,6 +68,23 @@ class Tabla extends React.Component {
                                 filterMethod: (filter, row) => {
                                     return row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
                                 }
+                            },
+                            {
+                                Header: "Estado",
+                                minWidth: 150,
+                                maxWidth: 200,
+                                Cell: row => <div style={{textAlign: 'right'}}>
+                                    <span>
+                                        {row.original.examenes_verificados} con resultados de {row.original.examenes_totales}
+                                    </span>
+                                </div>
+                            },
+                            {
+                                Header: "% Completado",
+                                accessor: "porcentaje_completado",
+                                minWidth: 70,
+                                maxWidth: 100,
+                                Cell: row => <div style={{textAlign: 'right'}}><span>{row.value}%</span></div>
                             },
                         ]
                     },

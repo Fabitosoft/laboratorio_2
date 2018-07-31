@@ -2,6 +2,8 @@ import React, {Component, Fragment} from 'react';
 import {MyDialogCreate} from '../../../../../00_utilities/components/ui/dialog';
 import {FlatIconModal} from '../../../../../00_utilities/components/ui/icon/iconos_base';
 import InfoExamenForm from './info_examen';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class FormExamenEstandar extends Component {
     constructor(props) {
@@ -66,11 +68,11 @@ class FormExamenEstandar extends Component {
                 <InfoExamenForm examen={item_seleccionado}/>
                 <div className='col-12 m-3'>
                     {
-                        item_seleccionado.pdf_examen ?
+                        item_seleccionado.pdf_examen_url ?
                             <div>
                                 <i className='far fa-file-pdf fa-4x puntero' onClick={
                                     () => {
-                                        window.open(item_seleccionado.pdf_examen, "_blank");
+                                        window.open(item_seleccionado.pdf_examen_url, "_blank");
                                     }
                                 }>
                                 </i>
@@ -82,16 +84,50 @@ class FormExamenEstandar extends Component {
                                 </i>
                                 {this.renderEliminar()}
                                 {
-                                    item_seleccionado.pdf_examen_encriptado?
-                                    <Fragment>
-                                        <h3 style={{color:'red'}}><i className='fas fa-exclamation'></i> Tendras problemas con este PDF</h3>
-                                        Este PDF tiene problemas de encriptación y no permitirá hacer impresiones unidas en las ordenes.<br/>
-                                        Trata de "Guardar como..." con un visor de PDF para hacer una copia sin este inconveniente.
-                                    </Fragment>:
+                                    item_seleccionado.pdf_examen_encriptado ?
+                                        <Fragment>
+                                            <h3 style={{color: 'red'}}><i className='fas fa-exclamation'></i> Tendras
+                                                problemas con este PDF</h3>
+                                            Este PDF tiene problemas de encriptación y no permitirá hacer impresiones
+                                            unidas en las ordenes.<br/>
+                                            Trata de "Guardar como..." con un visor de PDF para hacer una copia sin este
+                                            inconveniente.
+                                        </Fragment> :
                                         <p>
                                             Cargue exitoso del archivo.
                                         </p>
                                 }
+                                <div>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={item_seleccionado.cargue_sin_logo}
+                                                onChange={() => {
+                                                    const {
+                                                        cargando,
+                                                        noCargando,
+                                                        updateOrdenExamen,
+                                                        notificarErrorAjaxAction
+                                                    } = this.props;
+                                                    cargando();
+                                                    updateOrdenExamen(
+                                                        item_seleccionado.id,
+                                                        {
+                                                            ...item_seleccionado,
+                                                            cargue_sin_logo: !item_seleccionado.cargue_sin_logo
+                                                        },
+                                                        (res) => {
+                                                            setSelectItem(res);
+                                                            noCargando();
+                                                        },
+                                                        notificarErrorAjaxAction
+                                                    )
+                                                }}
+                                            />
+                                        }
+                                        label='No tiene logo'
+                                    />
+                                </div>
                             </div>
                             :
                             <input type="file"

@@ -26,9 +26,36 @@ export function printOrdenExamen(id, callback = null, callback_error = null) {
     }
 }
 
+export function printOrdenExamen_cliente(id, identificacion, codigo_consulta, callback = null, callback_error = null) {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('identificacion', identificacion);
+        params.append('codigo_consulta', codigo_consulta);
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados_cliente', params, null, callback, callback_error)
+    }
+}
+
 export function printOrdenExamen_sin_logo(id, callback = null, callback_error = null) {
     return function (dispatch) {
         callApiMethodWithParametersPDF(current_url_api, id, 'print_resultados_sin_logo', null, null, callback, callback_error)
+    }
+}
+
+export function verificarOrdenExamen(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDEN_EXAMEN, payload: response})
+        };
+        callApiMethod(current_url_api, id, 'verificar_examen', dispatches, callback, callback_error)
+    }
+}
+
+export function quitarVerificarOrdenExamen(id, callback = null, callback_error = null) {
+    return function (dispatch) {
+        const dispatches = (response) => {
+            dispatch({type: FETCH_ORDEN_EXAMEN, payload: response})
+        };
+        callApiMethod(current_url_api, id, 'quitar_verificar_examen', dispatches, callback, callback_error)
     }
 }
 

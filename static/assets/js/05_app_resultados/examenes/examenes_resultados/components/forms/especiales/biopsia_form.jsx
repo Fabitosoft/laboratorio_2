@@ -85,7 +85,10 @@ class FormExamenEstandar extends Component {
                     multiline={true}
                     rowsMax={3}
                 />
-                <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Biopsia"}}/>
+                {
+                    (submitting || pristine) &&
+                    <FirmaForm {...this.props} examen={{...item_seleccionado, resultado: "Es Biopsia"}}/>
+                }
             </MyFormTagModal>
         )
     }

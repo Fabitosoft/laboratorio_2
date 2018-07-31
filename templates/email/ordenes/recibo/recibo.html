@@ -1,4 +1,4 @@
-{% load static %}
+{% load static l10n %}
 <style>
     div {
         font-family: 'Arial';
@@ -12,10 +12,11 @@
     }
 
     .datos .td1 {
-
+        width: 4cm;
     }
 
     .datos .td2 {
+        width: 6cm;
         padding-left: 2rem;
     }
 
@@ -38,7 +39,7 @@
 
     .recibo th,
     .recibo td {
-        font-size: 9px;
+        font-size: 10px;
         text-align: left;
         padding: 1px;
         border-bottom: 1px solid #ddd;
@@ -68,32 +69,39 @@
             <td style="text-align: justify; width: 10cm" class="datos">
                 <table>
                     <tr>
-                        <td class="td1"><strong>Nro. Registro: </strong>{{ orden.id }}</td>
-                        <td class="td2"></td>
+                        {% localize off %}
+                            <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}</td>
+                            <td class="td2"></td>
+                        {% endlocalize %}
                     </tr>
                     <tr>
-                        <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}</td>
-                        <td class="td2"><strong>Paciente: </strong>{{ orden.paciente.full_name|title }}</td>
+                        <td colspan="2" class="td1"><strong>Paciente: </strong>{{ orden.paciente.full_name|title }}
+                        </td>
                     </tr>
                     <tr>
                         <td class="td1">
-                            <strong>Edad: </strong>{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
-                        <td class="td2"><strong>Id: </strong>{{ orden.paciente.identificacion|title }}</td>
+                            <strong>Identificación: </strong>{{ orden.paciente.tipo_documento|title }}.{{ orden.paciente.nro_identificacion }}
+                        </td>
+                        <td class="td2"><strong>Fecha Ingreso: </strong>{{ orden.created }}</td>
                     </tr>
                     <tr>
-                        <td class="td1"><strong>Teléfono: </strong>{{ orden.orden.numero_contacto_alternativo }}</td>
+                        <td class="td1"><strong>Genero: </strong>{{ orden.paciente.get_genero_display }}</td>
+                        <td class="td2"><strong>Fecha Reporte: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="td1">
+                            <strong>Edad: </strong>{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
                         <td class="td2"><strong>Entidad: </strong>{{ orden.entidad.nombre|title }}</td>
                     </tr>
+
                     <tr>
-                        <td class="td1"><strong>Médico Remitente: </strong>{{ orden.medico_remitente.full_name|title }}
-                        </td>
-                        <td class="td2"><strong>Forma de Pago: </strong>{{ orden.get_tipo_pago_display }}</td>
+                        <td class="td1"><strong>Teléfono: </strong>{{ orden.paciente.telefono }}</td>
+                        <td class="td2">{% if orden.medico_remitente %}<strong>Médico Remitente: </strong>
+                            {{ orden.medico_remitente.full_name|title }}{% endif %}</td>
                     </tr>
                     <tr>
-                        <td class="td1"><strong>Fecha: </strong>{{ orden.created }}
-                        </td>
-                        <td class="td2"><strong>Impresión: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}
-                        </td>
+                        <td class="td1"><strong>Forma de Pago: </strong>{{ orden.get_tipo_pago_display }}</td>
                     </tr>
                 </table>
             </td>
@@ -127,13 +135,13 @@
                         {{ examen.examen_nombre }}
                     </td>
                     <td class="dinero">
-                        $ {{ examen.valor_total }}
+                        $ {{ examen.valor_total|floatformat }}
                     </td>
                     <td class="dinero">
-                        $ {{ examen.valor_descuento }}
+                        $ {{ examen.valor_descuento|floatformat }}
                     </td>
                     <td class="dinero">
-                        $ {{ examen.valor_final }}
+                        $ {{ examen.valor_final|floatformat }}
                     </td>
                 </tr>
             {% endfor %}
@@ -141,16 +149,18 @@
             <tfoot>
             <tr>
                 <td><strong>Totales</strong></td>
-                <td class="dinero"><strong>$ {{ orden.valor_total }}</strong></td>
-                <td class="dinero"><strong> $ {{ orden.valor_descuento }}</strong></td>
-                <td class="dinero" style="border-bottom: black double"><strong> $ {{ orden.valor_final }}</strong></td>
+                <td class="dinero"><strong>$ {{ orden.valor_total|floatformat }}</strong></td>
+                <td class="dinero"><strong> $ {{ orden.valor_descuento|floatformat }}</strong></td>
+                <td class="dinero" style="border-bottom: black double"><strong> $ {{ orden.valor_final|floatformat }}</strong></td>
             </tr>
             </tfoot>
         </table>
-        <span>Valor a pagar el paciente: <strong> $ {{ orden.valor_final }}</strong></span>
+        <span>Valor a pagar el paciente: <strong> $ {{ orden.valor_final|floatformat }}</strong></span>
+        <div>Elaborado por: <strong>{{ orden.elaborado_por.get_full_name }}</strong></div>
         <div class="info-consulta-web">
             Si desea consultar por internet sus exámenes:<br/>
-            Diríjase a <strong>COLLAZOSLABORATORIO.COM</strong> y en <strong>RESULTADOS</strong>, digíte su número de documento y utilice su código de
+            Diríjase a <strong>COLLAZOSLABORATORIO.COM</strong> y en <strong>RESULTADOS</strong>, digíte su número de
+            documento y utilice su código de
             consulta de la orden <strong>{{ orden.codigo_consulta_web }}</strong>
         </div>
     </div>

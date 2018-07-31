@@ -3,6 +3,8 @@ import React from 'react';
 const Firma = (props) => {
     const {
         mi_cuenta,
+        cargando,
+        noCargando,
         setSelectItem,
         examen,
         notificarErrorAjaxAction,
@@ -19,22 +21,26 @@ const Firma = (props) => {
         }
     } = props;
     const onClickFirmarComo = () => {
+        cargando();
         firmarComoOrdenExamen(
             examen.id,
             especialista,
             (response) => {
-                setSelectItem(response)
+                setSelectItem(response);
+                noCargando();
             }
             , notificarErrorAjaxAction
         );
     };
 
     const onQuitarFirmaClick = () => {
+        cargando();
         quitarFirmaOrdenExamen(
             examen.id,
             id,
             (response) => {
-                setSelectItem(response)
+                setSelectItem(response);
+                noCargando();
             }
             , notificarErrorAjaxAction
         )
