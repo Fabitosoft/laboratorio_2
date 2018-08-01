@@ -138,7 +138,7 @@ class Tabla extends React.Component {
                         columns: [
                             {
                                 Header: "Examen",
-                                maxWidth: 60,
+                                maxWidth: 150,
                                 Cell: row => {
                                     return (
                                         <Fragment>
@@ -146,19 +146,45 @@ class Tabla extends React.Component {
                                                 row.original.examen_estado === 2 &&
                                                 <Fragment>
                                                     <i
-                                                        className='far fa-file-pdf puntero pr-3'
+                                                        className='far fa-file-pdf puntero pr-2'
                                                         style={{color: 'blue'}}
-                                                        onClick={() => verExamen(row.original.id)}
+                                                        onClick={() => verExamen(row.original.id, true, 0)}
+                                                    >
+                                                    </i>
+                                                    <i
+                                                        className='far fa-print puntero pr-2'
+                                                        style={{color: 'blue'}}
+                                                        onClick={() => verExamen(row.original.id, true, 1)}
+                                                    >
+                                                    </i>
+                                                    <i
+                                                        className='far fa-download puntero pr-2'
+                                                        style={{color: 'blue'}}
+                                                        onClick={() => verExamen(row.original.id, true, 2)}
                                                     >
                                                     </i>
                                                     {
                                                         permisos.imprimir_sin_logo &&
-                                                        <i
-                                                            className='far fa-file-pdf puntero'
-                                                            style={{color: 'green'}}
-                                                            onClick={() => verExamen(row.original.id, false)}
-                                                        >
-                                                        </i>
+                                                        <Fragment>
+                                                            <i
+                                                                className='far fa-file-pdf puntero pr-2'
+                                                                style={{color: 'green'}}
+                                                                onClick={() => verExamen(row.original.id, false, 0)}
+                                                            >
+                                                            </i>
+                                                            <i
+                                                                className='far fa-print puntero pr-2'
+                                                                style={{color: 'green'}}
+                                                                onClick={() => verExamen(row.original.id, false, 1)}
+                                                            >
+                                                            </i>
+                                                            <i
+                                                                className='far fa-download puntero pr-2'
+                                                                style={{color: 'green'}}
+                                                                onClick={() => verExamen(row.original.id, false, 2)}
+                                                            >
+                                                            </i>
+                                                        </Fragment>
                                                     }
                                                 </Fragment>
                                             }

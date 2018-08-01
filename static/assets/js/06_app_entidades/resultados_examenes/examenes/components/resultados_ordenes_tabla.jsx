@@ -94,25 +94,47 @@ class Tabla extends React.Component {
                             {
                                 Header: "Orden",
                                 accessor: "id",
-                                maxWidth: 60,
+                                maxWidth: 150,
                                 Cell: row => {
                                     return (
                                         <Fragment>
                                             {
                                                 row.original.estado === 1 &&
                                                 <Fragment>
-                                                    <i className='far fa-file-pdf puntero pr-3'
+                                                    <i className='far fa-file-pdf puntero pr-2'
                                                        style={{color: 'blue'}}
-                                                       onClick={() => verOrden(row.value)}
+                                                       onClick={() => verOrden(row.value, true, 0)}
+                                                    >
+                                                    </i>
+                                                    <i className='far fa-print puntero pr-2'
+                                                       style={{color: 'blue'}}
+                                                       onClick={() => verOrden(row.value, true, 1)}
+                                                    >
+                                                    </i>
+                                                    <i className='far fa-download puntero pr-2'
+                                                       style={{color: 'blue'}}
+                                                       onClick={() => verOrden(row.value, true, 2)}
                                                     >
                                                     </i>
                                                     {
                                                         permisos.imprimir_sin_logo &&
-                                                        <i className='far fa-file-pdf puntero'
-                                                           style={{color: 'green'}}
-                                                           onClick={() => verOrden(row.value, false)}
-                                                        >
-                                                        </i>
+                                                        <Fragment>
+                                                            <i className='far fa-file-pdf puntero pr-2'
+                                                               style={{color: 'green'}}
+                                                               onClick={() => verOrden(row.value, false, 0)}
+                                                            >
+                                                            </i>
+                                                            <i className='far fa-print puntero pr-2'
+                                                               style={{color: 'green'}}
+                                                               onClick={() => verOrden(row.value, false, 1)}
+                                                            >
+                                                            </i>
+                                                            <i className='far fa-download puntero pr-2'
+                                                               style={{color: 'green'}}
+                                                               onClick={() => verOrden(row.value, false, 2)}
+                                                            >
+                                                            </i>
+                                                        </Fragment>
                                                     }
                                                 </Fragment>
                                             }

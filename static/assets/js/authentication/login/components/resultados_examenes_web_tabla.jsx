@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FlatIconModal} from '../../../00_utilities/components/ui/icon/iconos_base';
 import {fechaFormatoUno} from "../../../00_utilities/common";
+import PrinJs from "print-js";
 
 const style = {
     table: {
@@ -23,7 +24,7 @@ const style = {
 };
 
 class TablaResultadoConsultaWeb extends Component {
-    verOrden(orden_id) {
+    verOrden(orden_id, nro_orden, tipo) {
         const {
             cargando,
             noCargando,
@@ -32,10 +33,26 @@ class TablaResultadoConsultaWeb extends Component {
             identificacion,
             codigo_consulta,
         } = this.props;
+        const nombre_archivo = _.snakeCase(_.deburr(`${nro_orden}-Resultados`));
         cargando();
         const success_callback = (response) => {
-            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            window.open(url, "_blank");
+            const file = new Blob([response], {type: 'application/pdf'});
+            const url = window.URL.createObjectURL(file);
+            switch (tipo) {
+                case 0:
+                    window.open(url, "_blank");
+                    break;
+                case 1:
+                    PrinJs(url);
+                    break;
+                case 2:
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', nombre_archivo);
+                    document.body.appendChild(link);
+                    link.click();
+                    break;
+            }
             noCargando();
         };
 
@@ -49,7 +66,7 @@ class TablaResultadoConsultaWeb extends Component {
             })
     }
 
-    AbrirExamen(examen_id) {
+    AbrirExamen(examen_id, tipo) {
         const {
             cargando,
             noCargando,
@@ -57,11 +74,29 @@ class TablaResultadoConsultaWeb extends Component {
             printOrdenExamen_cliente,
             identificacion,
             codigo_consulta,
+            ordenes_examenes,
         } = this.props;
+        const orden_examen = ordenes_examenes[examen_id];
+        const nombre_archivo = _.snakeCase(_.deburr(`${orden_examen.nro_examen}-${orden_examen.examen_nombre.substring(0, 20)}`));
         cargando();
         const success_callback = (response) => {
-            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            window.open(url, "_blank");
+            const file = new Blob([response], {type: 'application/pdf'});
+            const url = window.URL.createObjectURL(file);
+            switch (tipo) {
+                case 0:
+                    window.open(url, "_blank");
+                    break;
+                case 1:
+                    PrinJs(url);
+                    break;
+                case 2:
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', nombre_archivo);
+                    document.body.appendChild(link);
+                    link.click();
+                    break;
+            }
             noCargando();
         };
         printOrdenExamen_cliente(
@@ -118,11 +153,27 @@ class TablaResultadoConsultaWeb extends Component {
                     <div className="col-md-6">
                         <strong>Fecha Ingreso: </strong>{fechaFormatoUno(created)}
                     </div>
-                    <div className="col-12 text-right">
-                        <i className='far fa-file-pdf fa-2x puntero' onClick={() => this.verOrden(orden)}>
-                        </i> Imprima aquí en un solo archivo.<br/>
-                        <span
-                            style={{color: 'red'}}>{porcentaje_completado !== 1 && `Aún faltan ${examenes_totales - examenes_completados} examenes por completarse`}</span>
+                    <div className="col-12">
+                        <div className="row p-4">
+                            <div className="col-12">
+                                <h5>Consolidado</h5>
+                            </div>
+                            <div className="col-12">
+                                <i className='far fa-file-pdf fa-2x puntero'
+                                   onClick={() => this.verOrden(orden, nro_orden, 0)}>
+                                </i>
+                                <i className='far fa-print fa-2x puntero pl-3'
+                                   onClick={() => this.verOrden(orden, nro_orden, 1)}>
+                                </i>
+                                <i className='far fa-download fa-2x puntero pl-3'
+                                   onClick={() => this.verOrden(orden, nro_orden, 2)}>
+                                </i>
+                            </div>
+                            <div className="col-12">
+                                <span
+                                    style={{color: 'red'}}>{porcentaje_completado !== 1 && `Aún faltan ${examenes_totales - examenes_completados} examenes por completarse`}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -151,10 +202,20 @@ class TablaResultadoConsultaWeb extends Component {
                                             {
                                                 e.no_email ?
                                                     <span>Reclamar Personalmente</span> :
-                                                    <i className='far fa-file-pdf puntero fa-2x'
-                                                       onClick={() => this.AbrirExamen(e.id, "_blank")}
-                                                    >
-                                                    </i>
+                                                    <div>
+                                                        <i className='far fa-file-pdf puntero fa-lg'
+                                                           onClick={() => this.AbrirExamen(e.id, 0)}
+                                                        >
+                                                        </i>
+                                                        <i className='far fa-print puntero pl-2 fa-lg'
+                                                           onClick={() => this.AbrirExamen(e.id, 1)}
+                                                        >
+                                                        </i>
+                                                        <i className='far fa-download puntero pl-2 fa-lg'
+                                                           onClick={() => this.AbrirExamen(e.id, 2)}
+                                                        >
+                                                        </i>
+                                                    </div>
                                             }
                                         </td> :
                                         <td></td>

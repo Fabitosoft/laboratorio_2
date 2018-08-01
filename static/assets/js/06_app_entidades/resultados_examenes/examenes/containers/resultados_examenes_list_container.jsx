@@ -10,6 +10,7 @@ import Tab from '@material-ui/core/Tab';
 import {
     ORDENES_EXAMENES as bloque_1_permisos
 } from "../../../../00_utilities/permisos/types";
+import PrinJs from "print-js";
 
 
 class List extends Component {
@@ -29,18 +30,34 @@ class List extends Component {
         });
     };
 
-    verOrden(orden_id, con_logo = true) {
+    verOrden(orden_id, con_logo = true, tipo) {
         const {
             cargando,
             noCargando,
             notificarErrorAjaxAction,
             printOrdenesExamenes_en_orden,
-            printOrdenesExamenes_sin_logo_en_orden
+            printOrdenesExamenes_sin_logo_en_orden,
+            ordenes
         } = this.props;
         cargando();
+        const nombre_archivo = _.snakeCase(_.deburr(`${ordenes[orden_id].nro_orden}-Resultados`));
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            window.open(url, "_blank");
+            switch (tipo) {
+                case 0:
+                    window.open(url, "_blank");
+                    break;
+                case 1:
+                    PrinJs(url);
+                    break;
+                case 2:
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', nombre_archivo);
+                    document.body.appendChild(link);
+                    link.click();
+                    break;
+            }
             noCargando();
         };
         if (con_logo) {
@@ -56,18 +73,37 @@ class List extends Component {
         }
     }
 
-    verExamen(examen_id, con_logo = true) {
+
+    verExamen(examen_id, con_logo = true, tipo) {
         const {
             cargando,
             noCargando,
             notificarErrorAjaxAction,
             printOrdenExamen,
-            printOrdenExamen_sin_logo
+            printOrdenExamen_sin_logo,
+            ordenes_examenes,
         } = this.props;
         cargando();
+        const orden_examen = ordenes_examenes[examen_id];
+        const nombre_archivo = _.snakeCase(_.deburr(`${orden_examen.nro_examen}-${orden_examen.examen_nombre.substring(0, 20)}`));
         const success_callback = (response) => {
-            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            window.open(url, "_blank");
+            const file = new Blob([response], {type: 'application/pdf'});
+            const url = window.URL.createObjectURL(file);
+            switch (tipo) {
+                case 0:
+                    window.open(url, "_blank");
+                    break;
+                case 1:
+                    PrinJs(url);
+                    break;
+                case 2:
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', nombre_archivo);
+                    document.body.appendChild(link);
+                    link.click();
+                    break;
+            }
             noCargando();
         };
         if (con_logo) {
