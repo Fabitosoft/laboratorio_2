@@ -73,6 +73,11 @@ class FormExamenEstandar extends Component {
                 modelStyle={modelStyle}
             >
                 <InfoExamenForm examen={item_seleccionado}/>
+                <MyTextFieldSimple
+                    className="col-12 col-md-2"
+                    nombre='Número Interno'
+                    name='nro_examen_especial'
+                />
                 <div className="col-12">
                     <div className="row">
                         <div className="col-12">
@@ -218,25 +223,25 @@ class FormExamenEstandar extends Component {
                                                                 <MyCheckboxSimple
                                                                     name='B1a_i'
                                                                     nombre='Inflamación'
-                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    className="col-12 col-md-4 col-lg-3"
                                                                     disabled={disabled}
                                                                 />
                                                                 <MyCheckboxSimple
                                                                     name='B1a_ii'
                                                                     nombre='Irradiación'
-                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    className="col-12 col-md-4 col-lg-3"
                                                                     disabled={disabled}
                                                                 />
                                                                 <MyCheckboxSimple
                                                                     name='B1a_iii'
                                                                     nombre='Dispositivo Intrauterino'
-                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    className="col-12 col-md-4 col-lg-3"
                                                                     disabled={disabled}
                                                                 />
                                                                 <MyCheckboxSimple
                                                                     name='B1a_iv'
                                                                     nombre='Reparación'
-                                                                    className="col-12 col-md-6 col-lg-4"
+                                                                    className="col-12 col-md-4 col-lg-3"
                                                                     disabled={disabled}
                                                                 />
                                                             </div>
@@ -245,19 +250,19 @@ class FormExamenEstandar extends Component {
                                                     <MyCheckboxSimple
                                                         name='B1b'
                                                         nombre='Con Cambios por Atrofia'
-                                                        className="col-12"
+                                                        className="col-12 col-md-6"
                                                         disabled={disabled}
                                                     />
                                                     <MyCheckboxSimple
                                                         name='B1c'
                                                         nombre='Con Células glandulares benignas post-histerectomía'
-                                                        className="col-12"
+                                                        className="col-12 col-md-6"
                                                         disabled={disabled}
                                                     />
                                                     <MyCheckboxSimple
                                                         name='B1d'
                                                         nombre='Con presencia de células endometriales fuera de fase'
-                                                        className="col-12"
+                                                        className="col-12 col-md-6"
                                                         disabled={disabled}
                                                     />
                                                 </div>
@@ -310,19 +315,6 @@ class FormExamenEstandar extends Component {
                                             </div>
                                         }
                                         <MyCheckboxSimple
-                                            name='B4'
-                                            nombre='Lesión escamosa epitelial de alto grado'
-                                            className="col-12"
-                                            disabled={disabled}
-                                        />
-                                        <MyCheckboxSimple
-                                            name='B5'
-                                            nombre='Carcinoma escamocelular'
-                                            className="col-12"
-                                            disabled={disabled}
-                                        />
-
-                                        <MyCheckboxSimple
                                             name='B6'
                                             nombre='Anormalidades en'
                                             className="col-12"
@@ -361,12 +353,6 @@ class FormExamenEstandar extends Component {
                                             </div>
                                         }
                                         <MyCheckboxSimple
-                                            name='B7'
-                                            nombre='Adenocarcinoma endocervical in situ'
-                                            className="col-12"
-                                            disabled={disabled}
-                                        />
-                                        <MyCheckboxSimple
                                             name='B8'
                                             nombre='Adenocarcinoma'
                                             className="col-12"
@@ -404,9 +390,27 @@ class FormExamenEstandar extends Component {
                                             </div>
                                         }
                                         <MyCheckboxSimple
+                                            name='B4'
+                                            nombre='Lesión escamosa epitelial de alto grado'
+                                            className="col-12 col-md-6"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='B5'
+                                            nombre='Carcinoma escamocelular'
+                                            className="col-12 col-md-6"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
+                                            name='B7'
+                                            nombre='Adenocarcinoma endocervical in situ'
+                                            className="col-12 col-md-6"
+                                            disabled={disabled}
+                                        />
+                                        <MyCheckboxSimple
                                             name='B9'
                                             nombre='Otra Neoplastia Maligna'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                     </div>
@@ -420,43 +424,43 @@ class FormExamenEstandar extends Component {
                                         <MyCheckboxSimple
                                             name='C1'
                                             nombre='No se observan microorganismos patógenos'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C2'
                                             nombre='Bacterias morfológicamente consistentes con actinomyces'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C3'
                                             nombre='Desviación de la flora sugestiva de vaginosis bacteriana'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C4'
                                             nombre='Trichonomas vaginalis'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C5'
                                             nombre='Hongos mofológicamente compatibles con Candida Sp'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C6'
                                             nombre='Cambios citopáticos asociados a Herpes'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                         <MyCheckboxSimple
                                             name='C7'
                                             nombre='No se observan microorganismos'
-                                            className="col-12"
+                                            className="col-12 col-md-6"
                                             disabled={disabled}
                                         />
                                     </div>

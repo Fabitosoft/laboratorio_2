@@ -294,7 +294,6 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                     ultimo_indice_examen = ultimo_indice_examen + 1
                     examen.nro_examen = ultimo_indice_examen
                     examen.save()
-                    examen.generar_nro_examen_especial()
 
 
 class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
@@ -417,12 +416,21 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
+        nro_examen_especial = self.request._full_data.get('nro_examen_especial', None)
         orden_examen = serializer.save(creado_por=self.request.user)
         if orden_examen.especial:
             if orden_examen.nro_plantilla == 1:
-                Biopsia.objects.create(orden_examen=orden_examen)
+                if not Biopsia.objects.filter(nro_examen_especial=nro_examen_especial).exists():
+                    Biopsia.objects.create(orden_examen=orden_examen, nro_examen_especial=nro_examen_especial)
+                else:
+                    raise serializers.ValidationError(
+                        {'error': 'Ya existe una Biopsia con el número de examen %s' % (nro_examen_especial)})
             if orden_examen.nro_plantilla == 2:
-                Citologia.objects.create(orden_examen=orden_examen)
+                if not Citologia.objects.filter(nro_examen_especial=nro_examen_especial).exists():
+                    Citologia.objects.create(orden_examen=orden_examen, nro_examen_especial=nro_examen_especial)
+                else:
+                    raise serializers.ValidationError(
+                        {'error': 'Ya existe una Citologia con el número de examen %s' % (nro_examen_especial)})
 
     @detail_route(methods=['post'])
     def verificar_examen(self, request, pk=None):

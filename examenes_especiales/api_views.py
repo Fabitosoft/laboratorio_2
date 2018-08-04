@@ -1,11 +1,11 @@
 from rest_framework import viewsets, permissions
 
-from examenes_especiales.mixins import ExamenesEspecialesViewMixin
 from .api_serializers import CitologiaSerializer, BiopsiaSerializer
 from .models import Citologia, Biopsia
+from ordenes.mixins import OrdenesExamenesPDFViewMixin
 
 
-class BiopsiaViewSet(ExamenesEspecialesViewMixin, viewsets.ModelViewSet):
+class BiopsiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
     queryset = Biopsia.objects.select_related(
         'orden_examen',
         'orden_examen__examen',
@@ -16,17 +16,15 @@ class BiopsiaViewSet(ExamenesEspecialesViewMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer):
         super().perform_update(serializer)
         biopsia = self.get_object()
-        orden_examen = biopsia.orden_examen
-        orden_examen.modificado_por = self.request.user
-        if biopsia.descripcion_macroscopica and biopsia.diagnostico:
-            orden_examen.resultado = "Con Resultado de Biopsia"
-        else:
-            orden_examen.resultado = None
-        orden_examen.save()
-        #self.generar_pdf(self.request, orden_examen, biopsia.get_numero_examen())
+        if biopsia.orden_examen.examen_estado == 2:
+            self.generar_pdf_especiales(self.request, biopsia.orden_examen, biopsia.nro_examen_especial)
+        elif biopsia.orden_examen.examen_estado in [0, 1]:
+            orden_examen = biopsia.orden_examen
+            orden_examen.modificado_por = self.request.user
+            orden_examen.save()
 
 
-class CitologiaViewSet(ExamenesEspecialesViewMixin, viewsets.ModelViewSet):
+class CitologiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
     queryset = Citologia.objects.select_related(
         'orden_examen',
         'orden_examen__examen',
@@ -105,29 +103,17 @@ class CitologiaViewSet(ExamenesEspecialesViewMixin, viewsets.ModelViewSet):
         super().perform_update(serializer)
         citologia = self.get_object()
         examen = citologia.orden_examen
-        campos = Citologia._meta.get_fields()
-        respondidas_booleanas = 0
-        self.clear_A1_1(citologia)
-        self.clear_A1(citologia)
-        self.clear_A3(citologia)
-
-        self.clear_B1a(citologia)
-        self.clear_B1(citologia)
-
-        self.clear_B2(citologia)
-        self.clear_B3(citologia)
-
-        self.clear_B6(citologia)
-        self.clear_B6a(citologia)
-
-        self.clear_B8(citologia)
-
-        for campo in campos:
-            es_booleano = Citologia._meta.get_field(campo.name).get_internal_type() == 'BooleanField'
-            if es_booleano:
-                if hasattr(citologia, campo.name):
-                    valor = getattr(citologia, campo.name)
-                    if valor:
-                        respondidas_booleanas += 1
-        examen.save()
-        #self.generar_pdf(self.request, examen, citologia.get_numero_examen())
+        if examen.examen_estado == 2:
+            self.generar_pdf_especiales(self.request, examen, citologia.nro_examen_especial)
+        elif citologia.orden_examen.examen_estado in [0, 1]:
+            self.clear_A1_1(citologia)
+            self.clear_A1(citologia)
+            self.clear_A3(citologia)
+            self.clear_B1a(citologia)
+            self.clear_B1(citologia)
+            self.clear_B2(citologia)
+            self.clear_B3(citologia)
+            self.clear_B6(citologia)
+            self.clear_B6a(citologia)
+            self.clear_B8(citologia)
+            examen.save()

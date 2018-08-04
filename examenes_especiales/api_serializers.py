@@ -13,6 +13,7 @@ class BiopsiaSerializer(serializers.ModelSerializer):
             'descripcion_macroscopica',
             'descripcion_microscopica',
             'diagnostico',
+            'nro_examen_especial',
         ]
 
 
@@ -23,6 +24,7 @@ class CitologiaSerializer(serializers.ModelSerializer):
             'id',
             'observaciones',
             'orden_examen',
+            'nro_examen_especial',
             'A1_1',
             'A1_1a',
             'A1_1b',

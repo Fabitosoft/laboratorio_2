@@ -137,11 +137,6 @@ class OrdenExamen(TimeStampedModel):
         ]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        # if self.examen_estado in [0, 1]:
-        #     if self.resultado:
-        #         self.examen_estado = 1
-        #     else:
-        #         self.examen_estado = 0
         super().save(force_insert, force_update, using, update_fields)
         self.orden.calcular_totales()
 
@@ -167,11 +162,6 @@ class OrdenExamen(TimeStampedModel):
         if hasattr(self, 'citologia'):
             tipo = self.citologia
         return tipo
-
-    def generar_nro_examen_especial(self):
-        tipo_examen = self.get_tipo_examen_especial()
-        if tipo_examen:
-            tipo_examen.generar_numero()
 
     def get_numero_examen_especial(self):
         tipo_examen = self.get_tipo_examen_especial()

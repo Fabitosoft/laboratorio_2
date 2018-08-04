@@ -7,26 +7,21 @@ from ordenes.models import OrdenExamen
 
 
 class ExamenEspecial(ExamenesEspecialesMixin, TimeStampedModel):
-    nro_examen_especial = models.PositiveIntegerField(null=True, blank=True)
+    nro_examen_especial = models.PositiveIntegerField(null=True, blank=True, unique=True)
 
     class Meta:
         abstract = True
 
 
 class Biopsia(ExamenEspecial):
-    nomenclatura = 'BIO'
     orden_examen = models.OneToOneField(OrdenExamen, on_delete=models.CASCADE, related_name='biopsia')
     observaciones = models.TextField(null=True, blank=True)
     descripcion_macroscopica = models.TextField(null=True, blank=True, verbose_name='Descripción Macroscópica')
     descripcion_microscopica = models.TextField(null=True, blank=True, verbose_name='Descripción Microscópica')
     diagnostico = models.TextField(null=True, blank=True, verbose_name='Diagnóstico')
 
-    def get_modelo_queryset(self):
-        return Biopsia.objects.all()
-
 
 class Citologia(ExamenEspecial):
-    nomenclatura = 'CIT'
     # PLANTILLA 2
     orden_examen = models.OneToOneField(OrdenExamen, on_delete=models.CASCADE, related_name='citologia')
     observaciones = models.TextField(null=True, blank=True)
@@ -92,6 +87,3 @@ class Citologia(ExamenEspecial):
     C5 = models.BooleanField(verbose_name='Hongos mofológicamente compatibles con Candida Sp', default=0)
     C6 = models.BooleanField(verbose_name='Cambios citopáticos asociados a Herpes', default=0)
     C7 = models.BooleanField(verbose_name='No se observan microorganismos', default=0)
-
-    def get_modelo_queryset(self):
-        return Citologia.objects.all()

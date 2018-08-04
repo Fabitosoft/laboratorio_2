@@ -102,9 +102,9 @@ class Detail extends Component {
             orden: object.id,
             descuento: 0,
             valor_descuento: 0,
+            nro_examen_especial: parseInt(examen.nro_examen_especial),
             valor_final: parseFloat(examen.valor_examen)
         };
-
         const cargarOrden = () => this.props.fetchOrden(
             object.id,
             () => {
@@ -117,7 +117,10 @@ class Detail extends Component {
         this.props.createOrdenExamen(
             examen_orden,
             cargarOrden,
-            notificarErrorAjaxAction
+            (response) => {
+                noCargando();
+                notificarErrorAjaxAction(response);
+            }
         );
     }
 
@@ -162,7 +165,7 @@ class Detail extends Component {
             //
             // document.body.appendChild(link);
             // link.click();
-            PrinJs(url)
+            PrinJs(url);
             //window.open(url, "_blank");
             notificarAction(`Se ha enviado correctamente los resultados`);
             noCargando();

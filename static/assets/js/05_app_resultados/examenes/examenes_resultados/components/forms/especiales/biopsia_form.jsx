@@ -51,6 +51,11 @@ class FormExamenEstandar extends Component {
                 <div className="col-12">
                     <div className="row">
                         <MyTextFieldSimple
+                            className="col-12 col-md-2"
+                            nombre='Número Interno'
+                            name='nro_examen_especial'
+                        />
+                        <MyTextFieldSimple
                             className="col-12"
                             nombre='Descripción Macroscopica'
                             name='descripcion_macroscopica'
