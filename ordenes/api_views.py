@@ -262,16 +262,16 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         if orden.estado == 1:
             now = datetime.datetime.now()
             if not orden.nro_orden:
-                base_nro = (abs(int(now.year)) % 100) * 10000
+                # base_nro = (abs(int(now.year)) % 100) * 10000
                 qs = Orden.objects.filter(
                     nro_orden__isnull=False,
-                    nro_orden__gte=base_nro
+                    # nro_orden__gte=base_nro
                 ).aggregate(
                     ultimo_indice=Max('nro_orden')
                 )
                 ultimo_indice = qs['ultimo_indice']
                 if ultimo_indice is None:
-                    orden.nro_orden = base_nro
+                    orden.nro_orden = 107370
                 else:
                     orden.nro_orden = int(ultimo_indice) + 1
             if not orden.codigo_consulta_web:
