@@ -10,6 +10,7 @@ class BiopsiaSerializer(serializers.ModelSerializer):
             'id',
             'observaciones',
             'orden_examen',
+            'nombre',
             'descripcion_macroscopica',
             'descripcion_microscopica',
             'diagnostico',

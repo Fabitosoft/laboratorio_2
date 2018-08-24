@@ -51,6 +51,11 @@ class FormExamenEstandar extends Component {
                 <div className="col-12">
                     <div className="row">
                         <MyTextFieldSimple
+                            className="col-12"
+                            nombre='Nombre Informe'
+                            name='nombre'
+                        />
+                        <MyTextFieldSimple
                             className="col-12 col-md-2"
                             nombre='Número Interno'
                             name='nro_examen_especial'
@@ -101,8 +106,12 @@ class FormExamenEstandar extends Component {
 
 function mapPropsToState(state, ownProps) {
     const {biopsia} = ownProps;
+    const biopsia_initial_values = biopsia && biopsia.nombre ? biopsia : {
+        ...biopsia,
+        nombre: 'Informe Patología'
+    };
     return {
-        initialValues: biopsia
+        initialValues: biopsia_initial_values
     }
 }
 

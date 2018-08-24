@@ -1,7 +1,7 @@
-{% load static l10n %}
+{% load number_to_word static l10n %}
 <style>
     div {
-        font-family: 'Arial';
+        font-family: 'Calibri';
         font-size: 10px;
     }
 
@@ -12,12 +12,19 @@
     }
 
     .datos .td1 {
-        width: 4cm;
+        width: 2.5cm;
     }
 
     .datos .td2 {
-        width: 6cm;
-        padding-left: 2rem;
+        width: 3cm;
+    }
+
+    .datos .td3 {
+        width: 2.5cm;
+    }
+
+    .datos .td4 {
+        width: 4cm;
     }
 
     .recibo {
@@ -70,38 +77,51 @@
                 <table>
                     <tr>
                         {% localize off %}
-                            <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}</td>
-                            <td class="td2"></td>
+                            <td class="td1"><strong>Nro. Orden: </strong></td>
+                            <td class="td2">{{ orden.nro_orden }}</td>
+                            <td class="td3"></td>
+                            <td class="td4"></td>
                         {% endlocalize %}
                     </tr>
                     <tr>
-                        <td colspan="2" class="td1"><strong>Paciente: </strong>{{ orden.paciente.full_name|title }}
-                        </td>
+                        <td class="td1"><strong>Paciente: </strong></td>
+                        <td colspan="3" class="td2">{{ orden.paciente.full_name|title }}</td>
                     </tr>
                     <tr>
-                        <td class="td1">
-                            <strong>Identificación: </strong>{{ orden.paciente.tipo_documento|title }}.{{ orden.paciente.nro_identificacion }}
-                        </td>
-                        <td class="td2"><strong>Fecha Ingreso: </strong>{{ orden.created }}</td>
+                        <td class="td1"><strong>
+                            <strong>Identificación: </strong>
+                        </strong></td>
+                        <td class="td2">{{ orden.paciente.tipo_documento|title }}.{{ orden.paciente.nro_identificacion }}</td>
+                        <td class="td3"><strong>Fecha Ingreso:</strong></td>
+                        <td class="td4">{{ orden.created|date:"d-b-Y (H:i)" }}</td>
                     </tr>
                     <tr>
-                        <td class="td1"><strong>Genero: </strong>{{ orden.paciente.get_genero_display }}</td>
-                        <td class="td2"><strong>Fecha Reporte: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}</td>
-                    </tr>
-
-                    <tr>
-                        <td class="td1">
-                            <strong>Edad: </strong>{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
-                        <td class="td2"><strong>Entidad: </strong>{{ orden.entidad.nombre|title }}</td>
+                        <td class="td1"><strong><strong>Genero:</strong> </strong></td>
+                        <td class="td2">{{ orden.paciente.get_genero_display }}</td>
+                        <td class="td3"><strong>Fecha Reporte:</strong></td>
+                        <td class="td4">{% now "d-b-Y (H:i)" %}</td>
                     </tr>
 
                     <tr>
-                        <td class="td1"><strong>Teléfono: </strong>{{ orden.paciente.telefono }}</td>
-                        <td class="td2">{% if orden.medico_remitente %}<strong>Médico Remitente: </strong>
-                            {{ orden.medico_remitente.full_name|title }}{% endif %}</td>
+                        <td class="td1"><strong><strong>Edad:</strong> </strong></td>
+                        <td class="td2">{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
+                        <td class="td3"><strong>Entidad:</strong></td>
+                        <td class="td4">{{ orden.entidad.nombre|title }}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="td1"><strong><strong>Teléfono:</strong> </strong></td>
+                        <td class="td2">{{ orden.paciente.telefono }}</td>
+                        <td class="td3">
+                            {% if orden.medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
+                        </td>
+                        <td class="td4">
+                            {% if orden.medico_remitente %}{{ orden.medico_remitente.full_name|title }}{% endif %}
+                        </td>
                     </tr>
                     <tr>
-                        <td class="td1"><strong>Forma de Pago: </strong>{{ orden.get_tipo_pago_display }}</td>
+                        <td class="td1"><strong><strong>Forma de Pago: </strong> </strong></td>
+                        <td class="td2">{{ orden.get_tipo_pago_display }}</td>
                     </tr>
                 </table>
             </td>
@@ -148,15 +168,18 @@
             </tbody>
             <tfoot>
             <tr>
-                <td><strong>Totales</strong></td>
+                <td><strong>Valor a pagar el paciente</strong></td>
                 <td class="dinero"><strong>$ {{ orden.valor_total|floatformat }}</strong></td>
                 <td class="dinero"><strong> $ {{ orden.valor_descuento|floatformat }}</strong></td>
-                <td class="dinero" style="border-bottom: black double"><strong> $ {{ orden.valor_final|floatformat }}</strong></td>
+                <td class="dinero" style="border-bottom: black double"><strong>
+                    $ {{ orden.valor_final|floatformat }}</strong></td>
             </tr>
             </tfoot>
         </table>
-        <span>Valor a pagar el paciente: <strong> $ {{ orden.valor_final|floatformat }}</strong></span>
-        <div>Elaborado por: <strong>{{ orden.elaborado_por.get_full_name }}</strong></div>
+        <div>
+            {% number_to_word orden.valor_final %}
+        </div>
+        <div><strong>Elaborado por: </strong>{{ orden.elaborado_por.get_full_name }}</div>
         <div class="info-consulta-web">
             Si desea consultar por internet sus exámenes:<br/>
             Diríjase a <strong>COLLAZOSLABORATORIO.COM</strong> y en <strong>RESULTADOS</strong>, digíte su número de

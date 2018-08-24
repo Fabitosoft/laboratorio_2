@@ -15,6 +15,7 @@ class ExamenEspecial(ExamenesEspecialesMixin, TimeStampedModel):
 
 class Biopsia(ExamenEspecial):
     orden_examen = models.OneToOneField(OrdenExamen, on_delete=models.CASCADE, related_name='biopsia')
+    nombre = models.CharField(default='Informe Patología', max_length=300)
     observaciones = models.TextField(null=True, blank=True)
     descripcion_macroscopica = models.TextField(null=True, blank=True, verbose_name='Descripción Macroscópica')
     descripcion_microscopica = models.TextField(null=True, blank=True, verbose_name='Descripción Microscópica')

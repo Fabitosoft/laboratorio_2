@@ -2,7 +2,7 @@
     {% if firma %}
         <img class="firma-imagen" src="{{ firma.especialista.firma.url }}" alt="">
     {% endif %}
-    <div>
+    <div class="especialista-informacion">
         <span class="especialista-nombre">{{ firma.especialista.full_name }}</span><br/>
         <span class="especialista-especialidad"><small>{{ firma.especialista.especialidad.nombre|title }}
             {% if firma.especialista.registro_profesional %}(TP:{{ firma.especialista.registro_profesional }}

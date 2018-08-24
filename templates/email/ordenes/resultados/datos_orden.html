@@ -1,55 +1,78 @@
 {% load l10n %}
 <style>
     .datos-resultados {
+        width: 100%;
+        border-bottom: lightgray 1px solid;
         font-family: 'Arial';
         font-size: 0.7rem;
         margin-left: -1.2cm;
-        margin-top: -0.4cm;
     }
 
     .td1 {
-
+        width: 2.5cm;
     }
 
     .td2 {
-        padding-left: 2rem;
+        width: 3cm;
+    }
+
+    .td3 {
+        width: 2.5cm;
+    }
+
+    .td4 {
+        width: 4cm;
     }
 </style>
 <div class="datos-resultados">
     <table>
-        <tr style="height: 1cm">
+        <tr style="height: 0.5cm">
             <td></td>
             <td></td>
         </tr>
         {% localize off %}
             <tr>
-                <td class="td1"><strong>Nro. Orden: </strong>{{ orden.nro_orden }}{% if nro_examen_especial %}-{{ nro_examen_especial }}{% endif %}</td>
-                <td class="td2"></td>
+                <td class="td1"><strong>Nro. Orden: </strong></td>
+                <td class="td2">
+                    {{ orden.nro_orden }}{% if nro_examen_especial %}-{{ nro_examen_especial }}{% endif %}
+                </td>
+                <td class="td3"></td>
+                <td class="td4"></td>
             </tr>
         {% endlocalize %}
         <tr>
-            <td class="td1"><strong>Paciente: </strong>{{ paciente.full_name|title }}</td>
-            <td class="td2"></td>
+            <td class="td1"><strong>Paciente: </strong></td>
+            <td colspan="3" class="td2">{{ orden.paciente.full_name|title }}</td>
         </tr>
         <tr>
-            <td class="td1">
-                <strong>Identificación: </strong>{{ paciente.tipo_documento|title }}. {{ paciente.nro_identificacion }}
+            <td class="td1"><strong>
+                <strong>Identificación: </strong>
+            </strong></td>
+            <td class="td2">{{ paciente.tipo_documento|title }}. {{ paciente.nro_identificacion }}</td>
+            <td class="td3"><strong>Fecha Ingreso:</strong></td>
+            <td class="td4">{{ orden.created|date:"d-b-Y (H:i)" }}</td>
+        </tr>
+        <tr>
+            <td class="td1"><strong><strong>Genero:</strong> </strong></td>
+            <td class="td2">{{ paciente.get_genero_display }}</td>
+            <td class="td3"><strong>Fecha Reporte:</strong></td>
+            <td class="td4">{% now "d-b-Y (H:i)" %}</td>
+        </tr>
+        <tr>
+            <td class="td1"><strong><strong>Edad:</strong> </strong></td>
+            <td class="td2">{{ paciente.fecha_nacimiento|timesince:orden.created }}</td>
+            <td class="td3"><strong>Entidad:</strong></td>
+            <td class="td4">{{ entidad.nombre|title }}</td>
+        </tr>
+        <tr>
+            <td class="td1"><strong><strong>Teléfono:</strong> </strong></td>
+            <td class="td2">{{ paciente.telefono }}</td>
+            <td class="td3">
+                {% if medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
             </td>
-            <td class="td2"><strong>Fecha Ingreso: </strong>{{ orden.created }}</td>
-
-        </tr>
-        <tr>
-            <td class="td1"><strong>Genero: </strong>{{ paciente.get_genero_display }}</td>
-            <td class="td2"><strong>Fecha Reporte: </strong>{% now "d \d\e F \d\e Y \a\ \l\a\s H:i" %}</td>
-        </tr>
-        <tr>
-            <td class="td1"><strong>Edad: </strong>{{ paciente.fecha_nacimiento|timesince:orden.created }}</td>
-            <td class="td2"><strong>Entidad: </strong>{{ entidad.nombre|title }}</td>
-        </tr>
-        <tr>
-            <td class="td1"><strong>Teléfono: </strong>{{ paciente.telefono }}</td>
-            <td class="td2">{% if medico_remitente %}<strong>Médico Remitente: </strong>
-                {{ medico_remitente.full_name|title }}{% endif %}</td>
+            <td class="td4">
+                {% if orden.medico_remitente %}{{ medico_remitente.full_name|title }}{% endif %}
+            </td>
         </tr>
     </table>
 </div>

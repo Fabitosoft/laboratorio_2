@@ -142,6 +142,6 @@
         {% include 'email/ordenes/resultados/especiales/1_plantilla_biopsia/1_platinlla_biopsia.html' with biopsia=examen.biopsia examen=examen %}
     {% endif %}
     {% if examen.examen.nro_plantilla == 2 %}
-        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/2_platinlla_citologia.html' with citologia=examen.citologia examen=examen %}
+        {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/2_platinlla_citologia_cervical.html' with citologia=examen.citologia examen=examen %}
     {% endif %}
 </div>
