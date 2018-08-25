@@ -36,6 +36,7 @@ class Orden(TimeStampedModel):
     entidad = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='mis_ordenes')
     nombre_contacto_alternativo = models.CharField(max_length=200, verbose_name='Nombre Contacto', null=True,
                                                    blank=True)
+    fecha_ingreso = models.DateTimeField(null=True)
     numero_contacto_alternativo = models.CharField(max_length=100, verbose_name='Número Contacto', null=True,
                                                    blank=True)
     direccion_contacto_alternativo = models.CharField(max_length=200, verbose_name='Dirección Contacto', null=True,
@@ -173,7 +174,6 @@ class OrdenExamen(TimeStampedModel):
 class OrdenExamenFirmas(TimeStampedModel):
     orden_examen = models.ForeignKey(OrdenExamen, related_name='mis_firmas', on_delete=models.CASCADE)
     especialista = models.ForeignKey(Especialista, related_name='mis_examenes_firmados', on_delete=models.PROTECT)
-
 
 # class HistorialOrdenExamen(TimeStampedModel):
 #     tipo_bitacora = models.CharField(max_length=100)

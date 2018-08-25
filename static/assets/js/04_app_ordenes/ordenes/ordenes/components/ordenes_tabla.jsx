@@ -50,9 +50,9 @@ class Tabla extends React.Component {
                             },
                             {
                                 Header: "Fecha",
-                                accessor: "created",
                                 maxWidth: 150,
-                                Cell: row => <div>{fechaFormatoUno(row.value)}</div>
+                                Cell: row =>
+                                    <div>{row.original.fecha_ingreso ? fechaFormatoUno(row.original.fecha_ingreso) : fechaFormatoUno(row.original.created)}</div>
                             },
                             {
                                 Header: "Médico Remitente",
@@ -99,7 +99,7 @@ class Tabla extends React.Component {
                                                 onDelete(row.original)
                                             }}
                                             element_name={row.original.id}
-                                            element_type={singular_name}
+                                            element_type='Orden'
                                         />
                                     }
                                 </div>

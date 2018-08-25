@@ -167,6 +167,7 @@ class OrdenSerializer(serializers.ModelSerializer):
             'entidad_nombre',
             'medico_remitente_nombre',
             'medico_remitente',
+            'fecha_ingreso',
             'tipo_pago',
             'nro_orden',
             'entidad',
@@ -181,4 +182,5 @@ class OrdenSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'created': {'read_only': True},
+            'fecha_ingreso': {'allow_null': True},
         }

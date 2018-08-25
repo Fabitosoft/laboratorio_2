@@ -24,6 +24,11 @@
                                 <div class="tecnica">
                                     <strong>Técnica: </strong>{{ orden_examen.tecnica|title }}
                                 </div>
+                                <div class="fecha_validacion">
+                                    <strong>
+                                        Fecha Validación:
+                                    </strong>{{ examen.orden_examen.fecha_verificado|date:"d-b-Y (h:i) a" }}
+                                </div>
                             {% endif %}
                             {% if orden_examen.observaciones %}
                                 <div class="observaciones">

@@ -20,7 +20,7 @@
     }
 
     .datos .td3 {
-        width: 2.5cm;
+        width: 3cm;
     }
 
     .datos .td4 {
@@ -78,7 +78,7 @@
                     <tr>
                         {% localize off %}
                             <td class="td1"><strong>Nro. Orden: </strong></td>
-                            <td class="td2">{{ orden.nro_orden }}</td>
+                            <td class="td2" style="color: red;">{{ orden.nro_orden }}</td>
                             <td class="td3"></td>
                             <td class="td4"></td>
                         {% endlocalize %}
@@ -98,7 +98,7 @@
                     <tr>
                         <td class="td1"><strong><strong>Genero:</strong> </strong></td>
                         <td class="td2">{{ orden.paciente.get_genero_display }}</td>
-                        <td class="td3"><strong>Fecha Reporte:</strong></td>
+                        <td class="td3"><strong>Fecha Impresión:</strong></td>
                         <td class="td4">{% now "d-b-Y (H:i)" %}</td>
                     </tr>
 
@@ -106,7 +106,7 @@
                         <td class="td1"><strong><strong>Edad:</strong> </strong></td>
                         <td class="td2">{{ orden.paciente.fecha_nacimiento|timesince:orden.created }}</td>
                         <td class="td3"><strong>Entidad:</strong></td>
-                        <td class="td4">{{ orden.entidad.nombre|title }}</td>
+                        <td class="td4">{{ orden.entidad.nombre|title|truncatechars:30 }}</td>
                     </tr>
 
                     <tr>
@@ -116,7 +116,7 @@
                             {% if orden.medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
                         </td>
                         <td class="td4">
-                            {% if orden.medico_remitente %}{{ orden.medico_remitente.full_name|title }}{% endif %}
+                            {% if orden.medico_remitente %}{{ orden.medico_remitente.full_name|title|truncatechars:30 }}{% endif %}
                         </td>
                     </tr>
                     <tr>

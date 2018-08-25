@@ -27,7 +27,7 @@
     </div>
     <br/>
     {% if citologia.A1_1 or citologia.A1_2 or citologia.A3 %}
-        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+        <div class="box-uno" style="border: 1px lightgray solid; padding: 1rem">
             CALIDAD DE LA MUESTRA
 
             <div class="box-dos">
@@ -67,7 +67,7 @@
     {% endif %}
 
     {% if not citologia.A3 %}
-        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+        <div class="box-uno" style="border: 1px lightgray solid; padding: 1rem">
             INTERPRETACIÓN
 
             {% if citologia.B1 %}
@@ -141,7 +141,7 @@
     <br/>
 
     {% if citologia.C1 or citologia.C2 or citologia.C3 or citologia.C4 or citologia.C5 or citologia.C6 or citologia.C7 %}
-        <div class="box-uno" style="border: 1px black solid; padding: 1rem">
+        <div class="box-uno" style="border: 1px lightgray solid; padding: 1rem">
             MICROORGANISMOS
             <div class="box-dos">
                 {% include 'email/ordenes/resultados/especiales/2_plantilla_citologia/checkbox.html' with valor=citologia.C1 nombre_campo='C1' %}

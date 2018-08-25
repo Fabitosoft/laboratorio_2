@@ -17,11 +17,11 @@
     }
 
     .td3 {
-        width: 2.5cm;
+        width: 3cm;
     }
 
     .td4 {
-        width: 4cm;
+        width: 8cm;
     }
 </style>
 <div class="datos-resultados">
@@ -50,19 +50,25 @@
             </strong></td>
             <td class="td2">{{ paciente.tipo_documento|title }}. {{ paciente.nro_identificacion }}</td>
             <td class="td3"><strong>Fecha Ingreso:</strong></td>
-            <td class="td4">{{ orden.created|date:"d-b-Y (H:i)" }}</td>
+            <td class="td4">{% if orden.fecha_ingreso %}{{ orden.fecha_ingreso|date:"d-b-Y (H:i)" }}{% else %}
+                {{ orden.created|date:"d-b-Y (H:i)" }}{% endif %}</td>
         </tr>
         <tr>
             <td class="td1"><strong><strong>Genero:</strong> </strong></td>
             <td class="td2">{{ paciente.get_genero_display }}</td>
-            <td class="td3"><strong>Fecha Reporte:</strong></td>
-            <td class="td4">{% now "d-b-Y (H:i)" %}</td>
+            {% if examen %}
+                <td class="td3"><strong>Fecha Verificación:</strong></td>
+                <td class="td4">{{ examen.fecha_verificado|date:"d-b-Y (H:i)" }}</td>
+            {% else %}
+                <td class="td3"></td>
+                <td class="td4"></td>
+            {% endif %}
         </tr>
         <tr>
             <td class="td1"><strong><strong>Edad:</strong> </strong></td>
             <td class="td2">{{ paciente.fecha_nacimiento|timesince:orden.created }}</td>
             <td class="td3"><strong>Entidad:</strong></td>
-            <td class="td4">{{ entidad.nombre|title }}</td>
+            <td class="td4">{{ entidad.nombre|title|truncatechars:60 }}</td>
         </tr>
         <tr>
             <td class="td1"><strong><strong>Teléfono:</strong> </strong></td>
@@ -71,7 +77,7 @@
                 {% if medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
             </td>
             <td class="td4">
-                {% if orden.medico_remitente %}{{ medico_remitente.full_name|title }}{% endif %}
+                {% if orden.medico_remitente %}{{ medico_remitente.full_name|title|truncatechars:60 }}{% endif %}
             </td>
         </tr>
     </table>

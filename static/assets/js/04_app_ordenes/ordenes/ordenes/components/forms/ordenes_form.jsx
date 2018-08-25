@@ -4,7 +4,8 @@ import {formValueSelector} from 'redux-form';
 import {
     MyTextFieldSimple,
     MySelect,
-    MySelectAsync
+    MySelectAsync,
+    MyDateTimePickerField
 } from '../../../../../00_utilities/components/ui/forms/fields';
 import {connect} from "react-redux";
 import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/MyFormTagModal';
@@ -100,6 +101,11 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
+                <MyDateTimePickerField
+                    className="col-12 col-lg-6"
+                    nombre='Fecha de Ingreso'
+                    name='fecha_ingreso'
+                />
                 <MySelectAsync
                     className='col-12'
                     valueKey="id"
