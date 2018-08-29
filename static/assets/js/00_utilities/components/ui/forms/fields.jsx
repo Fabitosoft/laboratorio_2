@@ -195,7 +195,7 @@ MyCombobox.propTypes = {
 };
 
 
-const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
+const renderDateTimePicker = ({input: {onChange, value}, show_edad, defaultValue = null}) => {
     const now = moment();
     const fechaHoy = moment(now, "YYYY MM DD", "es");
     const fecha_nacimiento = moment(value, "YYYY MM DD", "es").tz('America/Bogota');
@@ -206,10 +206,11 @@ const renderDateTimePicker = ({input: {onChange, value}, show_edad}) => {
         <Fragment>
             <DateTimePicker
                 onChange={onChange}
+                defaultValue={defaultValue}
                 format="YYYY-MM-DD"
                 time={false}
                 max={new Date()}
-                value={!value ? null : new Date(value)}
+                value={!value ? defaultValue : new Date(value)}
             />{show_edad && edad}
         </Fragment>
     )
@@ -220,6 +221,7 @@ export const MyDateTimePickerField = (props) => {
         <div className={props.className}>
             <label>{props.nombre}</label>
             <Field
+                defaultValue={props.defaultValue}
                 name={props.name}
                 type="date"
                 fullWidth={true}

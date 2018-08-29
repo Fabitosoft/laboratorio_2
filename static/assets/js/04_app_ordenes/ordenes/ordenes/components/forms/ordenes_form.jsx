@@ -105,6 +105,7 @@ class Form extends Component {
                     className="col-12 col-lg-6"
                     nombre='Fecha de Ingreso'
                     name='fecha_ingreso'
+                    defaultValue={new Date()}
                 />
                 <MySelectAsync
                     className='col-12'

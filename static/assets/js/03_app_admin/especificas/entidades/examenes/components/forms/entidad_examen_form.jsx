@@ -37,22 +37,27 @@ class Form extends Component {
                 modal_open={modal_open}
                 pristine={pristine}
                 element_type={singular_name}
-            >
-                <MyCombobox
-                    className='col-12'
-                    nombre='Examen'
-                    name='examen'
-                    valueField='id'
-                    textField='nombre'
-                    data={
-                        _.map(_.orderBy(examenes_para_adicionar, ['nombre'], ['asc']), e => {
-                            return {
-                                id: e.id,
-                                nombre: e.nombre
-                            }
-                        })
-                    }
-                />
+            >{
+                initialValues ?
+                    <div className="col-12">
+                        {initialValues.examen_nombre}
+                    </div> :
+                    <MyCombobox
+                        className='col-12'
+                        nombre='Examen'
+                        name='examen'
+                        valueField='id'
+                        textField='nombre'
+                        data={
+                            _.map(_.orderBy(examenes_para_adicionar, ['nombre'], ['asc']), e => {
+                                return {
+                                    id: e.id,
+                                    nombre: e.nombre
+                                }
+                            })
+                        }
+                    />
+            }
                 <MyTextFieldSimple
                     className="col-12"
                     nombre='Valor'
