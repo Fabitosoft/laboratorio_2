@@ -103,7 +103,7 @@ class Form extends Component {
             >
                 <MyTextFieldSimple
                     name='nro_orden'
-                    nombre='Nombre de Orden'
+                    nombre='Nro. Orden'
                     className="col-12 col-lg-6"
                     type='number'
                 />

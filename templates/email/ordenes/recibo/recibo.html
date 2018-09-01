@@ -2,7 +2,7 @@
 <style>
     div {
         font-family: 'Calibri';
-        font-size: 10px;
+        font-size: 11px;
     }
 
     .datos {
@@ -116,7 +116,8 @@
                             {% if orden.medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
                         </td>
                         <td class="td4">
-                            {% if orden.medico_remitente %}{{ orden.medico_remitente.full_name|title|truncatechars:30 }}{% endif %}
+                            {% if orden.medico_remitente %}
+                                {{ orden.medico_remitente.full_name|title|truncatechars:30 }}{% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -179,6 +180,7 @@
         <div>
             {% number_to_word orden.valor_final %}
         </div>
+        <br/>
         <div><strong>Elaborado por: </strong>{{ orden.elaborado_por.get_full_name }}</div>
         <div class="info-consulta-web">
             Si desea consultar por internet sus exámenes:<br/>
