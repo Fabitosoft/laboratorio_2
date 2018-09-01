@@ -72,7 +72,7 @@
         </tr>
         <tr>
             <td class="td1"><strong><strong>Teléfono:</strong> </strong></td>
-            <td class="td2">{{ paciente.telefono }}</td>
+            <td class="td2">{% if paciente.telefono %}{{ paciente.telefono }}{% endif %}</td>
             <td class="td3">
                 {% if medico_remitente %}<strong>Médico Remitente: </strong>{% endif %}
             </td>

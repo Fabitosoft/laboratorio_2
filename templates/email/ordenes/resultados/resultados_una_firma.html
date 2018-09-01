@@ -37,9 +37,15 @@
                                 {% endif %}
                             </td>
                             <td class="resultado"
-                                style="width: 27.5%">{{ examen.orden_examen.resultado }} {{ examen.orden_examen.examen_unidad_medida }}</td>
+                                style="width: 27.5%">{{ examen.orden_examen.resultado }}
+                                {% if examen.orden_examen.examen_unidad_medida %}
+                                    {{ examen.orden_examen.examen_unidad_medida }} {% endif %}</td>
                             <td style="width: 27.5%"
-                                class="valor-referencia">{{ examen.orden_examen.examen_valor_referencia }}</td>
+                                class="valor-referencia">
+                                {% if examen.orden_examen.examen_valor_referencia %}
+                                    {{ examen.orden_examen.examen_valor_referencia }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
