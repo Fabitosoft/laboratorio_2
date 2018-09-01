@@ -50,7 +50,7 @@
             </strong></td>
             <td class="td2">{{ paciente.tipo_documento|title }}. {{ paciente.nro_identificacion }}</td>
             <td class="td3"><strong>Fecha Ingreso:</strong></td>
-            <td class="td4">{% if orden.fecha_ingreso %}{{ orden.fecha_ingreso|date:"d-b-Y (H:i)" }}{% else %}
+            <td class="td4">{% if orden.fecha_ingreso %}{{ orden.fecha_ingreso|date:"d-b-Y (h:i a)" }}{% else %}
                 {{ orden.created|date:"d-b-Y (H:i)" }}{% endif %}</td>
         </tr>
         <tr>
@@ -58,7 +58,7 @@
             <td class="td2">{{ paciente.get_genero_display }}</td>
             {% if examen %}
                 <td class="td3"><strong>Fecha Verificación:</strong></td>
-                <td class="td4">{{ examen.fecha_verificado|date:"d-b-Y (H:i)" }}</td>
+                <td class="td4">{{ examen.fecha_verificado|date:"d-b-Y (h:i a)" }}</td>
             {% else %}
                 <td class="td3"></td>
                 <td class="td4"></td>
