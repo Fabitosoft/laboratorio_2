@@ -5,6 +5,7 @@ const validate = values => {
         'paciente',
         'entidad',
         'tipo_pago',
+        'nro_orden',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

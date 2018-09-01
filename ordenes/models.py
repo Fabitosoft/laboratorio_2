@@ -50,7 +50,7 @@ class Orden(TimeStampedModel):
     examenes = models.ManyToManyField(Examen, through='OrdenExamen', related_name='mis_examenes')
 
     estado = models.PositiveIntegerField(default=0, choices=ORDEN_ESTADO_CHOICES)
-    nro_orden = models.PositiveIntegerField(null=True, blank=True)
+    nro_orden = models.PositiveIntegerField(null=True, blank=True, unique=True)
     codigo_consulta_web = models.CharField(max_length=8, null=True)
 
     class Meta:

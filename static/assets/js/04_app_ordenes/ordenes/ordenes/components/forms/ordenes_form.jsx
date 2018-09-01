@@ -101,6 +101,12 @@ class Form extends Component {
                 pristine={pristine}
                 element_type={singular_name}
             >
+                <MyTextFieldSimple
+                    name='nro_orden'
+                    nombre='Nombre de Orden'
+                    className="col-12 col-lg-6"
+                    type='number'
+                />
                 <MyDateTimePickerField
                     className="col-12 col-lg-6"
                     nombre='Fecha de Ingreso'
