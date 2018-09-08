@@ -6,6 +6,7 @@ import {MyFormTagModal} from '../../../../../00_utilities/components/ui/forms/My
 import InfoExamenForm from './info_examen';
 import FirmaForm from './firmas_form';
 import validate from './examen_estandar_validate';
+import PrinJs from "print-js";
 
 const modelStyle = {
     width: '100%',
@@ -14,6 +15,24 @@ const modelStyle = {
 };
 
 class FormExamenEstandar extends Component {
+    imprimirExamen() {
+        const {
+            item_seleccionado,
+            printOrdenExamen,
+            notificarErrorAjaxAction,
+            noCargando
+        } = this.props;
+        const success_callback = (response) => {
+            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
+            PrinJs(url);
+            noCargando();
+        };
+        printOrdenExamen(item_seleccionado.id, success_callback, (r) => {
+            notificarErrorAjaxAction(r, 60000);
+            noCargando();
+        })
+    }
+
     render() {
         const {
             pristine,
@@ -88,6 +107,12 @@ class FormExamenEstandar extends Component {
                 {
                     (submitting || pristine) &&
                     <FirmaForm {...this.props} examen={item_seleccionado}/>
+                }
+                {
+                    item_seleccionado.examen_estado === 2 &&
+                    <span className='btn btn-primary' onClick={() => this.imprimirExamen()}>
+                    <i className='far fa-print'></i>
+                    </span>
                 }
             </MyFormTagModal>
         )
