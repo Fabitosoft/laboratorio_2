@@ -153,28 +153,28 @@ class TablaResultadoConsultaWeb extends Component {
                     <div className="col-md-6">
                         <strong>Fecha Ingreso: </strong>{fechaFormatoUno(created)}
                     </div>
-                    <div className="col-12">
-                        <div className="row p-4">
-                            <div className="col-12">
-                                <h5>Consolidado</h5>
-                            </div>
-                            <div className="col-12">
-                                <i className='far fa-file-pdf fa-2x puntero'
-                                   onClick={() => this.verOrden(orden, nro_orden, 0)}>
-                                </i>
-                                <i className='far fa-print fa-2x puntero pl-3'
-                                   onClick={() => this.verOrden(orden, nro_orden, 1)}>
-                                </i>
-                                <i className='far fa-download fa-2x puntero pl-3'
-                                   onClick={() => this.verOrden(orden, nro_orden, 2)}>
-                                </i>
-                            </div>
-                            <div className="col-12">
-                                <span
-                                    style={{color: 'red'}}>{porcentaje_completado !== 1 && `Aún faltan ${examenes_totales - examenes_completados} examenes por completarse`}</span>
-                            </div>
-                        </div>
-                    </div>
+                    {/*<div className="col-12">*/}
+                        {/*<div className="row p-4">*/}
+                            {/*<div className="col-12">*/}
+                                {/*<h5>Consolidado</h5>*/}
+                            {/*</div>*/}
+                            {/*<div className="col-12">*/}
+                                {/*<i className='far fa-file-pdf fa-2x puntero'*/}
+                                   {/*onClick={() => this.verOrden(orden, nro_orden, 0)}>*/}
+                                {/*</i>*/}
+                                {/*<i className='far fa-print fa-2x puntero pl-3'*/}
+                                   {/*onClick={() => this.verOrden(orden, nro_orden, 1)}>*/}
+                                {/*</i>*/}
+                                {/*<i className='far fa-download fa-2x puntero pl-3'*/}
+                                   {/*onClick={() => this.verOrden(orden, nro_orden, 2)}>*/}
+                                {/*</i>*/}
+                            {/*</div>*/}
+                            {/*<div className="col-12">*/}
+                                {/*<span*/}
+                                    {/*style={{color: 'red'}}>{porcentaje_completado !== 1 && `Aún faltan ${examenes_totales - examenes_completados} examenes por completarse`}</span>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
                 </div>
 
                 <table className='table table-striped table-responsive text-justify' style={style.table}>
