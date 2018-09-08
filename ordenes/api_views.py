@@ -156,16 +156,15 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         output_documento_estandares_especiales = BytesIO()
         output_documento_con_logo = BytesIO()
         output_final = BytesIO()
+        pdf_merger = PdfFileMerger()
 
         resultados_estandar = self.generar_resultados_pdf(request, orden, es_email, es_entidad)
         if resultados_estandar:
             resultados_estandar.write_pdf(
                 target=output_documento_estandares
             )
-
-        pdf_merger = PdfFileMerger()
-        pdf_estandares_reader = PdfFileReader(output_documento_estandares)
-        pdf_merger.append(pdf_estandares_reader)
+            pdf_estandares_reader = PdfFileReader(output_documento_estandares)
+            pdf_merger.append(pdf_estandares_reader)
 
         plantillas_especiales_sin_logo = orden.mis_examenes.filter(
             Q(especial=True) &
@@ -221,6 +220,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_merger.write(output_final)
         else:
             output_final = output_documento_con_logo
+        pdf_merger.close()
         return output_final
 
     @detail_route(methods=['post'])
