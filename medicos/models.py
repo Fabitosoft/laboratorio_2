@@ -1,4 +1,5 @@
 from django.db import models
+import random
 from django.contrib.auth.models import User
 from model_utils.models import TimeStampedModel
 
@@ -44,7 +45,8 @@ class MedicoRemitente(TimeStampedModel):
 class Especialista(TimeStampedModel):
     def firma_upload_to(instance, filename):
         nombre_especialista = instance.full_name
-        return "especialistas/firmas/%s.%s" % (nombre_especialista, filename.split('.')[1])
+        nro_random = random.randint(1111, 9999)
+        return "especialistas/firmas/%s%s.%s" % (nombre_especialista, nro_random, filename.split('.')[1])
 
     CHOICES_TIPO_DOCUMENTO = (
         ('CC', 'Cédula Ciudadanía'),
