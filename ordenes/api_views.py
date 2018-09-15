@@ -103,6 +103,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             )
             pdf_writer.write(resultados)
         msg.attach('Resultados nro. orden %s.pdf' % orden.nro_orden, resultados.getvalue(), 'application/pdf')
+        resultados.close()
         try:
             pass
             msg.send()
@@ -123,6 +124,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         if validado:
             resultados = self.resultados_pdf(request, True, True, False)
             response.write(resultados.getvalue())
+            resultados.close()
         return response
 
     @detail_route(methods=['post'])
@@ -132,6 +134,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
         response.write(resultados.getvalue())
+        resultados.close()
         return response
 
     @detail_route(methods=['post'])
@@ -141,6 +144,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
         response['Content-Transfer-Encoding'] = 'binary'
         response.write(resultados.getvalue())
+        resultados.close()
         return response
 
     def resultados_pdf(self, request, con_logo=False, es_email=False, es_entidad=False):
@@ -222,11 +226,10 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             output_final = output_documento_con_logo
         pdf_merger.close()
 
-        output_final.close()
-        output_documento_con_logo.close()
         output_base.close()
-        output_documento_estandares_especiales.close()
         output_documento_estandares.close()
+        #output_documento_con_logo.close()
+        #output_documento_estandares_especiales.close()
         return output_final
 
     @detail_route(methods=['post'])
