@@ -209,6 +209,7 @@ class OrdenesExamenesPDFViewMixin(object):
             random.randint(1000, 9999)
         )
         orden_examen.pdf_examen.save(filename, File(output))
+        output.close()
 
     def generar_pdf(self, request, orden_examen):
         if not orden_examen.especial:
@@ -287,3 +288,4 @@ class OrdenesExamenesPDFViewMixin(object):
                 random.randint(1000, 9999)
             )
             orden_examen.pdf_examen.save(filename, File(output))
+            output.close()

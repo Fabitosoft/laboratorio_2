@@ -221,6 +221,12 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         else:
             output_final = output_documento_con_logo
         pdf_merger.close()
+
+        output_final.close()
+        output_documento_con_logo.close()
+        output_base.close()
+        output_documento_estandares_especiales.close()
+        output_documento_estandares.close()
         return output_final
 
     @detail_route(methods=['post'])
@@ -503,6 +509,7 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
             output_examen_sin_logo = BytesIO()
             pdf_examen_writer.write(output_examen_sin_logo)
             response.write(output_examen_sin_logo.getvalue())
+            output_examen_sin_logo.close()
             return response
         else:
             base = self.generar_base_pdf(request)
@@ -525,4 +532,6 @@ class OrdenExamenViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
             writer_con_fondo.write(output_final)
 
             response.write(output_final.getvalue())
+            output_base.close()
+            output_final.close()
             return response
