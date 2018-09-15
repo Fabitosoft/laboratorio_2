@@ -151,14 +151,11 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
         orden = self.get_object()
         base = self.generar_base_pdf(request)
         output_base = BytesIO()
-        # output_final = BytesIO()
         base.write_pdf(
             target=output_base
         )
 
         output_documento_estandares = BytesIO()
-        output_documento_estandares_especiales = BytesIO()
-        output_documento_con_logo = BytesIO()
         output_final = BytesIO()
         pdf_merger = PdfFileMerger()
 
@@ -169,6 +166,7 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             )
             pdf_estandares_reader = PdfFileReader(output_documento_estandares)
             pdf_merger.append(pdf_estandares_reader)
+            output_documento_estandares.close()
 
         plantillas_especiales_sin_logo = orden.mis_examenes.filter(
             Q(especial=True) &
@@ -196,10 +194,10 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
             pdf_examen = PdfFileReader(exa.pdf_examen)
             if not pdf_examen.isEncrypted:
                 pdf_merger.append(pdf_examen)
-        pdf_merger.write(output_documento_estandares_especiales)
+        pdf_merger.write(output_final)
 
         pdf_base_reader = PdfFileReader(output_base)  # La base de fondo
-        pdf_documento_reader = PdfFileReader(output_documento_estandares_especiales)  # El pdf para poner fondo
+        pdf_documento_reader = PdfFileReader(output_final)  # El pdf para poner fondo
         writer_con_logo = PdfFileWriter()
         cantidad_hojas = pdf_documento_reader.getNumPages()
 
@@ -209,27 +207,20 @@ class OrdenViewSet(OrdenesPDFViewMixin, viewsets.ModelViewSet):
                 page_object_documento = pdf_documento_reader.getPage(nro_hora)
                 page_object_documento.mergePage(page_object_base)
                 writer_con_logo.addPage(page_object_documento)
-            writer_con_logo.write(output_documento_con_logo)
-        else:
-            output_documento_con_logo = output_documento_estandares_especiales
+            writer_con_logo.write(output_final)
 
         if plantillas_especiales_con_logo.exists():
             pdf_merger = PdfFileMerger()
-            pdf_examen = PdfFileReader(output_documento_con_logo)
+            pdf_examen = PdfFileReader(output_final)
             pdf_merger.append(pdf_examen)
             for exa in plantillas_especiales_con_logo.all():
                 pdf_examen = PdfFileReader(exa.pdf_examen)
                 if not pdf_examen.isEncrypted:
                     pdf_merger.append(pdf_examen)
             pdf_merger.write(output_final)
-        else:
-            output_final = output_documento_con_logo
-        pdf_merger.close()
 
+        pdf_merger.close()
         output_base.close()
-        output_documento_estandares.close()
-        #output_documento_con_logo.close()
-        #output_documento_estandares_especiales.close()
         return output_final
 
     @detail_route(methods=['post'])
