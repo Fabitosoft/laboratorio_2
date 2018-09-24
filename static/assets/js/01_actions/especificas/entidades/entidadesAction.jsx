@@ -13,10 +13,20 @@ import {
     deleteObject,
     createObject,
     callApiMethod,
-    fetchListWithParameter
+    fetchListWithParameter,
+    callApiMethodWithParametersPDF,
 } from '../../00_general_fuctions'
 
 const current_url_api = 'entidades';
+
+export function printRelacionCobroEntidad(id, fecha_ini, fecha_fin, callback = null, callback_error = null) {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('fecha_ini', fecha_ini);
+        params.append('fecha_fin', fecha_fin);
+        callApiMethodWithParametersPDF(current_url_api, id, 'print_relacion_cobro', params, null, callback, callback_error)
+    }
+}
 
 export const fetchEntidadesXParametro = (parametro, callback = null, callback_error = null) => {
     return (dispatch) => {

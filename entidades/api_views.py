@@ -1,10 +1,15 @@
-from django.db.models import Q
+from io import BytesIO
+
+from django.http import HttpResponse
+from django.template.loader import get_template
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
+from weasyprint import HTML, CSS
 
 from laboratorio_2.utils_queryset import query_varios_campos_or
 from .models import Entidad, ContactoEntidad, EntidadExamen
 from rest_framework import viewsets, permissions
+from ordenes.models import OrdenExamen
 
 from .api_serializers import EntidadSerializer, ContactoEntidadSerializer, EntidadExamenSerializer
 
@@ -31,6 +36,42 @@ class EntidadViewSet(viewsets.ModelViewSet):
             entidad.create_user()
         serializer = self.get_serializer(entidad)
         return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def print_relacion_cobro(self, request, pk=None):
+        entidad = self.get_object()
+        fecha_ini = self.request.POST.get('fecha_ini')
+        fecha_fin = self.request.POST.get('fecha_fin')
+        examenes = OrdenExamen.objects.select_related('orden', 'orden__paciente', 'examen').filter(
+            orden__entidad=entidad,
+            orden__fecha_ingreso__lte=fecha_fin,
+            orden__fecha_ingreso__gte=fecha_ini
+        )
+        ctx = {
+            'entidad': entidad,
+            'examenes': examenes,
+            'fecha_ini': fecha_ini,
+            'fecha_fin': fecha_fin,
+        }
+        html_get_template = get_template('reportes/relacion_cobro/relacion_cobro.html').render(ctx)
+
+        html = HTML(
+            string=html_get_template,
+            base_url=request.build_absolute_uri()
+        )
+
+        main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_recibos.min.css')])
+
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
 
 class ContactoEntidadViewSet(viewsets.ModelViewSet):

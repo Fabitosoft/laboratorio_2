@@ -1,0 +1,104 @@
+{% load number_to_word static l10n %}
+<style>
+    div {
+        font-family: 'Calibri';
+        font-size: 9px;
+    }
+
+    .datos {
+        font-size: 0.6rem;
+        margin-left: -1.2cm;
+        margin-top: -0.4cm;
+    }
+
+    .datos .td1 {
+        width: 2.5cm;
+    }
+
+    .datos .td2 {
+        width: 3cm;
+    }
+
+    .datos .td3 {
+        width: 3cm;
+    }
+
+    .datos .td4 {
+        width: 4cm;
+    }
+
+    .recibo {
+        color: #000;
+        font-size: 9px;
+    }
+
+    .recibo tr {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .recibo table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .recibo th,
+    .recibo td {
+        font-size: 10px;
+        text-align: left;
+        padding: 3px;
+        border: 1px solid #ddd;
+    }
+
+    .recibo .dinero {
+        text-align: right;
+    }
+
+    .recibo tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .recibo td, .recibo th {
+        border-bottom: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+    }
+
+    .info-consulta-web {
+        font-size: 10px;
+        margin-top: 0.5rem;
+    }
+</style>
+<div class="recibo">
+    <strong>Entidad: </strong> {{ entidad.nombre }} <br/>
+    <strong>Nit: </strong> {{ entidad.nit }} <br/>
+    <strong>Concepto: </strong> Servicios prestados entre {{ fecha_ini }} y {{ fecha_fin }} <br/>
+    <strong>Fecha y Hora de Impresión: </strong> {% now "d-b-Y (h:i a)" %} <br/>
+    <table class="table tabla">
+        <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Nr. Orden</th>
+            <th>Nr. Identificación</th>
+            <th>Nombre del Cliente</th>
+            <th>Cod</th>
+            <th>Nombre Examen</th>
+            <th>Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for examen in examenes.all %}
+            <tr>
+                <td>{{ examen.orden.fecha_ingreso|date:"d-m-Y" }}</td>
+                <td style="text-align: right">{{ examen.orden.nro_orden }}</td>
+                <td style="text-align: right">{{ examen.orden.paciente.nro_identificacion }}</td>
+                <td>{{ examen.orden.paciente.full_name }}</td>
+                <td style="text-align: right">{{ examen.examen.codigo_cups }}</td>
+                <td>{{ examen.examen_nombre }}</td>
+                <td style="text-align: right">${{ examen.valor_final|floatformat:0 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

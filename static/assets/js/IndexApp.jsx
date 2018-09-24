@@ -82,6 +82,14 @@ class IndexApp extends Component {
                                 link='/app/resultados/'
                                 icono='fas fa-vial'
                             />
+                            {
+                                is_superuser &&
+                                <Boton
+                                    nombre='Operaciones Caja'
+                                    link='/app/operaciones_caja'
+                                    icono='fas fa-money-bill'
+                                />
+                            }
                             <div className="col-4"></div>
                             <div className="col-4 boton-index mt-4">
                                 <div className='icono puntero' onClick={() => this.props.logout()}>
