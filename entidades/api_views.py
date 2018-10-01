@@ -1,5 +1,6 @@
 from io import BytesIO
 
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.template.loader import get_template
 from rest_framework.decorators import list_route, detail_route
@@ -32,7 +33,7 @@ class EntidadViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def crear_usuario(self, request, pk=None):
         entidad = self.get_object()
-        if (not entidad.usuario):
+        if not entidad.usuario:
             entidad.create_user()
         serializer = self.get_serializer(entidad)
         return Response(serializer.data)
@@ -40,18 +41,25 @@ class EntidadViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def print_relacion_cobro(self, request, pk=None):
         entidad = self.get_object()
+        tipo_pago = self.request.POST.get('tipo_pago')
         fecha_ini = self.request.POST.get('fecha_ini')
         fecha_fin = self.request.POST.get('fecha_fin')
         examenes = OrdenExamen.objects.select_related('orden', 'orden__paciente', 'examen').filter(
             orden__entidad=entidad,
-            orden__fecha_ingreso__lte=fecha_fin,
-            orden__fecha_ingreso__gte=fecha_ini
-        )
+            orden__fecha_ingreso__date__lte=fecha_fin,
+            orden__fecha_ingreso__date__gte=fecha_ini,
+            orden__tipo_pago=tipo_pago
+        ).order_by('orden__fecha_ingreso')
         ctx = {
             'entidad': entidad,
             'examenes': examenes,
             'fecha_ini': fecha_ini,
             'fecha_fin': fecha_fin,
+            'cantidad': examenes.count(),
+            'valor_total': examenes.aggregate(valor_total=Sum('valor_total'))['valor_total'],
+            'valor_descuento': examenes.aggregate(valor_descuento=Sum('valor_descuento'))['valor_descuento'],
+            'valor_final': examenes.aggregate(valor_final=Sum('valor_final'))['valor_final'],
+            'tipo_pago': tipo_pago,
         }
         html_get_template = get_template('reportes/relacion_cobro/relacion_cobro.html').render(ctx)
 

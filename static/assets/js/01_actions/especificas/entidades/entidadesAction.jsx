@@ -19,11 +19,12 @@ import {
 
 const current_url_api = 'entidades';
 
-export function printRelacionCobroEntidad(id, fecha_ini, fecha_fin, callback = null, callback_error = null) {
+export function printRelacionCobroEntidad(id, fecha_ini, fecha_fin, tipo_pago, callback = null, callback_error = null) {
     return function (dispatch) {
         let params = new URLSearchParams();
         params.append('fecha_ini', fecha_ini);
         params.append('fecha_fin', fecha_fin);
+        params.append('tipo_pago', tipo_pago);
         callApiMethodWithParametersPDF(current_url_api, id, 'print_relacion_cobro', params, null, callback, callback_error)
     }
 }

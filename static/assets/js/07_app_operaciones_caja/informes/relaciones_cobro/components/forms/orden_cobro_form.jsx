@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {MyDateTimePickerField, MySelectAsync} from '../../../../../00_utilities/components/ui/forms/fields';
+import {MyDateTimePickerField, MySelectAsync, MySelect} from '../../../../../00_utilities/components/ui/forms/fields';
 import {reduxForm} from "redux-form";
 import {FlatIconModal} from '../../../../../00_utilities/components/ui/icon/iconos_base';
 import moment from 'moment-timezone';
@@ -38,7 +38,7 @@ class FormRelacionCobro extends Component {
             <form onSubmit={handleSubmit((v) => {
                 const fecha_inicial = moment(v.fecha_inicial).format('YYYY-MM-DD');
                 const fecha_final = moment(v.fecha_final).format('YYYY-MM-DD');
-                printRelacionCobro(v.entidad, fecha_inicial, fecha_final);
+                printRelacionCobro(v.entidad, fecha_inicial, fecha_final, v.tipo_pago);
             })}>
                 <div className='row'>
                     <MyDateTimePickerField
@@ -52,12 +52,23 @@ class FormRelacionCobro extends Component {
                         name='fecha_final'
                     />
                     <MySelectAsync
-                        className='col-12'
+                        className='col-12 col-md-8'
                         valueKey="id"
                         labelKey="nombre"
                         name='entidad'
                         nombre='Entidad'
                         loadOptions={this.loadOptionsEntidades}
+                    />
+                    <MySelect
+                        className='col-12 col-md-4'
+                        name='tipo_pago'
+                        nombre='Formas de Pago...'
+                        data={[
+                            {value: 'EFECTIVO', label: 'Efectivo'},
+                            {value: 'TARJETA', label: 'Tarjeta'},
+                            {value: 'RELACION DE COBRO', label: 'Relación de Cobro'},
+                            {value: 'CORTESIA', label: 'Cortesía'},
+                        ]}
                     />
                     <FlatIconModal
                         text="Consultar"

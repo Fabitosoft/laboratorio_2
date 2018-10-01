@@ -5,6 +5,7 @@ const validate = values => {
         'fecha_inicial',
         'fecha_final',
         'entidad',
+        'tipo_pago',
     ];
     requiredFields.map(field => {
         if (!values[field]) {

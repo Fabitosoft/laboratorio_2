@@ -17,14 +17,14 @@ class List extends Component {
         this.printRelacionCobro = this.printRelacionCobro.bind(this);
     }
 
-    printRelacionCobro(entidad_id, fecha_inicial, fecha_final) {
+    printRelacionCobro(entidad_id, fecha_inicial, fecha_final, tipo_pago) {
         const {noCargando} = this.props;
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
             PrinJs(url);
             noCargando();
         };
-        this.props.printRelacionCobroEntidad(entidad_id, fecha_inicial, fecha_final, success_callback);
+        this.props.printRelacionCobroEntidad(entidad_id, fecha_inicial, fecha_final, tipo_pago, success_callback);
     }
 
     render() {
