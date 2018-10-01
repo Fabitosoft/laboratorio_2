@@ -18,12 +18,13 @@ class List extends Component {
     }
 
     printRelacionCobro(entidad_id, fecha_inicial, fecha_final, tipo_pago) {
-        const {noCargando} = this.props;
+        const {noCargando, cargando} = this.props;
         const success_callback = (response) => {
             const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
             PrinJs(url);
             noCargando();
         };
+        cargando();
         this.props.printRelacionCobroEntidad(entidad_id, fecha_inicial, fecha_final, tipo_pago, success_callback);
     }
 
