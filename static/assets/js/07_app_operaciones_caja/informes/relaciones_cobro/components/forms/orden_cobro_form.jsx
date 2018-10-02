@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {MyDateTimePickerField, MySelectAsync, MySelect} from '../../../../../00_utilities/components/ui/forms/fields';
+import {
+    MyDateTimePickerField,
+    MySelectAsync,
+    MySelect,
+    MyTextFieldSimple
+} from '../../../../../00_utilities/components/ui/forms/fields';
 import {reduxForm} from "redux-form";
 import {FlatIconModal} from '../../../../../00_utilities/components/ui/icon/iconos_base';
 import moment from 'moment-timezone';
@@ -12,7 +17,12 @@ class FormRelacionCobro extends Component {
     }
 
     loadOptionsEntidades(input, callback) {
-        const {notificarErrorAjaxAction, esta_cargando, cargando, noCargando} = this.props;
+        const {
+            notificarErrorAjaxAction,
+            esta_cargando,
+            cargando,
+            noCargando
+        } = this.props;
         const {
             fetchEntidadesXParametro,
             entidades_list
@@ -38,18 +48,30 @@ class FormRelacionCobro extends Component {
             <form onSubmit={handleSubmit((v) => {
                 const fecha_inicial = moment(v.fecha_inicial).format('YYYY-MM-DD');
                 const fecha_final = moment(v.fecha_final).format('YYYY-MM-DD');
-                printRelacionCobro(v.entidad, fecha_inicial, fecha_final, v.tipo_pago);
+                printRelacionCobro(
+                    v.entidad,
+                    fecha_inicial,
+                    fecha_final,
+                    v.tipo_pago,
+                    v.nro_relacion_cobro
+                );
             })}>
                 <div className='row'>
                     <MyDateTimePickerField
                         nombre='Fecha Inicial'
-                        className='col-12 col-md-6'
+                        className='col-12 col-md-4'
                         name='fecha_inicial'
                     />
                     <MyDateTimePickerField
                         nombre='Fecha Final'
-                        className='col-12 col-md-6'
+                        className='col-12 col-md-4'
                         name='fecha_final'
+                    />
+                    <MyTextFieldSimple
+                        className='col-12 col-md-2'
+                        name='nro_relacion_cobro'
+                        nombre='Nro. Relación'
+                        type='number'
                     />
                     <MySelectAsync
                         className='col-12 col-md-8'

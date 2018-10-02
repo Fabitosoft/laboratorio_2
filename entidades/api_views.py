@@ -42,6 +42,7 @@ class EntidadViewSet(viewsets.ModelViewSet):
     def print_relacion_cobro(self, request, pk=None):
         entidad = self.get_object()
         tipo_pago = self.request.POST.get('tipo_pago')
+        nro_relacion_cobro = self.request.POST.get('nro_relacion_cobro')
         fecha_ini = self.request.POST.get('fecha_ini')
         fecha_fin = self.request.POST.get('fecha_fin')
         examenes = OrdenExamen.objects.select_related('orden', 'orden__paciente', 'examen').filter(
@@ -54,6 +55,7 @@ class EntidadViewSet(viewsets.ModelViewSet):
         ctx = {
             'entidad': entidad,
             'examenes': examenes,
+            'nro_relacion_cobro': nro_relacion_cobro,
             'fecha_ini': fecha_ini,
             'fecha_fin': fecha_fin,
             'cantidad': examenes.count(),
