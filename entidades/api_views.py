@@ -50,7 +50,7 @@ class EntidadViewSet(viewsets.ModelViewSet):
             orden__fecha_ingreso__date__gte=fecha_ini,
             orden__tipo_pago=tipo_pago,
             orden__estado=1
-        ).order_by('orden__fecha_ingreso')
+        ).order_by('orden__fecha_ingreso','orden__nro_orden')
         ctx = {
             'entidad': entidad,
             'examenes': examenes,
