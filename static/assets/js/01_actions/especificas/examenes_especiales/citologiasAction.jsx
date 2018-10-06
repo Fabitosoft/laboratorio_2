@@ -5,10 +5,23 @@ import {
     fetchObject,
     deleteObject,
     createObject,
-    callApiMethodWithParameters
+    callApiMethodWithParametersPDF
 } from '../../00_general_fuctions'
 
 const current_url_api = 'citologias';
+
+export function printEstadisticaCitologia(entidad_id = null, fecha_ini, fecha_fin, callback = null, callback_error = null) {
+    return function (dispatch) {
+        let params = new URLSearchParams();
+        params.append('fecha_ini', fecha_ini);
+        params.append('fecha_fin', fecha_fin);
+        if (entidad_id) {
+            params.append('entidad_id', entidad_id);
+        }
+        callApiMethodWithParametersPDF(current_url_api, null, 'print_estadistica', params, null, callback, callback_error)
+    }
+}
+
 export const createCitologia = (values, callback = null, callback_error = null) => {
     return (dispatch) => {
         const dispatches = (response) => {

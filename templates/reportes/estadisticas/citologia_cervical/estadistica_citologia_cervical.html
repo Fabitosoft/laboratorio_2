@@ -1,0 +1,148 @@
+{% load number_to_word static l10n %}
+<style>
+    div {
+        font-family: 'Calibri';
+        font-size: 9px;
+    }
+
+    .datos {
+        font-size: 0.6rem;
+        margin-left: -1.2cm;
+        margin-top: -0.4cm;
+    }
+
+    .datos .td1 {
+        width: 2.5cm;
+    }
+
+    .datos .td2 {
+        width: 3cm;
+    }
+
+    .datos .td3 {
+        width: 3cm;
+    }
+
+    .datos .td4 {
+        width: 4cm;
+    }
+
+    .recibo {
+        color: #000;
+        font-size: 9px;
+    }
+
+    .recibo tr {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .recibo table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .recibo th,
+    .recibo td {
+        font-size: 10px;
+        text-align: left;
+        padding: 3px;
+        border: 1px solid #ddd;
+    }
+
+    .recibo .dinero {
+        text-align: right;
+    }
+
+    .recibo tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    .recibo td, .recibo th {
+        border-bottom: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+    }
+
+    .info-consulta-web {
+        font-size: 10px;
+        margin-top: 0.5rem;
+    }
+</style>
+<div>
+    <table style="width: 100%">
+        <tr>
+            <td style="text-align: right">
+                <img style="width: 2cm" src="{% static 'img/logo.png' %}" alt="">
+            </td>
+        </tr>
+    </table>
+    <strong>Nit: </strong> {{ entidad.nit }} <br/>
+    Laboratorio {{ entidad.nombre }} {{ fecha_ini }} a {{ fecha_fin }} <br/>
+    <strong>Fecha y Hora de Impresión: </strong> {% now "d-b-Y (h:i a)" %} <br/>
+    <div class="recibo">
+        <table class="table tabla">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Nro.</th>
+                <th>%</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="text-align: right">Total laminas recibidas e informadas</td>
+                <td style="text-align: right">{{ cantidad }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Citologías insatisfactorias o inadecuadas</td>
+                <td style="text-align: right">{{ cantidad_insactifactorias }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Citologías negativas</td>
+                <td style="text-align: right">{{ cantidad_negativas }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ASC-US</td>
+                <td style="text-align: right">{{ cantidad_ASC_US }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ASC-H</td>
+                <td style="text-align: right">{{ cantidad_ASC_H }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LIE BG y/o HPV</td>
+                <td style="text-align: right">{{ cantidad_LIE_BG_HPV }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LIE AG</td>
+                <td style="text-align: right">{{ cantidad_LIE_AG }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Carcinoma escamoso</td>
+                <td style="text-align: right">{{ cantidad_carcinoma_escamoso }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ACG (NOS y sospechosas de neoplasia)</td>
+                <td style="text-align: right">{{ cantidad_ACG }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Adenocarcinoma in situ e invasivo</td>
+                <td style="text-align: right">{{ cantidad_Adenocarcinoma_in_situ_e_invasivo }}</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+    </div>
+</div>

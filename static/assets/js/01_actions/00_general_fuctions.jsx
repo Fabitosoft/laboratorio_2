@@ -196,11 +196,16 @@ export function callApiMethodWithParameters(url, id, method, parameters, dispatc
     );
 }
 
-export function callApiMethodWithParametersPDF(url, id, method, parameters, dispatches = null, callback = null, callback_error = null) {
+export function callApiMethodWithParametersPDF(url, id = null, method, parameters, dispatches = null, callback = null, callback_error = null) {
     console.log(`%cAPI METODO ${method.toUpperCase()} CON PARMAETROS - %c${url.toUpperCase()} - %cID ${id} PARA PDF`, 'color:red', 'color:blue', 'color:green');
     axios_instance.defaults.xsrfHeaderName = "X-CSRFTOKEN";
     axios_instance.defaults.xsrfCookieName = "csrftoken";
-    const FULL_URL = `${url}/${id}/${method}/`;
+    let FULL_URL = '';
+    if (id) {
+        FULL_URL = `${url}/${id}/${method}/`;
+    } else {
+        FULL_URL = `${url}/${method}/`;
+    }
 
     const headers = {};
     if (localStorage.token) {

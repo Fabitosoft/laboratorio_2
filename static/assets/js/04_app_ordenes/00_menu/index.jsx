@@ -29,6 +29,11 @@ const Menu = () => {
                                 <Icon style={iconStyles} className="fas fa-user"/>
                             </div>
                         </Link>
+                        <Link to='/app/ordenes/reportes/estadistica_citologia_cervical'>
+                            <div style={iconStyles}>
+                                <Icon style={iconStyles} className="fas fa-paperclip"/>
+                            </div>
+                        </Link>
                     </Fragment>
                 )
             }}

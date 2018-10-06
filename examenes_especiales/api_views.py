@@ -1,8 +1,16 @@
+from io import BytesIO
+
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.template.loader import get_template
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import list_route
+from weasyprint import CSS, HTML
 
 from .api_serializers import CitologiaSerializer, BiopsiaSerializer
 from .models import Citologia, Biopsia
 from ordenes.mixins import OrdenesExamenesPDFViewMixin
+from entidades.models import Entidad
 
 
 class BiopsiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
@@ -31,6 +39,68 @@ class CitologiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
     ).all()
     serializer_class = CitologiaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @list_route(methods=['post'])
+    def print_estadistica(self, request, pk=None):
+        entidad_id = self.request.POST.get('entidad_id', None)
+        fecha_ini = self.request.POST.get('fecha_ini')
+        fecha_fin = self.request.POST.get('fecha_fin')
+        entidad = None
+        citologias = Citologia.objects.filter(
+            orden_examen__orden__fecha_ingreso__date__lte=fecha_fin,
+            orden_examen__orden__fecha_ingreso__date__gte=fecha_ini,
+            orden_examen__examen_estado=2
+        )
+
+        if entidad_id:
+            citologias = citologias.filter(orden_examen__orden__entidad_id=entidad_id)
+            entidad = Entidad.objects.get(id=entidad_id)
+
+        citologias_insactifactorias = citologias.filter(A1_2=True)
+        citologias_negativas = citologias.filter(B1=True)
+        citologias_ASC_US = citologias.filter(B2a=True)
+        citologias_ASC_H = citologias.filter(B2b=True)
+        citologias_LIE_BG_HPV = citologias.filter(B3=True)
+        citologias_LIE_AG = citologias.filter(B4=True)
+        citologias_carcinoma_escamoso = citologias.filter(B5=True)
+        citologias_ACG = citologias.filter(B9=True)
+        citologias_Adenocarcinoma_in_situ_e_invasivo = citologias.filter(B7=True)
+
+        ctx = {
+            'entidad': entidad,
+            'fecha_ini': fecha_ini,
+            'fecha_fin': fecha_fin,
+            'cantidad': citologias.count(),
+            'cantidad_insactifactorias': citologias_insactifactorias.count(),
+            'cantidad_negativas': citologias_negativas.count(),
+            'cantidad_ASC_US': citologias_ASC_US.count(),
+            'cantidad_ASC_H': citologias_ASC_H.count(),
+            'cantidad_LIE_BG_HPV': citologias_LIE_BG_HPV.count(),
+            'cantidad_LIE_AG': citologias_LIE_AG.count(),
+            'cantidad_carcinoma_escamoso': citologias_carcinoma_escamoso.count(),
+            'cantidad_ACG': citologias_ACG.count(),
+            'cantidad_Adenocarcinoma_in_situ_e_invasivo': citologias_Adenocarcinoma_in_situ_e_invasivo.count(),
+        }
+        html_get_template = get_template(
+            'reportes/estadisticas/citologia_cervical/estadistica_citologia_cervical.html').render(ctx)
+
+        html = HTML(
+            string=html_get_template,
+            base_url=request.build_absolute_uri()
+        )
+
+        main_doc = html.render(stylesheets=[CSS('static/css/pdf_ordenes_recibos.min.css')])
+
+        output = BytesIO()
+        main_doc.write_pdf(
+            target=output
+        )
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        response['Content-Transfer-Encoding'] = 'binary'
+        response.write(output.getvalue())
+        output.close()
+        return response
 
     def clearCampos(self, citologia, campos_array):
         campos = Citologia._meta.get_fields()
