@@ -9,7 +9,7 @@ import {fechaFormatoUno} from "../../../../00_utilities/common";
 class Tabla extends React.Component {
     render() {
 
-        const data = _.orderBy(this.props.data, ['id'], ['desc']);
+        const data = _.orderBy(this.props.data, ['nro_orden', 'fecha_ingreso'], ['desc', 'desc']);
         const {
             updateItem,
             singular_name,

@@ -1,7 +1,7 @@
 import random
 import string
-from datetime import datetime
 
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -37,7 +37,7 @@ class Orden(TimeStampedModel):
     entidad = models.ForeignKey(Entidad, on_delete=models.PROTECT, related_name='mis_ordenes')
     nombre_contacto_alternativo = models.CharField(max_length=200, verbose_name='Nombre Contacto', null=True,
                                                    blank=True)
-    fecha_ingreso = models.DateTimeField(null=True, default=datetime.now())
+    fecha_ingreso = models.DateTimeField(null=True, default=timezone.now)
     numero_contacto_alternativo = models.CharField(max_length=100, verbose_name='Número Contacto', null=True,
                                                    blank=True)
     direccion_contacto_alternativo = models.CharField(max_length=200, verbose_name='Dirección Contacto', null=True,
