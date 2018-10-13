@@ -20,13 +20,21 @@ class List extends Component {
     printReportes(entidad_id = null, fecha_inicial, fecha_final) {
         const {
             noCargando,
+            entidades_list,
             cargando,
             printEstadisticaCitologia,
             notificarErrorAjaxAction
         } = this.props;
         const success_callback = (response) => {
-            const url = window.URL.createObjectURL(new Blob([response], {type: 'application/pdf'}));
-            PrinJs(url);
+            const file = new Blob([response], {type: 'application/pdf'});
+            const url = window.URL.createObjectURL(file);
+            const link = document.createElement('a');
+            const nombre_entidad = entidad_id ? `_${entidades_list[entidad_id].nombre}` : '';
+            const nombre_archivo = `Esta_Cito_Cerv${nombre_entidad.substring(0,20)}_desde_${fecha_inicial}_a_${fecha_final}`;
+            link.href = url;
+            link.setAttribute('download', nombre_archivo);
+            document.body.appendChild(link);
+            link.click();
             noCargando();
         };
         cargando();

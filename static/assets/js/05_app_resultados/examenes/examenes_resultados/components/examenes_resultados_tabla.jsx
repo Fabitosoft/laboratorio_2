@@ -1,19 +1,14 @@
 import React from "react";
-import Checkbox from '@material-ui/core/Checkbox';
-import {MyDialogButtonDelete} from '../../../../00_utilities/components/ui/dialog';
-import {IconButtonTableEdit, IconButtonTableSee} from '../../../../00_utilities/components/ui/icon/iconos';
-import {Link} from 'react-router-dom'
+import {IconButtonTableEdit} from '../../../../00_utilities/components/ui/icon/iconos';
 
 import ReactTable from "react-table";
 
 class Tabla extends React.Component {
     render() {
 
-        const data = _.orderBy(this.props.data,['nro_examen'],['desc']);
+        const data = _.orderBy(this.props.data, ['nro_examen'], ['desc']);
         const {
-            updateItem,
             singular_name,
-            onDelete,
             onSelectItemEdit,
             permisos_object
         } = this.props;
@@ -43,10 +38,7 @@ class Tabla extends React.Component {
                                 Header: "Nro. Exa Es.",
                                 accessor: "nro_examen_especial",
                                 maxWidth: 100,
-                                filterable: true,
-                                filterMethod: (filter, row) => {
-                                    return row._original.nro_examen_especial ? row[filter.id].includes(filter.value.toUpperCase()) : false
-                                }
+                                filterable: true
                             },
                             {
                                 Header: "Examen",

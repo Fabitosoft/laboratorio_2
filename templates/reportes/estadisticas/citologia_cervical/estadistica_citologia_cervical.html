@@ -1,4 +1,4 @@
-{% load number_to_word static l10n %}
+{% load number_to_word static l10n mathfilters %}
 <style>
     div {
         font-family: 'Calibri';
@@ -78,71 +78,75 @@
             </td>
         </tr>
     </table>
-    <strong>Nit: </strong> {{ entidad.nit }} <br/>
-    Laboratorio {{ entidad.nombre }} {{ fecha_ini }} a {{ fecha_fin }} <br/>
-    <strong>Fecha y Hora de Impresión: </strong> {% now "d-b-Y (h:i a)" %} <br/>
-    <div class="recibo">
-        <table class="table tabla">
+    <h1 style="text-align: center">LABORATORIO COLLAZOS</h1>
+    <h2 style="text-align: center">Desde el {{ fecha_ini }} hasta el {{ fecha_fin }} <br/></h2>
+    {% if entidad %}
+        <h2 style="text-align: center">Para {{ entidad.nombre }} <br/></h2>
+        <h2 style="text-align: center">Nit. {{ entidad.nit }} <br/></h2>
+    {% endif %}
+    <div class="recibo" style="margin-left: 25%">
+        <table class="table tabla" style="width: 60%">
             <thead>
             <tr>
                 <th></th>
-                <th>Nro.</th>
-                <th>%</th>
+                <th style="text-align: right">Nro.</th>
+                <th style="text-align: right">%</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td style="text-align: right">Total laminas recibidas e informadas</td>
+                <td>Total laminas recibidas e informadas</td>
                 <td style="text-align: right">{{ cantidad }}</td>
-                <td></td>
+                <td style="text-align: right">100%</td>
             </tr>
             <tr>
                 <td>Citologías insatisfactorias o inadecuadas</td>
                 <td style="text-align: right">{{ cantidad_insactifactorias }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_insactifactorias|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>Citologías negativas</td>
                 <td style="text-align: right">{{ cantidad_negativas }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_negativas|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>ASC-US</td>
                 <td style="text-align: right">{{ cantidad_ASC_US }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_ASC_US|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>ASC-H</td>
                 <td style="text-align: right">{{ cantidad_ASC_H }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_ASC_H|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>LIE BG y/o HPV</td>
                 <td style="text-align: right">{{ cantidad_LIE_BG_HPV }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_LIE_BG_HPV|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>LIE AG</td>
                 <td style="text-align: right">{{ cantidad_LIE_AG }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_LIE_AG|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>Carcinoma escamoso</td>
                 <td style="text-align: right">{{ cantidad_carcinoma_escamoso }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_carcinoma_escamoso|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>ACG (NOS y sospechosas de neoplasia)</td>
                 <td style="text-align: right">{{ cantidad_ACG }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_ACG|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             <tr>
                 <td>Adenocarcinoma in situ e invasivo</td>
                 <td style="text-align: right">{{ cantidad_Adenocarcinoma_in_situ_e_invasivo }}</td>
-                <td></td>
+                <td style="text-align: right">{{ cantidad_Adenocarcinoma_in_situ_e_invasivo|div:cantidad|mul:100|floatformat:1 }}%</td>
             </tr>
             </tbody>
         </table>
         <br/>
     </div>
+    <strong>Fecha y Hora de Generación: </strong> {% now "d-b-Y (h:i a)" %} <br/>
 </div>

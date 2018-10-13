@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from django.db.models import Sum
+from django.db.models import Sum, Min
 from django.http import HttpResponse
 from django.template.loader import get_template
 from rest_framework import viewsets, permissions
@@ -51,7 +51,6 @@ class CitologiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
             orden_examen__orden__fecha_ingreso__date__gte=fecha_ini,
             orden_examen__examen_estado=2
         )
-
         if entidad_id:
             citologias = citologias.filter(orden_examen__orden__entidad_id=entidad_id)
             entidad = Entidad.objects.get(id=entidad_id)
@@ -63,8 +62,8 @@ class CitologiaViewSet(OrdenesExamenesPDFViewMixin, viewsets.ModelViewSet):
         citologias_LIE_BG_HPV = citologias.filter(B3=True)
         citologias_LIE_AG = citologias.filter(B4=True)
         citologias_carcinoma_escamoso = citologias.filter(B5=True)
-        citologias_ACG = citologias.filter(B9=True)
-        citologias_Adenocarcinoma_in_situ_e_invasivo = citologias.filter(B7=True)
+        citologias_ACG = citologias.filter(B6=True)
+        citologias_Adenocarcinoma_in_situ_e_invasivo = citologias.filter(B8=True)
 
         ctx = {
             'entidad': entidad,

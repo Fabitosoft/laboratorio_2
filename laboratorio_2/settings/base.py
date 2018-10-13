@@ -70,6 +70,7 @@ THIRD_PART_APPS = [
     'rest_framework',
     'knox',
     'webpack_loader',
+    'mathfilters',
 ]
 
 REST_FRAMEWORK = {
