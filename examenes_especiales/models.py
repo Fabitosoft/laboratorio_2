@@ -84,7 +84,7 @@ class Citologia(ExamenEspecial):
     C1 = models.BooleanField(verbose_name='No se observan microorganismos patógenos', default=0)
     C2 = models.BooleanField(verbose_name='Bacterias morfológicamente consistentes con actinomyces', default=0)
     C3 = models.BooleanField(verbose_name='Desviación de la flora sugestiva de vaginosis bacteriana', default=0)
-    C4 = models.BooleanField(verbose_name='Trichonomas vaginalis', default=0)
+    C4 = models.BooleanField(verbose_name='Trichomonas vaginalis', default=0)
     C5 = models.BooleanField(verbose_name='Hongos mofológicamente compatibles con Candida Sp', default=0)
     C6 = models.BooleanField(verbose_name='Cambios citopáticos asociados a Herpes', default=0)
     C7 = models.BooleanField(verbose_name='No se observan microorganismos', default=0)
